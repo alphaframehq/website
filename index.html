@@ -787,6 +787,136 @@ body.no-webgl .j-panel{position:static;opacity:1;transform:none;margin:18px auto
   .drag-hint,.scroll-cue i,.mini3d .cube,.mini3d .ring,.mini3d .dot,.mini3d .layer,.hero-fallback .ap{animation:none}
   .j-panel{transition:none}
 }
+
+/* ==========================================================================
+   FIX ROUND 2 — 26 Nov 2026, 12:43 IST
+   (a) Mobile performance: hero touch-action, coarse-pointer journey unpin
+   (b) Desktop NO-GO fixes: header nav class mismatch, ring demo clicks,
+       coin stack, hero mouse-follow, journey framing, black slabs,
+       tilt strength, wordmark lift
+   (c) CONSISTENCY: one animation language, one type scale, one component
+       language, one palette (incl. --mint/--coral which were UNDEFINED)
+   (d) ALIVE: the site notices the visitor — ambient breathing, sheen,
+       hover lean everywhere, press feedback. Transform/opacity only.
+   ========================================================================== */
+
+/* ---- (c1) DESIGN TOKENS: one animation language, one palette ---- */
+:root{
+  --mint:#3ED598; --coral:#FF5A5F;
+  --d-fast:.25s; --d-med:.45s; --d-slow:.8s;
+  --ease:cubic-bezier(.16,1,.3,1);
+  /* --bounce already defined above: cubic-bezier(.34,1.56,.64,1) */
+}
+/* One animation language: every new-component transition uses the tokens.
+   Hover/press = bouncy, fades = smooth ease. Old tool components keep
+   their fast .2s feedback on purpose (tools feel snappy, showcase bouncy). */
+.reveal{transition:opacity var(--d-slow) var(--ease),transform var(--d-slow) var(--bounce)}
+.btn{transition:transform var(--d-fast) var(--bounce),box-shadow var(--d-fast) var(--bounce)}
+.tilt3d{transition:transform var(--d-fast) var(--ease),box-shadow var(--d-med) var(--ease)}
+.j-dots i{transition:all var(--d-fast) var(--ease)}
+.ring-nav button{transition:transform var(--d-fast) var(--bounce)}
+#valueStack .coin{transition:opacity var(--d-med) var(--ease),transform var(--d-med) var(--bounce)}
+
+/* ---- (c2) TYPE SCALE: display / section / card / body / label ---- */
+body{font-size:16px;line-height:1.6}
+.spotlight h3,.step h3,.plan h3,.ring-card .work-body h3,.eng-point h3{font-size:24px;line-height:1.08;text-transform:uppercase}
+.sec-head p{font-size:17px;line-height:1.6}
+.mono,.pill,.ring-hint,.scroll-cue{font-size:13px;font-weight:800;letter-spacing:.14em}
+.pill,.tag,.work-meta span{font-family:'Nunito',system-ui,sans-serif}
+.pill{font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:.16em}
+.tag{font-size:11px}
+.work-meta span{font-size:12px}
+
+/* ---- (c3) ONE COMPONENT LANGUAGE: 2px border + hard shadow + 999px pills ---- */
+.work-meta span,.ba-badges span{border-radius:999px}
+.pill,.mono,.hstat,.float-chip3d,.audit-opt,.demo-btn,.demo-tab,.ba-badges span,.work-meta span,.tag{border:2px solid var(--line2)}
+.step,.plan,.faq{transition:transform var(--d-fast) var(--bounce),box-shadow var(--d-fast) var(--bounce),border-color var(--d-fast) var(--ease)}
+.step:hover,.plan:hover,.faq:hover{transform:translateY(-4px);border-color:var(--gold)}
+.step:active,.plan:active,.faq:active{transform:translateY(-1px) scale(.98)}
+
+/* ---- (b1) HEADER NAV: markup uses .nav-links, old CSS styled .navlinks ----
+   (class mismatch = no flex, no gaps, links ran together). Also the old
+   mobile hide rule targeted .navlinks, so the desktop nav never hid. */
+#siteHeader .nav{gap:20px}
+#siteHeader .brand{flex:none}
+#siteHeader .nav-links{display:flex;align-items:center;gap:4px;margin-left:auto}
+#siteHeader .nav-links a{position:relative;text-decoration:none;font-weight:700;font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink2);padding:10px 12px;border:1px solid transparent;border-radius:999px;transition:color var(--d-fast) var(--ease),border-color var(--d-fast) var(--ease),background var(--d-fast) var(--ease);white-space:nowrap}
+#siteHeader .nav-links a:hover{color:var(--gold2);border-color:var(--line2);background:rgba(245,197,66,.1)}
+#siteHeader .nav-links a::after{content:"";position:absolute;left:12px;right:12px;bottom:6px;height:2px;background:var(--gold);border-radius:2px;transform:scaleX(0);transform-origin:left;transition:transform var(--d-fast) var(--bounce)}
+#siteHeader .nav-links a:hover::after{transform:scaleX(1)}
+#siteHeader .nav .btn{white-space:nowrap;flex:none}
+@media (max-width:1020px){#siteHeader .nav-links{display:none}}
+
+/* ---- (b3) COIN STACK: coins stack UPWARD, one lit per $250 ----
+   All 8 coins sat at bottom:0 with only translateZ between them, so they
+   overlapped into a single flat ellipse whatever the total was. */
+#valueStack .coin:nth-child(1){bottom:0}
+#valueStack .coin:nth-child(2){bottom:13px}
+#valueStack .coin:nth-child(3){bottom:26px}
+#valueStack .coin:nth-child(4){bottom:39px}
+#valueStack .coin:nth-child(5){bottom:52px}
+#valueStack .coin:nth-child(6){bottom:65px}
+#valueStack .coin:nth-child(7){bottom:78px}
+#valueStack .coin:nth-child(8){bottom:91px}
+
+/* ---- (b8) FOOTER WORDMARK: rise animation (fill:both) locked the transform
+   so :hover could never lift a letter; the per-letter transition-delay also
+   delayed the fill by up to 360ms. backwards fill + no hover delay fixes both. */
+.foot-word{perspective:600px}
+.foot-word span{transition:transform var(--d-fast) var(--bounce),color var(--d-fast) var(--ease);transition-delay:0s}
+.foot-word span:hover{animation:none;transform:translateY(-16px) rotateX(25deg);color:var(--gold2)}
+.foot-word.in span{animation:letterRise .8s var(--bounce) backwards;animation-delay:calc(var(--i)*60ms)}
+
+/* ---- (b5) JOURNEY PANELS: kill ghost text — inactive panels are now
+   visibility:hidden (not just opacity:0 fading through each other) ---- */
+.j-panel{visibility:hidden;transition:opacity .35s var(--ease),transform var(--d-med) var(--bounce),visibility 0s .35s}
+.j-panel.active{opacity:1;transform:translateY(-50%) translateX(0) scale(1);visibility:visible;transition:opacity .35s var(--ease),transform var(--d-med) var(--bounce),visibility 0s 0s}
+
+/* ---- (b6) HERO STATS: never split or wrap mid-number ---- */
+.hstat,.hstat b{white-space:nowrap}
+
+/* ---- (a) HERO TOUCH: vertical swipes must scroll the page ----
+   touch-action:none on a full-viewport canvas swallowed every touch and,
+   with pointer capture, trapped the user on the hero. pan-y hands vertical
+   scrolling back to the browser; horizontal drags still spin the lens. */
+#hero3d{touch-action:pan-y}
+
+/* ---- (d) ALIVE: ambient breathing + sheen + float, transform/opacity only ---- */
+@keyframes aliveBreathe{0%,100%{transform:scale(1)}50%{transform:scale(1.035)}}
+@keyframes aliveFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes aliveSheen{0%{transform:translateX(-160%) skewX(-18deg)}60%,100%{transform:translateX(260%) skewX(-18deg)}}
+.hstat{animation:aliveBreathe 3.4s ease-in-out infinite}
+.hstat:nth-child(2){animation-delay:.5s}
+.hstat:nth-child(3){animation-delay:1s}
+.sec-head .mono{animation:aliveFloat 3.2s ease-in-out infinite}
+.btn-gold{position:relative;overflow:hidden}
+.btn-gold::after{content:"";position:absolute;top:0;bottom:0;left:0;width:45%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.45),transparent);transform:translateX(-160%) skewX(-18deg);animation:aliveSheen 3.8s var(--ease) infinite;pointer-events:none}
+
+/* ---- (a) TOUCH / COARSE POINTER: no pinned scroll traps ----
+   The 600vh pinned journey + scroll-scrubbed camera is a desktop ride.
+   On touch it becomes one static 3D scene (rendered once) + the four
+   panels stacked below it, so the page scrolls like a normal page.
+   Same design, same colours, same panels — not a different site. */
+@media (pointer:coarse){
+  #journeyWrap{height:auto}
+  .j-sticky{position:relative;height:auto;overflow:visible}
+  #journey3d{position:relative;display:block;width:100%;height:62svh}
+  .j-panel{position:static;opacity:1;visibility:visible;transform:none;margin:16px auto;max-width:560px}
+  .j-dots,.j-count,.j-skip{display:none}
+}
+
+/* ---- MOBILE: pills stay pills, alive motion stays slow and calm ---- */
+@media (max-width:640px){
+  .pill{border-radius:999px}
+  .hstat{animation-duration:4.6s}
+  .sec-head .mono{animation-duration:4.2s}
+  .hero-stats{padding-bottom:8px}
+}
+
+/* ---- REDUCED MOTION: the new alive motion off too ---- */
+@media (prefers-reduced-motion:reduce){
+  .hstat,.sec-head .mono,.btn-gold::after{animation:none}
+}
 </style>
 </head>
 <body>
@@ -1161,8 +1291,10 @@ var AF3D = (function () {
   function heroLeanFromMouse(nx, ny) {
     return { yaw: nx * 0.35, pitch: -ny * 0.175, camX: nx * 1.2, camY: -ny * 0.7 };
   }
-  /* TILT CARDS — pointer offset dx,dy in [-0.5,0.5] -> degrees, +/-10. */
-  function tiltFromPointer(dx, dy) { return { rx: (-dy * 20), ry: (dx * 20) }; }
+  /* TILT CARDS — pointer offset dx,dy in [-0.5,0.5] -> degrees.
+     Corner: +/-14 deg rotateX/Y plus +/-4 deg in-plane lean, so the tilt
+     reads clearly (measured 0.57 deg at +/-10 deg was too subtle). */
+  function tiltFromPointer(dx, dy) { return { rx: (-dy * 28), ry: (dx * 28), rz: (dx * 8) }; }
   /* WORK RING — 100px drag = 30 deg. */
   function ringRotFromDrag(dx) { return dx * 0.3; }
   /* LAYER STACK — scroll progress 0..1 -> spread in px per layer step (max 90). */
@@ -1172,13 +1304,17 @@ var AF3D = (function () {
 
   /* JOURNEY — camera fly-through keyframes (p in [0,1]).
      Stations: S1 old site (0,0,0) | S2 layers (8,0,-6) |
-               S3 browser (-6,1,-12) | S4 launch (0,2,-20). */
+               S3 browser (-6,1,-12) | S4 launch (0,2,-20).
+     Look targets sit ~2.5 units LEFT of each station, so the station
+     renders right-of-centre — clear of the left text panel (which covers
+     the left ~33% of a 1919px viewport). Mid stations pulled back a
+     little so scattered layers are never cut off at the right edge. */
   var CAM_KEYS = [
-    { p: 0.00, pos: [0, 0.5, 14],  look: [0, 0, 0] },
-    { p: 0.25, pos: [8, 2, 6],     look: [8, 0, -6] },
-    { p: 0.50, pos: [-6, 3, 0],    look: [-6, 1, -12] },
-    { p: 0.75, pos: [-2, 2, -2],   look: [-6, 1, -12] },
-    { p: 1.00, pos: [0, 3, -8],    look: [0, 2, -20] }
+    { p: 0.00, pos: [0, 0.5, 14],  look: [-2.5, 0, 0] },
+    { p: 0.25, pos: [8, 2, 7],     look: [5.5, 0, -6] },
+    { p: 0.50, pos: [-6, 3, 1],    look: [-8.5, 1, -12] },
+    { p: 0.75, pos: [-2, 2, -1],   look: [-8.5, 1, -12] },
+    { p: 1.00, pos: [0, 3, -8],    look: [-2.5, 2, -20] }
   ];
   function keyed(p, field) {
     p = clamp(p, 0, 1);
@@ -1200,8 +1336,8 @@ var AF3D = (function () {
       s2: seg(p, 0.18, 0.28) * (1 - seg(p, 0.62, 0.74)),
       s2assemble: seg(p, 0.22, 0.42),
       s3: seg(p, 0.44, 0.54) * (1 - seg(p, 0.78, 0.88)),
-      bars: seg(p, 0.55, 0.73),
-      s4: seg(p, 0.76, 0.86),
+      bars: seg(p, 0.48, 0.62),
+      s4: seg(p, 0.72, 0.82),
       burst: seg(p, 0.82, 0.98),
       station: Math.min(3, Math.floor(p * 4))
     };
@@ -1409,7 +1545,7 @@ calc();
 var reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 /* ---- Reveal fallback: never leave a section blank if the observer misses it ---- */
 function revealCheck(){document.querySelectorAll('.reveal:not(.in)').forEach(function(el){var r=el.getBoundingClientRect();if(r.top<window.innerHeight*0.94&&r.bottom>0)el.classList.add('in');});}
-window.addEventListener('scroll',revealCheck,{passive:true});
+var __rcTick=false;window.addEventListener('scroll',function(){if(!__rcTick){__rcTick=true;requestAnimationFrame(function(){revealCheck();__rcTick=false;});}},{passive:true});
 window.addEventListener('resize',revealCheck);
 setTimeout(revealCheck,600); setTimeout(revealCheck,1800); revealCheck();
 /* ---- BA slider: range control stays in sync both ways ---- */
@@ -1503,6 +1639,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!modal.hidd
 "use strict";
 var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 var finePointer = window.matchMedia("(pointer: fine)").matches;
+var coarsePointer = window.matchMedia("(pointer: coarse)").matches;
 var isMobile = window.innerWidth < 700;
 var $ = function (id) { return document.getElementById(id); };
 function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
@@ -1546,9 +1683,10 @@ function initHero(THREE) {
   if (!sec || !canvas) return null;
   var renderer;
   try {
-    renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+    /* mobile: no MSAA + DPR 1 — the single biggest fragment-cost cut on phones */
+    renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: !isMobile, alpha: true });
   } catch (e) { return null; }
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isMobile ? 1.5 : 2));
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isMobile ? 1 : 2));
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.1;
   var scene = new THREE.Scene();
@@ -1558,7 +1696,8 @@ function initHero(THREE) {
 
   scene.add(new THREE.AmbientLight(0x8a7fd0, 0.55));
   var key = new THREE.DirectionalLight(0xfff1d6, 1.8); key.position.set(4, 6, 6); scene.add(key);
-  var rim = new THREE.PointLight(0xff5a5f, 30, 24); rim.position.set(-5, 2, -4); scene.add(rim);
+  /* mobile: skip the red rim point light (one less punctual light per fragment) */
+  if (!isMobile) { var rim = new THREE.PointLight(0xff5a5f, 30, 24); rim.position.set(-5, 2, -4); scene.add(rim); }
   var gold = new THREE.PointLight(0xf5c542, 22, 16); gold.position.set(0, -3, 3); scene.add(gold);
 
   /* --- the lens: golden aperture, the brand mark as a real object --- */
@@ -1570,7 +1709,9 @@ function initHero(THREE) {
   var ring2 = new THREE.Mesh(new THREE.TorusGeometry(1.62, 0.07, 14, 64), darkMat);
   lens.add(ring2);
   var lensGlass = new THREE.Mesh(new THREE.CircleGeometry(1.5, 48),
-    new THREE.MeshPhysicalMaterial({ color: 0x2e2361, metalness: 0.2, roughness: 0.08, clearcoat: 1 }));
+    /* mobile: Standard, not Physical — clearcoat is expensive on phone GPUs */
+    isMobile ? new THREE.MeshStandardMaterial({ color: 0x2e2361, metalness: 0.2, roughness: 0.08 })
+             : new THREE.MeshPhysicalMaterial({ color: 0x2e2361, metalness: 0.2, roughness: 0.08, clearcoat: 1 }));
   lensGlass.position.z = -0.12; lens.add(lensGlass);
   var iris = new THREE.Mesh(new THREE.CircleGeometry(0.85, 40),
     new THREE.MeshBasicMaterial({ color: 0xffd97a, transparent: true, opacity: 0.28 }));
@@ -1591,15 +1732,19 @@ function initHero(THREE) {
   }
   scene.add(lens);
 
-  /* --- morphing gold blob behind the lens (4D: vertex noise over time) --- */
-  var blobDetail = isMobile ? 3 : 4;
+  /* --- morphing gold blob behind the lens (4D: vertex noise over time) ---
+     Mobile: detail 2 (162 verts vs 642 at detail 3), cheap 3-sine noise,
+     morph on alternate frames, and NO computeVertexNormals — flatShading
+     computes normals in-shader, so the per-frame recompute was pure waste. */
+  var blobDetail = isMobile ? 2 : 4;
   var blobGeo = new THREE.IcosahedronGeometry(1.15, blobDetail);
   var blobBase = blobGeo.attributes.position.array.slice();
   var blob = new THREE.Mesh(blobGeo, new THREE.MeshStandardMaterial({ color: 0xf5c542, metalness: 0.85, roughness: 0.25, flatShading: true }));
   blob.position.set(0, 0, -3.6); scene.add(blob);
   function noise3(x, y, z, t) {
-    return Math.sin(x * 2.1 + t) * Math.sin(y * 1.7 - t * 0.7) * Math.sin(z * 1.9 + t * 0.5)
-         + 0.5 * Math.sin(x * 4.3 - t * 1.3) * Math.sin(y * 3.1 + t);
+    var a = Math.sin(x * 2.1 + t) * Math.sin(y * 1.7 - t * 0.7) * Math.sin(z * 1.9 + t * 0.5);
+    if (isMobile) return a;
+    return a + 0.5 * Math.sin(x * 4.3 - t * 1.3) * Math.sin(y * 3.1 + t);
   }
 
   /* --- floating 3D browser windows (the product: websites) --- */
@@ -1607,14 +1752,16 @@ function initHero(THREE) {
   var winDefs = [
     { pos: [-3.6, 1.3, -1.4], rotY: 0.55, accent: "#F5C542", title: "MOVERS" },
     { pos: [3.7, -0.7, -1.0], rotY: -0.5, accent: "#7C5CFF", title: "DENTAL" },
-    { pos: [0.4, -2.5, -2.4], rotY: 0.12, accent: "#3ED598", title: "REALTY" }
+    { pos: [1.2, -2.9, -2.8], rotY: 0.12, accent: "#3ED598", title: "REALTY" }
   ];
-  var winSide = new THREE.MeshStandardMaterial({ color: 0x171200, metalness: 0.4, roughness: 0.5 });
+  /* sides are lit indigo, not near-black; the mini-site texture is on BOTH
+     faces — a window turning away never shows a blank black slab again. */
+  var winSide = new THREE.MeshStandardMaterial({ color: 0x2e2361, metalness: 0.4, roughness: 0.5 });
   winDefs.forEach(function (w, i) {
     var tex = siteTexture(THREE, w.accent, w.title);
     var face = new THREE.MeshStandardMaterial({ map: tex, roughness: 0.35, metalness: 0.1 });
     var box = new THREE.Mesh(new THREE.BoxGeometry(2.7, 1.8, 0.12),
-      [winSide, winSide, winSide, winSide, face, winSide]);
+      [winSide, winSide, winSide, winSide, face, face]);
     var g = new THREE.Group();
     g.add(box); g.position.set(w.pos[0], w.pos[1], w.pos[2]); g.rotation.y = w.rotY;
     g.userData = { baseY: w.pos[1], phase: i * 2.1 };
@@ -1637,8 +1784,8 @@ function initHero(THREE) {
     var pts = new THREE.Points(g, m); pts.userData = { base: base, ph: ph, n: n };
     scene.add(pts); return pts;
   }
-  var dust = makePoints(isMobile ? 120 : 320, [13, 8, 7], 0.07, 0xf5c542, 0.85);
-  var stars = makePoints(160, [26, 16, 8], 0.06, 0xfff6e5, 0.7);
+  var dust = makePoints(isMobile ? 60 : 320, [13, 8, 7], 0.07, 0xf5c542, 0.85);
+  var stars = makePoints(isMobile ? 60 : 160, [26, 16, 8], 0.06, 0xfff6e5, 0.7);
   stars.position.z = -9;
   var shC = document.createElement("canvas"); shC.width = shC.height = 128;
   var shX = shC.getContext("2d");
@@ -1680,12 +1827,19 @@ function initHero(THREE) {
     if (e.target.closest("a,button,input,select,textarea")) return;
     S.dragging = true; S.dragged = false; S.lastX = e.clientX; S.lastY = e.clientY;
     canvas.classList.add("dragging");
-    try { sec.setPointerCapture(e.pointerId); } catch (err) {}
+    /* touch: NEVER capture the pointer — capture retargets the gesture and
+       blocks native vertical scrolling, which made the hero feel "sticky"
+       on phones (canvas had touch-action:none). With touch-action:pan-y the
+       browser scrolls on vertical swipes and delivers pointermove on
+       horizontal drags; mouse/pen still get capture for smooth dragging. */
+    if (e.pointerType !== "touch") { try { sec.setPointerCapture(e.pointerId); } catch (err) {} }
   });
   sec.addEventListener("pointermove", function (e) {
     if (!S.dragging) return;
     var dx = e.clientX - S.lastX, dy = e.clientY - S.lastY;
     S.lastX = e.clientX; S.lastY = e.clientY;
+    /* touch: a mostly-vertical swipe is a page scroll, not a lens drag */
+    if (e.pointerType === "touch" && Math.abs(dy) > Math.abs(dx) * 1.5) return;
     if (Math.abs(dx) + Math.abs(dy) > 2) S.dragged = true;
     S.targetYaw += AF3D.heroYawFromDrag(dx);
     S.targetPitch = clamp(S.targetPitch + AF3D.heroPitchFromDrag(dy), -0.5, 0.5);
@@ -1714,40 +1868,56 @@ function initHero(THREE) {
   size();
   var rzT; window.addEventListener("resize", function () { clearTimeout(rzT); rzT = setTimeout(function () { isMobile = window.innerWidth < 700; size(); }, 200); }, { passive: true });
 
+  var frameNo = 0;
   return {
     tick: function (t, now) {
       if (!heroVisible || document.hidden) return;
+      frameNo++;
       if (!reduced && !S.dragging && now - S.lastMove > 3000) S.targetYaw += 0.0022;
-      var k = 0.08;
+      var k = 0.12;
       S.yaw += (S.targetYaw + S.leanYaw - S.yaw) * k;
       S.pitch += (S.targetPitch + S.leanPitch - S.pitch) * k;
       S.hoverT += ((S.hoverTarget || 0) - S.hoverT) * 0.1;
       lens.rotation.y = S.yaw; lens.rotation.x = S.pitch;
+      /* MOUSE-FOLLOW, made visible: the lens itself slides sideways with the
+         mouse (a symmetric torus rotating about its own centre barely moves
+         its centroid — that is why the old lean measured ~0.1 deg). The
+         window ring counter-shifts for parallax depth. Expected centroid
+         shift on a full mouse sweep: ~90px (was ~15px). */
+      lens.position.x = S.leanYaw * 2.0;
+      lens.position.y = S.leanPitch * 1.2;
+      winRing.position.x = -S.leanYaw * 0.9;
+      winRing.position.y = -S.leanPitch * 0.5;
       var open = S.hoverT * 0.55 + 0.06 * Math.sin(t * 0.8);
       blades.forEach(function (p) { p.rotation.z = p.userData.baseRot + open; });
       lens.scale.setScalar(1 + 0.07 * S.hoverT);
       iris.material.opacity = 0.22 + 0.12 * Math.sin(t * 1.6) + 0.15 * S.hoverT;
-      /* blob breathes (4D morph) */
-      var pos = blobGeo.attributes.position, amp = 0.22 + 0.18 * S.hoverT;
-      for (var i = 0; i < pos.count; i++) {
-        var bx = blobBase[i * 3], by = blobBase[i * 3 + 1], bz = blobBase[i * 3 + 2];
-        var n = noise3(bx, by, bz, t * 0.7) * amp;
-        pos.setXYZ(i, bx * (1 + n), by * (1 + n), bz * (1 + n));
+      /* blob breathes (4D morph) — mobile: alternate frames only */
+      if (!isMobile || frameNo % 2 === 0) {
+        var pos = blobGeo.attributes.position, amp = 0.22 + 0.18 * S.hoverT;
+        for (var i = 0; i < pos.count; i++) {
+          var bx = blobBase[i * 3], by = blobBase[i * 3 + 1], bz = blobBase[i * 3 + 2];
+          var n = noise3(bx, by, bz, t * 0.7) * amp;
+          pos.setXYZ(i, bx * (1 + n), by * (1 + n), bz * (1 + n));
+        }
+        pos.needsUpdate = true;
       }
-      pos.needsUpdate = true; blobGeo.computeVertexNormals();
       blob.rotation.y = t * 0.12; blob.rotation.x = Math.sin(t * 0.3) * 0.2;
       winRing.rotation.y = t * 0.05;
       winRing.children.forEach(function (g) { g.position.y = g.userData.baseY + Math.sin(t * 0.7 + g.userData.phase) * 0.16; });
-      [dust, stars].forEach(function (pts) {
-        var a = pts.geometry.attributes.position, b = pts.userData.base, ph = pts.userData.ph;
-        for (var j = 0; j < pts.userData.n; j++) {
-          a.setY(j, b[j * 3 + 1] + Math.sin(t * 0.5 + ph[j]) * 0.22);
-        }
-        a.needsUpdate = true;
-      });
+      /* particles drift — mobile: alternate frames only */
+      if (!isMobile || frameNo % 2 === 0) {
+        [dust, stars].forEach(function (pts) {
+          var a = pts.geometry.attributes.position, b = pts.userData.base, ph = pts.userData.ph;
+          for (var j = 0; j < pts.userData.n; j++) {
+            a.setY(j, b[j * 3 + 1] + Math.sin(t * 0.5 + ph[j]) * 0.22);
+          }
+          a.needsUpdate = true;
+        });
+      }
       dust.rotation.y = t * 0.02; stars.rotation.y = -t * 0.008;
-      camera.position.x += (S.camX * 0.35 - camera.position.x) * 0.05;
-      camera.position.y += (S.camY * 0.35 - camera.position.y) * 0.05;
+      camera.position.x += (S.camX * 0.25 - camera.position.x) * 0.05;
+      camera.position.y += (S.camY * 0.25 - camera.position.y) * 0.05;
       camera.lookAt(0, 0, 0);
       renderer.render(scene, camera);
     },
@@ -1764,9 +1934,9 @@ function initJourney(THREE) {
   var wrap = $("journeyWrap"), canvas = $("journey3d");
   if (!wrap || !canvas) return null;
   var renderer;
-  try { renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true }); }
+  try { renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: !isMobile, alpha: true }); }
   catch (e) { return null; }
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isMobile ? 1.5 : 2));
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isMobile ? 1 : 2));
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.1;
   var scene = new THREE.Scene();
@@ -1806,7 +1976,8 @@ function initJourney(THREE) {
       new THREE.MeshStandardMaterial({ color: col, roughness: 0.4, metalness: 0.3 }));
     m.userData = {
       assembled: new THREE.Vector3(0, layerY[i], 0),
-      scattered: new THREE.Vector3((i % 2 ? 1 : -1) * (2.6 + i * 0.7), (i - 1.5) * 1.6, (i % 2 ? -1 : 1) * 1.2),
+      /* tighter scatter — the old spread ran off the right edge of frame */
+      scattered: new THREE.Vector3((i % 2 ? 1 : -1) * (1.9 + i * 0.5), (i - 1.5) * 1.6, (i % 2 ? -1 : 1) * 0.8),
       rotS: (i - 1.5) * 0.55
     };
     m.position.copy(m.userData.scattered); m.rotation.z = m.userData.rotS;
@@ -1829,13 +2000,18 @@ function initJourney(THREE) {
   });
   scene.add(s3);
 
-  /* STATION 4 — launch: golden aperture + particle burst */
+  /* STATION 4 — launch: golden aperture + particle burst.
+     Thicker ring + a glowing inner disc, so it reads as an aperture,
+     not a faint outline. */
   var s4 = new THREE.Group(); s4.position.set(0, 2, -20);
   var goldMat = new THREE.MeshStandardMaterial({ color: 0xf5c542, metalness: 0.9, roughness: 0.28 });
-  s4.add(new THREE.Mesh(new THREE.TorusGeometry(1.7, 0.12, 18, 64), goldMat));
+  s4.add(new THREE.Mesh(new THREE.TorusGeometry(2.0, 0.2, 18, 64), goldMat));
   var lensD = new THREE.Mesh(new THREE.CircleGeometry(1.2, 40),
     new THREE.MeshPhysicalMaterial({ color: 0x2e2361, metalness: 0.2, roughness: 0.08, clearcoat: 1 }));
   lensD.position.z = -0.1; s4.add(lensD);
+  var disc = new THREE.Mesh(new THREE.CircleGeometry(1.35, 40),
+    new THREE.MeshBasicMaterial({ color: 0xffd97a, transparent: true, opacity: 0.4 }));
+  disc.position.z = -0.05; s4.add(disc);
   var burstN = 180, burstBase = new Float32Array(burstN * 3), burstDir = new Float32Array(burstN * 3);
   for (var i = 0; i < burstN; i++) {
     var th = Math.random() * Math.PI * 2, ph = Math.acos(2 * Math.random() - 1);
@@ -1853,13 +2029,15 @@ function initJourney(THREE) {
     new IntersectionObserver(function (es) { jVisible = es[0].isIntersecting; }, { threshold: 0 }).observe(wrap);
   }
   function size() {
-    var r = wrap.getBoundingClientRect();
-    var w = r.width || window.innerWidth, h = window.innerHeight;
+    /* size from the canvas box itself — on touch the canvas is a 62svh
+       static panel, not a full viewport, so window.innerHeight is wrong */
+    var r = canvas.getBoundingClientRect();
+    var w = r.width || window.innerWidth, h = r.height || window.innerHeight;
     renderer.setSize(w, h, false);
     camera.aspect = w / h; camera.updateProjectionMatrix();
   }
   size();
-  var rzT; window.addEventListener("resize", function () { clearTimeout(rzT); rzT = setTimeout(size, 200); }, { passive: true });
+  var rzT; window.addEventListener("resize", function () { clearTimeout(rzT); rzT = setTimeout(function () { size(); if (coarsePointer) renderOnce(); }, 200); }, { passive: true });
 
   var pSmooth = 0, lastStation = -1;
   window.__AF_DEBUG = window.__AF_DEBUG || {};
@@ -1877,7 +2055,8 @@ function initJourney(THREE) {
     });
     setOpacity(s3, st.s3);
     bars.forEach(function (b) {
-      var s = 0.1 + 0.9 * st.bars;
+      /* taller, earlier bars — full height by p=0.62, ~2.2 units tall */
+      var s = 0.15 + 1.15 * st.bars;
       b.scale.y = s; b.position.y = -2.2 + (1.7 * s) / 2;
     });
     setOpacity(s4, st.s4);
@@ -1890,41 +2069,44 @@ function initJourney(THREE) {
     burst.material.opacity = st.burst;
     s4.rotation.z = t * 0.05;
   }
-  return {
-    tick: function (t) {
-      if (!jVisible || document.hidden) return;
-      var rect = wrap.getBoundingClientRect(), vh = window.innerHeight;
-      var p = clamp((vh - rect.top) / (rect.height - vh), 0, 1);
-      if (reduced) { p = 0.62; pSmooth = p; }
-      else pSmooth += (p - pSmooth) * 0.14;
-      var st = AF3D.journeyState(pSmooth);
-      var cam = AF3D.journeyCam(pSmooth), look = AF3D.journeyLook(pSmooth);
-      camera.position.set(cam[0], cam[1], cam[2]);
-      camera.lookAt(look[0], look[1], look[2]);
-      applyState(st, t);
-      if (st.station !== lastStation) {
-        lastStation = st.station;
-        panels.forEach(function (pn, i) { pn.classList.toggle("active", i === st.station); });
-        dots.forEach(function (d, i) { d.classList.toggle("on", i === st.station); });
-        if (count) count.textContent = "0" + (st.station + 1) + " / 04";
-      }
-      renderer.render(scene, camera);
-    },
-    renderOnce: function () {
-      var st = AF3D.journeyState(0.62);
-      var cam = AF3D.journeyCam(0.62), look = AF3D.journeyLook(0.62);
-      camera.position.set(cam[0], cam[1], cam[2]);
-      camera.lookAt(look[0], look[1], look[2]);
-      applyState(st, 0);
-      panels.forEach(function (pn, i) { pn.classList.toggle("active", i === 2); });
-      renderer.render(scene, camera);
+  function tick(t) {
+    /* touch: the journey is a static scene (CSS unpins it) — no scrub,
+       no per-frame traverse, no 600vh scroll trap on phones */
+    if (coarsePointer) return;
+    if (!jVisible || document.hidden) return;
+    var rect = wrap.getBoundingClientRect(), vh = window.innerHeight;
+    var p = clamp((vh - rect.top) / (rect.height - vh), 0, 1);
+    if (reduced) { p = 0.62; pSmooth = p; }
+    else pSmooth += (p - pSmooth) * 0.14;
+    var st = AF3D.journeyState(pSmooth);
+    var cam = AF3D.journeyCam(pSmooth), look = AF3D.journeyLook(pSmooth);
+    camera.position.set(cam[0], cam[1], cam[2]);
+    camera.lookAt(look[0], look[1], look[2]);
+    applyState(st, t);
+    if (st.station !== lastStation) {
+      lastStation = st.station;
+      panels.forEach(function (pn, i) { pn.classList.toggle("active", i === st.station); });
+      dots.forEach(function (d, i) { d.classList.toggle("on", i === st.station); });
+      if (count) count.textContent = "0" + (st.station + 1) + " / 04";
     }
-  };
+    renderer.render(scene, camera);
+  }
+  function renderOnce() {
+    var st = AF3D.journeyState(0.62);
+    var cam = AF3D.journeyCam(0.62), look = AF3D.journeyLook(0.62);
+    camera.position.set(cam[0], cam[1], cam[2]);
+    camera.lookAt(look[0], look[1], look[2]);
+    applyState(st, 0);
+    panels.forEach(function (pn, i) { pn.classList.toggle("active", i === 2); });
+    renderer.render(scene, camera);
+  }
+  return { tick: tick, renderOnce: renderOnce };
 }
 
 /* ---------- CSS-3D INTERACTIONS (work even without WebGL) ---------- */
 function initInteractions() {
-  /* Strong tilt cards: +/-10 deg (old: +/-0.3-0.6 deg) */
+  /* Strong tilt cards: +/-14 deg + in-plane lean (old: +/-10 deg, and the
+     measured effect was only 0.57 deg in-plane — now unmistakable) */
   if (finePointer && !reduced) {
     document.querySelectorAll(".tilt3d").forEach(function (el) {
       el.addEventListener("pointermove", function (e) {
@@ -1932,7 +2114,7 @@ function initInteractions() {
         var dx = (e.clientX - r.left) / r.width - 0.5;
         var dy = (e.clientY - r.top) / r.height - 0.5;
         var t = AF3D.tiltFromPointer(dx, dy);
-        el.style.transform = "perspective(900px) rotateX(" + t.rx.toFixed(2) + "deg) rotateY(" + t.ry.toFixed(2) + "deg) translateZ(6px)";
+        el.style.transform = "perspective(900px) rotateX(" + t.rx.toFixed(2) + "deg) rotateY(" + t.ry.toFixed(2) + "deg) rotateZ(" + t.rz.toFixed(2) + "deg) translateZ(12px)";
       });
       el.addEventListener("pointerleave", function () { el.style.transform = ""; });
     });
@@ -1946,9 +2128,14 @@ function initInteractions() {
     window.__AF_DEBUG = window.__AF_DEBUG || {};
     window.__AF_DEBUG.ring = { get rot() { return rot; }, get target() { return target; } };
     stage.addEventListener("pointerdown", function (e) {
+      /* NEVER capture on buttons/links: setPointerCapture retargets the
+         following click to the stage, so the demo buttons inside the ring
+         never received their clicks (that is why OPEN LIVE DEMO was dead).
+         Touch: no capture at all, so vertical swipes keep scrolling. */
+      if (e.target.closest("a,button,input,select,textarea")) return;
       dragging = true; lastX = e.clientX; dragDist = 0; vel = 0; lastAct = performance.now();
       stage.classList.add("dragging");
-      try { stage.setPointerCapture(e.pointerId); } catch (err) {}
+      if (e.pointerType !== "touch") { try { stage.setPointerCapture(e.pointerId); } catch (err) {} }
     });
     stage.addEventListener("pointermove", function (e) {
       if (!dragging) return;
@@ -1962,6 +2149,15 @@ function initInteractions() {
     stage.addEventListener("click", function (e) {
       if (dragDist > 6) { e.stopPropagation(); e.preventDefault(); }
     }, true);
+    /* tapping a card (not its button) opens its live demo, as the hint says */
+    cards.forEach(function (c) {
+      c.addEventListener("click", function (e) {
+        if (dragDist > 6) return;
+        if (e.target.closest(".demo-open")) return;
+        var b = c.querySelector(".demo-open");
+        if (b) b.click();
+      });
+    });
     function step(dir) { target += dir * 120; lastAct = performance.now(); }
     var pv = $("ringPrev"), nx = $("ringNext");
     if (pv) pv.addEventListener("click", function () { step(-1); });
@@ -2009,31 +2205,40 @@ function initInteractions() {
   }
 }
 
-/* ---------- scroll-driven CSS effects: layer stack, BA zoom, float chips ---------- */
+/* ---------- scroll-driven CSS effects: layer stack, BA zoom, float chips ----------
+   The rect math (getBoundingClientRect = forced layout) runs ONLY when the
+   scroll position actually changed — before it ran every animation frame. */
+var floatEls = null, lastScrollY = -1;
 function scrollFxTick(t) {
-  var vh = window.innerHeight;
-  var ls = $("layerStack");
-  if (ls) {
-    var r = ls.getBoundingClientRect();
-    var p = reduced ? 1 : clamp((vh * 0.9 - r.top) / (vh * 0.75), 0, 1);
-    var spread = AF3D.layerSpread(p);
-    Array.prototype.slice.call(ls.querySelectorAll(".layer")).forEach(function (el, i) {
-      el.style.transform = "translateZ(" + (i * spread).toFixed(1) + "px) translateY(" + (-i * spread * 0.45).toFixed(1) + "px) rotateX(" + ((1 - p) * 10).toFixed(2) + "deg)";
-    });
+  if (floatEls === null) floatEls = Array.prototype.slice.call(document.querySelectorAll("[data-float]"));
+  var y = window.scrollY || 0;
+  if (y !== lastScrollY) {
+    lastScrollY = y;
+    var vh = window.innerHeight;
+    var ls = $("layerStack");
+    if (ls) {
+      var r = ls.getBoundingClientRect();
+      var p = reduced ? 1 : clamp((vh * 0.9 - r.top) / (vh * 0.75), 0, 1);
+      var spread = AF3D.layerSpread(p);
+      Array.prototype.slice.call(ls.querySelectorAll(".layer")).forEach(function (el, i) {
+        el.style.transform = "translateZ(" + (i * spread).toFixed(1) + "px) translateY(" + (-i * spread * 0.45).toFixed(1) + "px) rotateX(" + ((1 - p) * 10).toFixed(2) + "deg)";
+      });
+    }
+    var ba = $("baWrap");
+    if (ba) {
+      var r2 = ba.getBoundingClientRect();
+      var v = reduced ? 1 : clamp((vh - r2.top) / (vh * 0.9), 0, 1);
+      var z = AF3D.baZoom(v);
+      ba.style.transform = "scale(" + z.scale.toFixed(3) + ") rotateX(" + z.rx.toFixed(2) + "deg)";
+    }
   }
-  var ba = $("baWrap");
-  if (ba) {
-    var r2 = ba.getBoundingClientRect();
-    var v = reduced ? 1 : clamp((vh - r2.top) / (vh * 0.9), 0, 1);
-    var z = AF3D.baZoom(v);
-    ba.style.transform = "scale(" + z.scale.toFixed(3) + ") rotateX(" + z.rx.toFixed(2) + "deg)";
-  }
-  document.querySelectorAll("[data-float]").forEach(function (el) {
-    if (reduced) return;
+  /* float chips: transform-only sine bob, cached list */
+  if (!reduced) floatEls.forEach(function (el) {
     var s = parseFloat(el.getAttribute("data-float")) || 1;
     el.style.transform = "translateY(" + (Math.sin(t * s) * 10).toFixed(1) + "px)";
   });
 }
+window.addEventListener("resize", function () { lastScrollY = -1; }, { passive: true });
 
 /* ---------- boot ---------- */
 initInteractions();
@@ -2064,6 +2269,8 @@ if (!webglOK()) {
       if (hero) hero.renderOnce();
       if (journey) journey.renderOnce();
     }
+    /* touch: the journey renders one static frame (no scrub, no pin) */
+    if (coarsePointer && journey) journey.renderOnce();
     startMaster();
   }).catch(function () {
     document.body.classList.add("no-webgl");
