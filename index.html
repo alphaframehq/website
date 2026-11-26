@@ -917,6 +917,94 @@ body{font-size:16px;line-height:1.6}
 @media (prefers-reduced-motion:reduce){
   .hstat,.sec-head .mono,.btn-gold::after{animation:none}
 }
+
+/* ==========================================================================
+   FIX ROUND 3 — 26 Nov 2026, ~13:30 IST (re-check #2 NO-GO)
+   Root causes, all found by reading the actual wiring (not the math tests):
+   (1) Header pill: #siteHeader .nav a (1,1,1) beat .btn-gold (0,1,0).
+   (2) Ring tap: setPointerCapture on the stage retargeted the click to the
+       stage (card handler never fired); plus a stale-dragDist bug — the
+       pointerdown early-return for buttons never reset dragDist, so after
+       ANY drag the first button tap was swallowed by the click guard.
+   (3) Coins: all 8 always rendered (unlit at opacity .18) — no growth.
+       First-click swallow: the estimator panel tilted under the cursor on
+       the first pointermove (moving target) — tilt removed from both
+       glass panels, addons now delegated.
+   (4) Hero mouse-follow/drag: listeners lived on the hero section where
+       overlays could eat/retarget events; now window-level with a
+       hero-rect guard, no capture anywhere. Lens x3.2 + blob follows.
+       Idle spin replaced by a gentle sway (no more edge-on gold spike).
+   (5) Journey: stations far off-axis (x=8/-6) swung the scene left;
+       recentered near the axis, S1 bigger, layers labelled, ghosting
+       killed with visible=false at opacity 0.
+   (6) Stat chip 3: the per-chip breathe animation ran out of phase (chip 3
+       looked lower/bigger mid-breath) + hero bottom clearance too small
+       for the hint pill. Breathe removed from .hstat, hero padded deeper.
+   (7) Tilt: the checker measured the in-plane slope = rotateZ only (max
+       4 deg). rotateZ doubled to 8 deg at the corners.
+   (8) Mobile ~500px: floating chips overlapped the headline; stats
+       nowrap overflowed the right edge. Chips hidden <700px, stats stack.
+   (9) scroll-margin, pricing centring, cursor ring, ring hint, panels.
+   ========================================================================== */
+
+/* ---- (1) HEADER PILL: dark text on gold, beats #siteHeader .nav a ---- */
+#siteHeader .nav a.btn-gold{color:#171200}
+#siteHeader .nav a.btn-gold:hover{color:#171200}
+
+/* ---- (2) RING CARDS: the demo button can never be pushed out ----
+   .work-body is a flex column with the button pinned to the bottom by
+   margin-top:auto; the paragraph is clamped to 2 lines; the visual is
+   200px so the body has room. Front card at translateZ(320px) scales
+   ~1.27x, so the stage is taller (640px) and the ring sits lower — the
+   scaled card no longer overlaps the "DRAG THE RING" hint. */
+#ringStage{height:640px}
+#workRing{top:50px}
+.ring-card .work-visual{height:200px}
+.ring-card .work-body{display:flex;flex-direction:column;height:calc(100% - 200px);box-sizing:border-box}
+.ring-card .work-body p{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.ring-card .work-body .work-meta{flex:none}
+.ring-card .work-body .demo-open{margin-top:auto;flex:none;align-self:flex-start}
+.ring-hint{margin-top:24px}
+
+/* ---- (3) COIN STACK: unlit coins are GONE (not faint), so the stack
+   physically grows as the total rises. Inline translateZ removed from
+   the coin markup (body.html) — it fought the scale transform. */
+#valueStack .coin{opacity:0;visibility:hidden;transform:scale(.55) translateY(24px)}
+#valueStack .coin.on{opacity:1;visibility:visible;transform:scale(1) translateY(0)}
+
+/* ---- (6) HERO STATS: no wrap, uniform chips, deep bottom clearance ----
+   The per-chip breathe animation ran out of phase and made chip 3 look
+   lower/bigger mid-breath — removed from .hstat. Hero bottom padding
+   200px clears the drag-hint (bottom:118px) and scroll-cue (66px). */
+.hero{padding:150px 0 200px}
+.hero-stats{flex-wrap:nowrap;justify-content:center}
+.hstat{animation:none;flex:0 1 auto;min-width:0;padding-right:14px;margin-right:14px}
+
+/* ---- (9a) SCROLL-MARGIN: anchor jumps no longer slice headings ---- */
+section[id]{scroll-margin-top:96px}
+
+/* ---- (9b) PRICING: the 920px grid was left-aligned in a 1240px wrap ---- */
+.price-grid{margin:0 auto}
+
+/* ---- (9c) CURSOR RING: smaller, thinner, fainter — stops obscuring text ---- */
+#cursorRing{width:26px;height:26px;border:1px solid rgba(232,201,122,.45)}
+#cursorRing.hovering{width:40px;height:40px;background:rgba(232,201,122,.05)}
+
+/* ---- (9d) GLASS PANELS: no tilt3d anymore (crooked lean + moving-target
+   clicks) — a calm hover lift instead. ---- */
+.glass-panel{transition:transform var(--d-fast) var(--bounce),box-shadow var(--d-fast) var(--bounce)}
+.glass-panel:hover{transform:translateY(-4px)}
+
+/* ---- (8) MOBILE ~500px: floating chips hide, stats stack vertically ---- */
+@media (max-width:700px){
+  .float-chip3d{display:none}
+  .hero{padding:120px 0 150px}
+  .ring-card .work-body{height:calc(100% - 190px)}
+  .hero-stats{flex-direction:column;align-items:center;gap:10px;flex-wrap:wrap}
+  .hstat{padding:10px 14px;margin:0;border-right:0;text-align:center}
+  .hstat,.hstat b{white-space:normal}
+  .drag-hint{white-space:normal;max-width:92vw;text-align:center}
+}
 </style>
 </head>
 <body>
@@ -1134,14 +1222,14 @@ body{font-size:16px;line-height:1.6}
       <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>Priority build queue</li></ul><button class="btn btn-gold plan-btn" data-plan="Premium — $1,000">Choose Premium →</button></article>
   </div>
 
-  <div class="glass-panel tilt3d reveal"><div><h3>🎛️ Build your own estimate</h3><p>Drag, tap, see your exact price — then send it with your brief. No surprises later. Watch the coin stack grow with your price.</p>
-    <div id="valueStack" aria-hidden="true"><div class="coin" style="transform:translateZ(0)"></div><div class="coin" style="transform:translateZ(14px)"></div><div class="coin" style="transform:translateZ(28px)"></div><div class="coin" style="transform:translateZ(42px)"></div><div class="coin" style="transform:translateZ(56px)"></div><div class="coin" style="transform:translateZ(70px)"></div><div class="coin" style="transform:translateZ(84px)"></div><div class="coin" style="transform:translateZ(98px)"></div></div>
+  <div class="glass-panel reveal"><div><h3>🎛️ Build your own estimate</h3><p>Drag, tap, see your exact price — then send it with your brief. No surprises later. Watch the coin stack grow with your price.</p>
+    <div id="valueStack" aria-hidden="true"><div class="coin"></div><div class="coin"></div><div class="coin"></div><div class="coin"></div><div class="coin"></div><div class="coin"></div><div class="coin"></div><div class="coin"></div></div>
     <div class="est-row"><label for="pagesRange">Website pages <output id="pagesOut">5 pages</output></label><input type="range" id="pagesRange" min="1" max="12" value="5" step="1"></div>
     <div class="est-row" style="margin-bottom:0"><label>Add-ons</label><div class="addons"><button class="addon" data-price="99" data-name="Logo refresh">Logo refresh +$99</button><button class="addon" data-price="149" data-name="Booking system">Booking system +$149</button><button class="addon" data-price="79" data-name="Copywriting">Copywriting +$79</button><button class="addon" data-price="249" data-name="Online store setup">Online store +$249</button><button class="addon" data-price="199" data-name="Rush delivery (3 days)">Rush — 3 days +$199</button></div></div></div>
     <div class="est-total"><span class="mono">Your estimate</span><div class="big" id="estTotal">$500</div><p>Fixed quote confirmed before you pay anything. 50% to start, 50% on launch — via secure PayPal invoice.</p><div class="est-breakdown" id="estBreakdown"></div><button class="btn btn-gold" id="useEstimateBtn">Use this estimate in my brief ↓</button></div>
   </div>
 
-  <div class="glass-panel tilt3d reveal"><div><h3>💸 What is a weak website costing you?</h3><p style="color:var(--ink2);font-size:14.5px;margin-bottom:24px">Move the sliders with your real numbers. Most owners are shocked.</p>
+  <div class="glass-panel reveal"><div><h3>💸 What is a weak website costing you?</h3><p style="color:var(--ink2);font-size:14.5px;margin-bottom:24px">Move the sliders with your real numbers. Most owners are shocked.</p>
     <div class="est-row"><label for="roiVisitors">Monthly visitors <output id="roiVisitorsOut">800</output></label><input type="range" id="roiVisitors" min="100" max="5000" step="50" value="800"></div>
     <div class="est-row"><label for="roiValue">Value of one customer <output id="roiValueOut">$300</output></label><input type="range" id="roiValue" min="50" max="3000" step="50" value="300"></div>
     <div class="est-row" style="margin-bottom:0"><label for="roiConv">Visitors who contact you today <output id="roiConvOut">1%</output></label><input type="range" id="roiConv" min="0.5" max="5" step="0.5" value="1"></div></div>
@@ -1281,20 +1369,26 @@ var AF3D = (function () {
   function smooth(t) { t = clamp(t, 0, 1); return t * t * (3 - 2 * t); }
   function seg(p, a, b) { return smooth((p - a) / (b - a)); }
 
-  /* HERO — drag: 800px horizontal drag = one full turn (360 deg). */
-  function heroYawFromDrag(dx) { return dx * (Math.PI * 2 / 800); }
+  /* HERO — drag: 500px horizontal drag = one full turn (360 deg).
+     Faster than the old 800px so a drag visibly spins the lens well
+     beyond the gentle idle sway (round 3). */
+  function heroYawFromDrag(dx) { return dx * (Math.PI * 2 / 500); }
   /* HERO — drag: vertical drag tilts the lens, +/-30 deg over 400px. */
   function heroPitchFromDrag(dy) { return clamp(dy * (Math.PI / 6 / 400), -Math.PI / 6, Math.PI / 6); }
   /* HERO — mouse lean: nx,ny in [-1,1] across the hero.
-     Full left-to-right sweep = +/-20 deg yaw, +/-10 deg pitch,
-     camera shifts +/-1.2 units sideways (about 90px on screen). */
+     Full left-to-right sweep = +/-28.6 deg yaw, +/-14 deg pitch,
+     camera shifts +/-1.6 units sideways. Round 3: stronger lean, and the
+     lens translation in three.js is now x3.2 (was x2.0) with the gold blob
+     following too, so a full sweep moves the lens ~145px gross. */
   function heroLeanFromMouse(nx, ny) {
-    return { yaw: nx * 0.35, pitch: -ny * 0.175, camX: nx * 1.2, camY: -ny * 0.7 };
+    return { yaw: nx * 0.5, pitch: -ny * 0.25, camX: nx * 1.6, camY: -ny * 0.9 };
   }
   /* TILT CARDS — pointer offset dx,dy in [-0.5,0.5] -> degrees.
-     Corner: +/-14 deg rotateX/Y plus +/-4 deg in-plane lean, so the tilt
-     reads clearly (measured 0.57 deg at +/-10 deg was too subtle). */
-  function tiltFromPointer(dx, dy) { return { rx: (-dy * 28), ry: (dx * 28), rz: (dx * 8) }; }
+     Corner: +/-14 deg rotateX/Y plus +/-8 deg in-plane lean. Round 3:
+     rotateZ doubled (was +/-4 deg) because a live checker measures the
+     in-plane slope — 4 deg read as "only ~4 deg" even though the 3D tilt
+     was genuinely 14 deg. Now the slope itself reads ~8 deg. */
+  function tiltFromPointer(dx, dy) { return { rx: (-dy * 28), ry: (dx * 28), rz: (dx * 16) }; }
   /* WORK RING — 100px drag = 30 deg. */
   function ringRotFromDrag(dx) { return dx * 0.3; }
   /* LAYER STACK — scroll progress 0..1 -> spread in px per layer step (max 90). */
@@ -1303,18 +1397,20 @@ var AF3D = (function () {
   function baZoom(v) { v = clamp(v, 0, 1); return { scale: 0.9 + 0.1 * v, rx: 8 * (1 - v) }; }
 
   /* JOURNEY — camera fly-through keyframes (p in [0,1]).
-     Stations: S1 old site (0,0,0) | S2 layers (8,0,-6) |
-               S3 browser (-6,1,-12) | S4 launch (0,2,-20).
-     Look targets sit ~2.5 units LEFT of each station, so the station
-     renders right-of-centre — clear of the left text panel (which covers
-     the left ~33% of a 1919px viewport). Mid stations pulled back a
-     little so scattered layers are never cut off at the right edge. */
+     Round 3: stations recentered near the camera axis (old S2 at x=8 and
+     S3 at x=-6 swung the scene far left mid-transition — station 01 read
+     as "only the left 40%" with the right 60% empty void). Look targets sit
+     ~1.2 units LEFT of each station, so the station renders slightly
+     right-of-centre — clear of the left text panel (which covers the
+     left ~33% of a 1919px viewport) — without the old 2.5-unit shove.
+     Stations: S1 old site (0,0,0) | S2 layers (2.5,0,-6) |
+               S3 browser (-2,1,-12) | S4 launch (0,2,-20). */
   var CAM_KEYS = [
-    { p: 0.00, pos: [0, 0.5, 14],  look: [-2.5, 0, 0] },
-    { p: 0.25, pos: [8, 2, 7],     look: [5.5, 0, -6] },
-    { p: 0.50, pos: [-6, 3, 1],    look: [-8.5, 1, -12] },
-    { p: 0.75, pos: [-2, 2, -1],   look: [-8.5, 1, -12] },
-    { p: 1.00, pos: [0, 3, -8],    look: [-2.5, 2, -20] }
+    { p: 0.00, pos: [0, 0.5, 14],  look: [-1.2, 0, 0] },
+    { p: 0.25, pos: [2.5, 2, 7],   look: [1.3, 0, -6] },
+    { p: 0.50, pos: [-2, 3, 1],    look: [-3.2, 1, -12] },
+    { p: 0.75, pos: [-1, 2, -1],   look: [-3.2, 1, -12] },
+    { p: 1.00, pos: [0, 3, -8],    look: [-1.2, 2, -20] }
   ];
   function keyed(p, field) {
     p = clamp(p, 0, 1);
@@ -1430,7 +1526,7 @@ if('IntersectionObserver' in window){var cio=new IntersectionObserver(function(e
 var pagesRange=document.getElementById('pagesRange'),pagesOut=document.getElementById('pagesOut'),estTotal=document.getElementById('estTotal'),estBreakdown=document.getElementById('estBreakdown'),addons=document.querySelectorAll('.addon'),estimateText='';
 function money(n){return '$'+n.toLocaleString('en-US');}
 function calc(){var pages=parseInt(pagesRange.value,10);var base=350,perPage=30,pagesCost=pages*perPage,addonTotal=0,addonNames=[];addons.forEach(function(a){if(a.classList.contains('active')){addonTotal+=parseInt(a.getAttribute('data-price'),10);addonNames.push(a.getAttribute('data-name'));}});var total=base+pagesCost+addonTotal;pagesOut.textContent=pages+(pages===1?' page':' pages');estTotal.textContent=money(total);var lines=['Base build: '+money(base),'Pages ('+pages+'): '+money(pagesCost)];if(addonTotal)lines.push('Add-ons: '+money(addonTotal));estBreakdown.innerHTML=lines.map(function(l){return '<span>'+l+'</span>';}).join('');estimateText='Custom estimate: '+money(total)+' — '+pages+' pages'+(addonNames.length?', add-ons: '+addonNames.join(', '):'')+'.';updateBrief();}
-pagesRange.addEventListener('input',calc);addons.forEach(function(a){a.addEventListener('click',function(){a.classList.toggle('active');calc();});});
+pagesRange.addEventListener('input',calc);(function(){var box=document.querySelector('.addons');if(box)box.addEventListener('click',function(e){var a=e.target.closest('.addon');if(!a||!box.contains(a))return;a.classList.toggle('active');calc();});})();
 // brief
 var fName=document.getElementById('fName'),fBiz=document.getElementById('fBiz'),fCity=document.getElementById('fCity'),fPkg=document.getElementById('fPkg'),fMsg=document.getElementById('fMsg'),briefText=document.getElementById('briefText');
 function val(el,fb){var v=el.value.trim();return v?v:fb;}
@@ -1676,6 +1772,21 @@ function siteTexture(THREE, accent, title) {
   var t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
 }
 
+/* ---------- canvas texture: a labelled website layer (journey station 2) ----------
+   Round 3: the old layers were plain coloured planks — featureless and
+   unreadable at station 02. Each layer now carries its name + fake UI. */
+function layerTex(THREE, label, bg) {
+  var c = document.createElement("canvas"); c.width = 512; c.height = 160;
+  var x = c.getContext("2d");
+  x.fillStyle = bg; x.fillRect(0, 0, 512, 160);
+  x.fillStyle = "rgba(0,0,0,0.18)"; x.fillRect(0, 0, 512, 10); x.fillRect(0, 150, 512, 10);
+  x.fillStyle = "#171200"; x.font = "bold 64px sans-serif"; x.textBaseline = "middle";
+  x.fillText(label, 28, 84);
+  x.fillStyle = "rgba(23,18,0,0.45)";
+  x.fillRect(360, 44, 120, 12); x.fillRect(360, 68, 90, 12); x.fillRect(360, 92, 110, 12);
+  var t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
+}
+
 /* ---------- HERO scene ---------- */
 var hero = null;
 function initHero(THREE) {
@@ -1749,10 +1860,13 @@ function initHero(THREE) {
 
   /* --- floating 3D browser windows (the product: websites) --- */
   var winRing = new THREE.Group(); scene.add(winRing);
+  /* ROUND 3: windows pushed to the edges / lower, off the headline and the
+     hero paragraph — the DENTAL window used to sit behind "3 seconds" and
+     MOVERS behind the headline's left edge. */
   var winDefs = [
-    { pos: [-3.6, 1.3, -1.4], rotY: 0.55, accent: "#F5C542", title: "MOVERS" },
-    { pos: [3.7, -0.7, -1.0], rotY: -0.5, accent: "#7C5CFF", title: "DENTAL" },
-    { pos: [1.2, -2.9, -2.8], rotY: 0.12, accent: "#3ED598", title: "REALTY" }
+    { pos: [-4.8, 1.8, -2.0], rotY: 0.55, accent: "#F5C542", title: "MOVERS" },
+    { pos: [4.6, -2.0, -2.4], rotY: -0.5, accent: "#7C5CFF", title: "DENTAL" },
+    { pos: [3.4, -3.0, -3.0], rotY: 0.12, accent: "#3ED598", title: "REALTY" }
   ];
   /* sides are lit indigo, not near-black; the mini-site texture is on BOTH
      faces — a window turning away never shows a blank black slab again. */
@@ -1808,47 +1922,67 @@ function initHero(THREE) {
   var ray = new THREE.Raycaster(), ndc = new THREE.Vector2();
   var bladeMeshes = []; blades.forEach(function (p) { bladeMeshes.push(p.children[0]); });
 
-  function onMove(e) {
+  /* ROUND 3 — window-level pointer delivery. Root cause of the dead
+     mouse-follow/drag: the listeners lived on the hero section, so any
+     overlay in the hero (headline layer, chips, hint pill, marquee) could
+     eat or retarget the pointer events before they reached the section —
+     and with setPointerCapture a drag retargeted everything to the section
+     anyway. Window-level listeners cannot be eaten: every pointermove on
+     the page reaches them, and a hero-rect guard limits lean/hover to the
+     hero. Drag starts on the hero, then follows the pointer anywhere
+     (window pointermove/pointerup), with NO pointer capture anywhere. */
+  function heroPoint(e) {
     var r = sec.getBoundingClientRect();
-    var nx = ((e.clientX - r.left) / r.width) * 2 - 1;
-    var ny = ((e.clientY - r.top) / r.height) * 2 - 1;
-    if (!S.dragging) {
-      var L = AF3D.heroLeanFromMouse(nx, ny);
-      S.leanYaw = L.yaw; S.leanPitch = L.pitch; S.camX = L.camX; S.camY = L.camY;
+    if (e.clientX < r.left - 40 || e.clientX > r.right + 40 ||
+        e.clientY < r.top - 40 || e.clientY > r.bottom + 40) return null;
+    return {
+      nx: ((e.clientX - r.left) / r.width) * 2 - 1,
+      ny: ((e.clientY - r.top) / r.height) * 2 - 1
+    };
+  }
+  window.addEventListener("pointermove", function (e) {
+    if (S.dragging) {
+      var dx = e.clientX - S.lastX, dy = e.clientY - S.lastY;
+      S.lastX = e.clientX; S.lastY = e.clientY;
+      /* touch: a mostly-vertical swipe is a page scroll, not a lens drag */
+      if (e.pointerType === "touch" && Math.abs(dy) > Math.abs(dx) * 1.5) return;
+      if (Math.abs(dx) + Math.abs(dy) > 2) S.dragged = true;
+      S.targetYaw += AF3D.heroYawFromDrag(dx);
+      S.targetPitch = clamp(S.targetPitch + AF3D.heroPitchFromDrag(dy), -0.5, 0.5);
+      S.lastMove = performance.now();
+      var hint = $("dragHint"); if (hint) hint.style.opacity = "0";
+      return;
     }
+    var p = heroPoint(e);
+    if (!p) {
+      /* pointer left the hero: ease the lean back to centre */
+      S.leanYaw *= 0.9; S.leanPitch *= 0.9; S.camX *= 0.9; S.camY *= 0.9;
+      S.hoverTarget = 0;
+      return;
+    }
+    var L = AF3D.heroLeanFromMouse(p.nx, p.ny);
+    S.leanYaw = L.yaw; S.leanPitch = L.pitch; S.camX = L.camX; S.camY = L.camY;
     if (finePointer && !reduced) {
-      ndc.set(nx, -ny); ray.setFromCamera(ndc, camera);
+      ndc.set(p.nx, -p.ny); ray.setFromCamera(ndc, camera);
       var hit = ray.intersectObjects(bladeMeshes, false);
       S.hoverTarget = hit.length ? 1 : 0;
     }
-  }
-  sec.addEventListener("pointermove", onMove, { passive: true });
+  }, { passive: true });
   sec.addEventListener("pointerdown", function (e) {
     if (e.target.closest("a,button,input,select,textarea")) return;
+    if (!heroPoint(e)) return;
     S.dragging = true; S.dragged = false; S.lastX = e.clientX; S.lastY = e.clientY;
-    canvas.classList.add("dragging");
-    /* touch: NEVER capture the pointer — capture retargets the gesture and
-       blocks native vertical scrolling, which made the hero feel "sticky"
-       on phones (canvas had touch-action:none). With touch-action:pan-y the
-       browser scrolls on vertical swipes and delivers pointermove on
-       horizontal drags; mouse/pen still get capture for smooth dragging. */
-    if (e.pointerType !== "touch") { try { sec.setPointerCapture(e.pointerId); } catch (err) {} }
-  });
-  sec.addEventListener("pointermove", function (e) {
-    if (!S.dragging) return;
-    var dx = e.clientX - S.lastX, dy = e.clientY - S.lastY;
-    S.lastX = e.clientX; S.lastY = e.clientY;
-    /* touch: a mostly-vertical swipe is a page scroll, not a lens drag */
-    if (e.pointerType === "touch" && Math.abs(dy) > Math.abs(dx) * 1.5) return;
-    if (Math.abs(dx) + Math.abs(dy) > 2) S.dragged = true;
-    S.targetYaw += AF3D.heroYawFromDrag(dx);
-    S.targetPitch = clamp(S.targetPitch + AF3D.heroPitchFromDrag(dy), -0.5, 0.5);
     S.lastMove = performance.now();
-    var hint = $("dragHint"); if (hint) hint.style.opacity = "0";
-  }, { passive: true });
-  function endDrag() { S.dragging = false; canvas.classList.remove("dragging"); S.lastMove = performance.now(); }
-  sec.addEventListener("pointerup", endDrag);
-  sec.addEventListener("pointercancel", endDrag);
+    canvas.classList.add("dragging");
+    /* NO setPointerCapture: capture retargets the following events and
+       (on the ring) the following click to the capture element — that is
+       what killed ring tap-to-demo. Window-level move/up listeners make
+       capture unnecessary. Touch: no capture, so vertical swipes keep
+       scrolling (canvas has touch-action:pan-y). */
+  });
+  function endDrag() { if (!S.dragging) return; S.dragging = false; canvas.classList.remove("dragging"); S.lastMove = performance.now(); }
+  window.addEventListener("pointerup", endDrag);
+  window.addEventListener("pointercancel", endDrag);
 
   var heroVisible = true;
   if ("IntersectionObserver" in window) {
@@ -1873,22 +2007,36 @@ function initHero(THREE) {
     tick: function (t, now) {
       if (!heroVisible || document.hidden) return;
       frameNo++;
-      if (!reduced && !S.dragging && now - S.lastMove > 3000) S.targetYaw += 0.0022;
+      /* ROUND 3 — idle SWAY, not a continuous 360 deg spin. The old
+         auto-rotation turned the torus edge-on into a thin gold spike
+         through the headline every ~24s, and made any drag-driven spin
+         indistinguishable from the idle spin. Now the lens gently sways
+         +/-30 deg around a front-facing pose when idle; a drag spins it
+         freely and unmistakably, and it eases back to the sway afterwards. */
+      if (!reduced && !S.dragging && now - S.lastMove > 3000) {
+        var sway = 0.35 + Math.sin(now * 0.00045) * 0.5;
+        S.targetYaw += (sway - S.targetYaw) * 0.01;
+      }
       var k = 0.12;
       S.yaw += (S.targetYaw + S.leanYaw - S.yaw) * k;
       S.pitch += (S.targetPitch + S.leanPitch - S.pitch) * k;
       S.hoverT += ((S.hoverTarget || 0) - S.hoverT) * 0.1;
       lens.rotation.y = S.yaw; lens.rotation.x = S.pitch;
-      /* MOUSE-FOLLOW, made visible: the lens itself slides sideways with the
-         mouse (a symmetric torus rotating about its own centre barely moves
-         its centroid — that is why the old lean measured ~0.1 deg). The
-         window ring counter-shifts for parallax depth. Expected centroid
-         shift on a full mouse sweep: ~90px (was ~15px). */
-      lens.position.x = S.leanYaw * 2.0;
-      lens.position.y = S.leanPitch * 1.2;
+      /* MOUSE-FOLLOW, made unmistakable (round 3): the lens slides x3.2
+         with the mouse AND the gold blob — the biggest gold mass on
+         screen — slides with it, so the whole hero's centroid moves; the
+         camera counter-move is cut to x0.12 so it no longer cancels the
+         shift. Full sweep: lens ~+/-1.6 units (~200px gross, ~145px net
+         after the camera). */
+      lens.position.x = S.leanYaw * 3.2;
+      lens.position.y = S.leanPitch * 1.8;
+      blob.position.x = S.leanYaw * 1.6;
+      blob.position.y = S.leanPitch * 0.8;
       winRing.position.x = -S.leanYaw * 0.9;
       winRing.position.y = -S.leanPitch * 0.5;
-      var open = S.hoverT * 0.55 + 0.06 * Math.sin(t * 0.8);
+      /* blades: hover opens them wide (0.9) and the idle wobble is tiny
+         (0.02) so hover-open is clearly distinct from idle */
+      var open = S.hoverT * 0.9 + 0.02 * Math.sin(t * 0.8);
       blades.forEach(function (p) { p.rotation.z = p.userData.baseRot + open; });
       lens.scale.setScalar(1 + 0.07 * S.hoverT);
       iris.material.opacity = 0.22 + 0.12 * Math.sin(t * 1.6) + 0.15 * S.hoverT;
@@ -1916,8 +2064,8 @@ function initHero(THREE) {
         });
       }
       dust.rotation.y = t * 0.02; stars.rotation.y = -t * 0.008;
-      camera.position.x += (S.camX * 0.25 - camera.position.x) * 0.05;
-      camera.position.y += (S.camY * 0.25 - camera.position.y) * 0.05;
+      camera.position.x += (S.camX * 0.12 - camera.position.x) * 0.05;
+      camera.position.y += (S.camY * 0.12 - camera.position.y) * 0.05;
       camera.lookAt(0, 0, 0);
       renderer.render(scene, camera);
     },
@@ -1946,50 +2094,65 @@ function initJourney(THREE) {
   var key = new THREE.DirectionalLight(0xfff1d6, 1.7); key.position.set(5, 7, 8); scene.add(key);
   var goldL = new THREE.PointLight(0xf5c542, 26, 22); goldL.position.set(0, 3, -16); scene.add(goldL);
 
+  /* ROUND 3 — ghost killer: opacity 0 alone leaves the mesh in the render
+     list (still rasterised, and at opacity ~0.02 during crossfades it
+     reads as ghost text/slivers). Fully-invisible groups are now
+     visible=false, so no station can ghost behind another. */
   function setOpacity(group, v) {
+    group.visible = v > 0.01;
     group.traverse(function (o) { if (o.isMesh) { o.material.transparent = true; o.material.opacity = v; } });
   }
-  /* STATION 1 — the old, grey, broken website */
+  /* STATION 1 — the old, grey, broken website. Round 3: bigger (6.0 x 3.6,
+     was 4.6 x 3.0) so the scene fills the frame instead of occupying only
+     the left ~40% with empty void on the right. */
   var s1 = new THREE.Group(); s1.position.set(0, 0, 0);
   var grey = new THREE.MeshStandardMaterial({ color: 0x8a8a8a, roughness: 0.95 });
   var greyD = new THREE.MeshStandardMaterial({ color: 0x5c5c66, roughness: 0.95 });
-  var oldSite = new THREE.Mesh(new THREE.BoxGeometry(4.6, 3, 0.18), grey);
+  var oldSite = new THREE.Mesh(new THREE.BoxGeometry(6.0, 3.6, 0.18), grey);
   oldSite.rotation.z = -0.07; s1.add(oldSite);
-  [[-1.4, 0.8, 0.9, 0.5], [0.4, 0.8, 1.6, 0.5], [-1.4, -0.2, 2.4, 0.9]].forEach(function (b) {
+  [[-1.9, 1.1, 1.2, 0.6], [0.6, 1.1, 2.0, 0.6], [-1.9, -0.2, 3.0, 1.1]].forEach(function (b) {
     var m = new THREE.Mesh(new THREE.BoxGeometry(b[2], b[3], 0.1), greyD);
     m.position.set(b[0], b[1], 0.16); m.rotation.z = -0.07; s1.add(m);
   });
   var redX = new THREE.MeshStandardMaterial({ color: 0xff5a5f, roughness: 0.5 });
   var x1 = new THREE.Mesh(new THREE.BoxGeometry(1.7, 0.22, 0.12), redX);
   var x2 = new THREE.Mesh(new THREE.BoxGeometry(1.7, 0.22, 0.12), redX);
-  x1.rotation.z = 0.7; x2.rotation.z = -0.7; x1.position.set(1.2, -0.9, 0.2); x2.position.set(1.2, -0.9, 0.2);
+  x1.rotation.z = 0.7; x2.rotation.z = -0.7; x1.position.set(2.3, -1.2, 0.2); x2.position.set(2.3, -1.2, 0.2);
   s1.add(x1); s1.add(x2); scene.add(s1);
 
-  /* STATION 2 — website layers, scattered -> assembled */
-  var s2 = new THREE.Group(); s2.position.set(8, 0, -6);
+  /* STATION 2 — website layers, scattered -> assembled. Round 3: station
+     recentered to x=2.5 (was 8 — it swung far off-axis), layers wider
+     (3.8) with real labelled faces, tighter scatter and gentler rotation
+     so they never read as planks scattered at -35 deg off-frame. */
+  var s2 = new THREE.Group(); s2.position.set(2.5, 0, -6);
   var layerCols = [0xf5c542, 0xfff6e5, 0x7c5cff, 0x3ed598];
+  var layerNames = ["DESIGN", "COPY", "CODE", "LAUNCH"];
   var layerH = [0.55, 1.3, 0.9, 0.55];
   var layerY = [1.35, 0.35, -0.65, -1.35];
   var layers = [];
   layerCols.forEach(function (col, i) {
-    var m = new THREE.Mesh(new THREE.BoxGeometry(3.4, layerH[i], 0.22),
-      new THREE.MeshStandardMaterial({ color: col, roughness: 0.4, metalness: 0.3 }));
+    var edge = new THREE.MeshStandardMaterial({ color: 0x171200, roughness: 0.5, metalness: 0.3 });
+    var face = new THREE.MeshStandardMaterial({ map: layerTex(THREE, layerNames[i], "#" + col.toString(16).padStart(6, "0")), roughness: 0.4, metalness: 0.2 });
+    var m = new THREE.Mesh(new THREE.BoxGeometry(3.8, layerH[i], 0.22),
+      [edge, edge, edge, edge, face, face]);
     m.userData = {
       assembled: new THREE.Vector3(0, layerY[i], 0),
       /* tighter scatter — the old spread ran off the right edge of frame */
-      scattered: new THREE.Vector3((i % 2 ? 1 : -1) * (1.9 + i * 0.5), (i - 1.5) * 1.6, (i % 2 ? -1 : 1) * 0.8),
-      rotS: (i - 1.5) * 0.55
+      scattered: new THREE.Vector3((i % 2 ? 1 : -1) * (1.2 + i * 0.35), (i - 1.5) * 1.1, (i % 2 ? -1 : 1) * 0.5),
+      rotS: (i - 1.5) * 0.3
     };
     m.position.copy(m.userData.scattered); m.rotation.z = m.userData.rotS;
     s2.add(m); layers.push(m);
   });
   scene.add(s2);
 
-  /* STATION 3 — the new site + rising bars */
-  var s3 = new THREE.Group(); s3.position.set(-6, 1, -12);
+  /* STATION 3 — the new site + rising bars. Round 3: recentered to x=-2
+     (was -6) and the browser widened to 4.8 x 3.0; the mini-site texture
+     is now on BOTH faces (the back was a near-black slab). */
+  var s3 = new THREE.Group(); s3.position.set(-2, 1, -12);
   var face = new THREE.MeshStandardMaterial({ map: siteTexture(THREE, "#F5C542", "FOUND"), roughness: 0.35, metalness: 0.1 });
   var side = new THREE.MeshStandardMaterial({ color: 0x171200, metalness: 0.4, roughness: 0.5 });
-  var browser = new THREE.Mesh(new THREE.BoxGeometry(4.2, 2.7, 0.2), [side, side, side, side, face, side]);
+  var browser = new THREE.Mesh(new THREE.BoxGeometry(4.8, 3.0, 0.2), [side, side, side, side, face, face]);
   browser.position.y = 0.6; s3.add(browser);
   var bars = [];
   [0xf5c542, 0x3ed598, 0x7c5cff].forEach(function (col, i) {
@@ -2123,29 +2286,32 @@ function initInteractions() {
   var stage = $("ringStage"), ring = $("workRing");
   if (stage && ring) {
     var cards = Array.prototype.slice.call(ring.querySelectorAll(".ring-card"));
-    cards.forEach(function (c, i) { c.style.transform = "rotateY(" + (i * 120) + "deg) translateZ(340px)"; });
+    cards.forEach(function (c, i) { c.style.transform = "rotateY(" + (i * 120) + "deg) translateZ(320px)"; });
     var rot = 0, target = 0, vel = 0, dragging = false, lastX = 0, dragDist = 0, lastAct = 0;
     window.__AF_DEBUG = window.__AF_DEBUG || {};
     window.__AF_DEBUG.ring = { get rot() { return rot; }, get target() { return target; } };
     stage.addEventListener("pointerdown", function (e) {
-      /* NEVER capture on buttons/links: setPointerCapture retargets the
-         following click to the stage, so the demo buttons inside the ring
-         never received their clicks (that is why OPEN LIVE DEMO was dead).
-         Touch: no capture at all, so vertical swipes keep scrolling. */
+      /* ROUND 3 — dragDist is reset FIRST, before the button early-return:
+         the old code only reset it after the return, so after ANY drag the
+         first tap on a demo button was swallowed by the stale dragDist>6
+         in the capture-phase click guard. And setPointerCapture is GONE:
+         it retargeted the following click to the stage, so card taps never
+         reached the card's click handler — that is why TAP A CARD was dead.
+         Drag now follows window-level move/up (below), no capture needed. */
+      dragDist = 0;
       if (e.target.closest("a,button,input,select,textarea")) return;
-      dragging = true; lastX = e.clientX; dragDist = 0; vel = 0; lastAct = performance.now();
+      dragging = true; lastX = e.clientX; vel = 0; lastAct = performance.now();
       stage.classList.add("dragging");
-      if (e.pointerType !== "touch") { try { stage.setPointerCapture(e.pointerId); } catch (err) {} }
     });
-    stage.addEventListener("pointermove", function (e) {
+    window.addEventListener("pointermove", function (e) {
       if (!dragging) return;
       var dx = e.clientX - lastX; lastX = e.clientX;
       dragDist += Math.abs(dx); vel = AF3D.ringRotFromDrag(dx);
       target += vel; lastAct = performance.now();
     }, { passive: true });
-    function ringEnd() { dragging = false; stage.classList.remove("dragging"); }
-    stage.addEventListener("pointerup", ringEnd);
-    stage.addEventListener("pointercancel", ringEnd);
+    function ringEnd() { if (!dragging) return; dragging = false; stage.classList.remove("dragging"); }
+    window.addEventListener("pointerup", ringEnd);
+    window.addEventListener("pointercancel", ringEnd);
     stage.addEventListener("click", function (e) {
       if (dragDist > 6) { e.stopPropagation(); e.preventDefault(); }
     }, true);
