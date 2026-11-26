@@ -1113,6 +1113,36 @@ section[id]{scroll-margin-top:96px}
    162/175px for chips 1-2 — content-driven, but the row reads as one
    component only when the three boxes match. */
 .hstat{min-width:160px;text-align:center}
+
+/* ==========================================================================
+   FIX ROUND 5 — 26 Nov 2026, ~15:00 IST (re-check #4 NO-GO)
+   (4) STAT CHIP DIGITS — measured in a real browser (Firefox, 1919x900):
+   .hstat b computes to 26px Bebas, but EVERY span inside .hstat
+   computes to 10.5px Special Elite — a legacy rule in the old style
+   block (".hstat span{font-size:10.5px...}") hits the .count digit
+   spans too, so "7 / $500+ / 100%" rendered ~10px tall. The fix scopes
+   the label style to the DIRECT child span only and makes the digit
+   spans inherit the big Bebas size from <b> (restored to 38px).
+   Chip background is now fully opaque (#1B1540): the old 0.82 alpha
+   let the bright 3D windows show through the chips.
+   (5) HERO BOTTOM LINE — measured: the gold drag pill (y 942..995)
+   overlapped the "Prefer email?" line (y 937..959). 48px of margin
+   under the last hero paragraph pushes the hero taller so the pill
+   (anchored to the hero bottom) drops clear; chips do not move.
+   CHIP 3 PADDING — second root cause found by the same probe: the
+   legacy rule ".hstat:last-child{padding:0;border:none}" (old inline
+   row style, specificity 0,2,0) beats every plain .hstat padding rule,
+   so chip 3 had padding-top 0px and NO border — its digits poked
+   7.5px above the chip's top edge. Restored to match chips 1-2. */
+.hstat{background:#1B1540;backdrop-filter:none}
+.hstat:last-child{padding:14px 20px;border:2px solid var(--line)}
+@media (max-width:700px){.hstat:last-child{padding:10px 14px}}
+.hstat b span,.hstat b em{font-size:inherit;font-family:inherit;font-style:normal}
+.hstat>span{display:block;font-size:12px;letter-spacing:.16em;color:var(--muted);font-weight:700;font-family:"Special Elite"}
+@media (min-width:641px){
+  .hstat b{font-size:38px;line-height:1}
+}
+.hero-inner p:last-of-type{margin-bottom:48px}
 </style>
 </head>
 <body>
@@ -1520,22 +1550,25 @@ var AF3D = (function () {
   function baZoom(v) { v = clamp(v, 0, 1); return { scale: 0.9 + 0.1 * v, rx: 8 * (1 - v) }; }
 
   /* JOURNEY — camera fly-through keyframes (p in [0,1]).
-     ROUND 4 (re-check #3 defect 3 — measured with a projection script,
-     /tmp/af3d-journey-proj.js, viewport 1919x900, fov 42deg): the round-3
-     camera sat 12-14 units from each station, so station 01 filled only
-     27% of the frame width and station 04 only 23%. The camera now sits
-     6-7 units from each station, so every station fills 40-62% of the
-     frame width in the clear zone right of the text panel (panel covers
-     left ~6-33%; stations centre at ~66% width). Look targets sit ~1.65
-     units LEFT of each station, which pushes the station right-of-centre.
-     Stations: S1 old site (0,0,0) | S2 layers (1.5,0,-6) |
-               S3 browser (-2,1,-12) | S4 launch (0,2,-20). */
+     ROUND 5 (re-check #4 defect 2/3): the round-4 keys had NO dwell —
+     the camera was always interpolating, so at every p inside a
+     station's window the camera was already part-way to the NEXT
+     station, and the station's own content had already faded out
+     (s1 gone by p=0.16 while station 0 spans [0,0.25) — most of
+     station 01's window showed nothing but void). Now each station
+     has a DWELL range (same pos/look at both ends, camera sits still)
+     and the flights happen only in the 0.06 gaps, crossfading with
+     the visibility windows below. Stations: S1 old site (0,0,0) |
+     S2 layers (1.5,0,-6) | S3 browser (-2,1,-12) | S4 launch (0,2,-20). */
   var CAM_KEYS = [
     { p: 0.00, pos: [0, 0.3, 6.8],   look: [-1.65, 0, 0] },
-    { p: 0.30, pos: [1.5, 0.3, 0.25], look: [-0.15, 0, -6] },
-    { p: 0.60, pos: [-2, 1.3, -5.0], look: [-3.65, 1, -12] },
-    { p: 0.85, pos: [0, 2.3, -12.84], look: [-1.65, 2, -20] },
-    { p: 1.00, pos: [0, 2.3, -14.5], look: [-1.2, 2, -20] }
+    { p: 0.22, pos: [0, 0.3, 6.8],   look: [-1.65, 0, 0] },
+    { p: 0.28, pos: [1.5, 0.3, 0.25], look: [-0.15, 0, -6] },
+    { p: 0.47, pos: [1.5, 0.3, 0.25], look: [-0.15, 0, -6] },
+    { p: 0.53, pos: [-2, 1.3, -5.0], look: [-3.65, 1, -12] },
+    { p: 0.72, pos: [-2, 1.3, -5.0], look: [-3.65, 1, -12] },
+    { p: 0.78, pos: [0, 2.3, -12.84], look: [-1.65, 2, -20] },
+    { p: 1.00, pos: [0, 2.3, -12.84], look: [-1.65, 2, -20] }
   ];
   function keyed(p, field) {
     p = clamp(p, 0, 1);
@@ -1550,22 +1583,24 @@ var AF3D = (function () {
   function journeyCam(p) { return keyed(p, "pos"); }
   function journeyLook(p) { return keyed(p, "look"); }
   /* JOURNEY — station visibility / morph state from scroll progress.
-     ROUND 4: the round-3 windows OVERLAPPED — s2 stayed at opacity 1.0
-     until p=0.62 while s3 was already fully in at p=0.54, so the S2
-     layer stack was fully visible (cut off at the right edge) all
-     through station 03's peak (measured in the projector: S2 at
-     x 69..113% at p=0.6). Now every station fades OUT before the next
-     one peaks: s2 is gone by p=0.50, s3 is gone by p=0.78. */
+     ROUND 5: the round-4 windows were NARROWER than the station
+     windows — each station was fully visible for only ~0.10 of p
+     while its counter/panel claimed 0.25, so most of every station's
+     window showed a fading-out scene or nothing at all (the "voids"
+     of re-check #4). Now the fades happen ONLY inside the 0.06
+     camera-flight gaps, crossfading old->new, so a station's content
+     is at full opacity for its whole dwell. s2assemble is the base
+     (per-layer stagger is computed in three.js applyState). */
   function journeyState(p) {
     p = clamp(p, 0, 1);
     return {
-      s1: 1 - seg(p, 0.06, 0.16),
-      s2: seg(p, 0.16, 0.26) * (1 - seg(p, 0.36, 0.46)),
-      s2assemble: seg(p, 0.20, 0.38),
-      s3: seg(p, 0.46, 0.56) * (1 - seg(p, 0.66, 0.74)),
-      bars: seg(p, 0.50, 0.60),
-      s4: seg(p, 0.76, 0.86),
-      burst: seg(p, 0.86, 0.98),
+      s1: 1 - seg(p, 0.22, 0.28),
+      s2: seg(p, 0.22, 0.28) * (1 - seg(p, 0.47, 0.53)),
+      s2assemble: seg(p, 0.28, 0.44),
+      s3: seg(p, 0.47, 0.53) * (1 - seg(p, 0.72, 0.78)),
+      bars: seg(p, 0.57, 0.67),
+      s4: seg(p, 0.72, 0.78),
+      burst: seg(p, 0.82, 0.95),
       station: Math.min(3, Math.floor(p * 4))
     };
   }
@@ -1956,16 +1991,16 @@ function initHero(THREE) {
   var lens = new THREE.Group();
   var goldMat = new THREE.MeshStandardMaterial({ color: 0xf5c542, metalness: 0.9, roughness: 0.28 });
   var darkMat = new THREE.MeshStandardMaterial({ color: 0x241b4d, metalness: 0.6, roughness: 0.35 });
-  var ring = new THREE.Mesh(new THREE.TorusGeometry(2.2, 0.14, 20, 72), goldMat);
+  var ring = new THREE.Mesh(new THREE.TorusGeometry(2.0, 0.14, 20, 72), goldMat);
   lens.add(ring);
-  var ring2 = new THREE.Mesh(new THREE.TorusGeometry(1.62, 0.07, 14, 64), darkMat);
+  var ring2 = new THREE.Mesh(new THREE.TorusGeometry(1.5, 0.07, 14, 64), darkMat);
   lens.add(ring2);
-  var lensGlass = new THREE.Mesh(new THREE.CircleGeometry(1.5, 48),
+  var lensGlass = new THREE.Mesh(new THREE.CircleGeometry(1.4, 48),
     /* mobile: Standard, not Physical — clearcoat is expensive on phone GPUs */
     isMobile ? new THREE.MeshStandardMaterial({ color: 0x2e2361, metalness: 0.2, roughness: 0.08 })
              : new THREE.MeshPhysicalMaterial({ color: 0x2e2361, metalness: 0.2, roughness: 0.08, clearcoat: 1 }));
   lensGlass.position.z = -0.12; lens.add(lensGlass);
-  var iris = new THREE.Mesh(new THREE.CircleGeometry(0.85, 40),
+  var iris = new THREE.Mesh(new THREE.CircleGeometry(0.78, 40),
     new THREE.MeshBasicMaterial({ color: 0xffd97a, transparent: true, opacity: 0.28 }));
   iris.position.z = -0.05; lens.add(iris);
   /* 8 aperture blades on pivots — they swing open on hover */
@@ -1973,10 +2008,10 @@ function initHero(THREE) {
   for (var i = 0; i < 8; i++) {
     var a = (i / 8) * Math.PI * 2;
     var pivot = new THREE.Group();
-    pivot.position.set(Math.cos(a) * 1.85, Math.sin(a) * 1.85, 0.05);
-    var blade = new THREE.Mesh(new THREE.BoxGeometry(1.75, 0.55, 0.06),
+    pivot.position.set(Math.cos(a) * 1.7, Math.sin(a) * 1.7, 0.05);
+    var blade = new THREE.Mesh(new THREE.BoxGeometry(1.6, 0.5, 0.06),
       new THREE.MeshStandardMaterial({ color: i % 2 ? 0xd4a017 : 0xf5c542, metalness: 0.85, roughness: 0.3 }));
-    blade.position.x = 0.62;
+    blade.position.x = 0.55;
     pivot.add(blade);
     pivot.rotation.z = a + Math.PI / 2;
     pivot.userData.baseRot = pivot.rotation.z;
@@ -2001,13 +2036,16 @@ function initHero(THREE) {
 
   /* --- floating 3D browser windows (the product: websites) --- */
   var winRing = new THREE.Group(); scene.add(winRing);
-  /* ROUND 3: windows pushed to the edges / lower, off the headline and the
-     hero paragraph — the DENTAL window used to sit behind "3 seconds" and
-     MOVERS behind the headline's left edge. */
+  /* ROUND 5: windows pushed clear of the stat chips. Measured (1919x900):
+     the DENTAL window's screen box reached x 1265..1519, y 687..897 and
+     the REALTY window x 1138..1392 — both overlapping chip 3
+     (x 1076..1236, y 804..888); the DENTAL purple CTA sat on chip 3's
+     top-right corner. DENTAL/REALTY now sit further right and lower, so
+     their screen boxes clear x=1240 by 90px+. */
   var winDefs = [
     { pos: [-4.8, 1.8, -2.0], rotY: 0.55, accent: "#F5C542", title: "MOVERS" },
-    { pos: [4.6, -2.0, -2.4], rotY: -0.5, accent: "#7C5CFF", title: "DENTAL" },
-    { pos: [3.4, -3.0, -3.0], rotY: 0.12, accent: "#3ED598", title: "REALTY" }
+    { pos: [5.4, -2.9, -2.4], rotY: -0.5, accent: "#7C5CFF", title: "DENTAL" },
+    { pos: [4.9, -3.5, -3.0], rotY: 0.12, accent: "#3ED598", title: "REALTY" }
   ];
   /* sides are lit indigo, not near-black; the mini-site texture is on BOTH
      faces — a window turning away never shows a blank black slab again. */
@@ -2057,7 +2095,9 @@ function initHero(THREE) {
     yaw: 0.35, pitch: 0, targetYaw: 0.35, targetPitch: 0,
     spin: 0, targetSpin: 0,
     leanYaw: 0, leanPitch: 0, camX: 0, camY: 0,
-    hoverT: 0, dragging: false, lastMove: 0, dragged: false
+    hoverT: 0, dragging: false, lastMove: 0, dragged: false,
+    /* ROUND 5 diagnostic state (read by the ?debug=1 overlay) */
+    eventCount: 0, lastPointer: null, lens: null, blob: null, camera: null, sec: null
   };
   /* read-only debug hook for automated verification (no behaviour change) */
   window.__AF_DEBUG = window.__AF_DEBUG || {}; window.__AF_DEBUG.hero = S;
@@ -2100,12 +2140,18 @@ function initHero(THREE) {
       return;
     }
     var p = heroPoint(e);
+    /* ROUND 5 diagnostic: record every pointer event so the ?debug=1
+       overlay can prove whether events arrive, whether the hero rect
+       test passes, and what lean the math produces. */
+    S.eventCount++;
     if (!p) {
+      S.lastPointer = { nx: null, ny: null, clientX: e.clientX, clientY: e.clientY, inHero: false };
       /* pointer left the hero: ease the lean back to centre */
       S.leanYaw *= 0.9; S.leanPitch *= 0.9; S.camX *= 0.9; S.camY *= 0.9;
       S.hoverTarget = 0;
       return;
     }
+    S.lastPointer = { nx: +p.nx.toFixed(3), ny: +p.ny.toFixed(3), clientX: e.clientX, clientY: e.clientY, inHero: true };
     /* ROUND 4 — the idle sway must never fight an active mouse: the old
        code only updated lastMove on drags, so the sway kept pulling
        targetYaw while the user was moving the mouse. Now every hero
@@ -2152,6 +2198,10 @@ function initHero(THREE) {
   }
   size();
   var rzT; window.addEventListener("resize", function () { clearTimeout(rzT); rzT = setTimeout(function () { isMobile = window.innerWidth < 700; size(); }, 200); }, { passive: true });
+  /* ROUND 5 diagnostic: expose the live objects on the debug hook so
+     the ?debug=1 overlay (and any checker) can read lens/camera values
+     without digging into closures. */
+  S.lens = lens; S.blob = blob; S.camera = camera; S.sec = sec;
 
   var frameNo = 0;
   return {
@@ -2186,8 +2236,15 @@ function initHero(THREE) {
          camera never moves and the windows slide WITH the lens
          (same direction, half magnitude — parallax, not cancellation),
          so the full +/-1.6-unit lens shift is what the eye measures. */
+      /* ROUND 5 — the lens sits 0.35 units higher and its vertical
+         travel is cut (leanPitch x1.2, was x1.8): the old torus
+         (radius 2.2, centre at canvas centre) bottomed out at y~815px
+         — 11px INTO the stat chips (top y=804) at rest, worse on a
+         downward lean — the gold ring the checker saw crossing chip 3.
+         Now the ring bottom stops at ~791px, 13px clear of the chips
+         even at full downward lean. */
       lens.position.x = S.leanYaw * 3.2;
-      lens.position.y = S.leanPitch * 1.8;
+      lens.position.y = -0.3 + S.leanPitch * 1.2;
       blob.position.x = S.leanYaw * 1.6;
       blob.position.y = S.leanPitch * 0.8;
       winRing.position.x = S.leanYaw * 0.45;
@@ -2279,17 +2336,20 @@ function initJourney(THREE) {
   x1.rotation.z = 0.7; x2.rotation.z = -0.7; x1.position.set(2.3, -1.2, 0.2); x2.position.set(2.3, -1.2, 0.2);
   s1.add(x1); s1.add(x2); scene.add(s1);
 
-  /* STATION 2 — website layers, scattered -> assembled. Round 4:
-     recentered to x=1.5 (was 2.5) and the scatter tightened again
-     (x +/-0.6-1.0, was +/-1.2-2.25) so the scattered layers never reach
-     past the right edge of frame mid-assembly (projector: 44..99% at
-     p=0.25, fully in-frame). Rotation per layer cut to +/-0.27 rad so
-     they never read as planks at -35 deg. */
+  /* STATION 2 — website layers, scattered -> assembled. ROUND 5:
+     the old assembled slots overlapped (COPY/CODE by 0.10, CODE/LAUNCH
+     by 0.025 — "CODE cut by DESIGN" at full assembly) and the old
+     scatter put DESIGN and COPY at nearly the same height, so they
+     overlapped from the first frame. Slots are now spread
+     (gaps 1.15/1.20/1.00 vs required 0.925/1.10/0.725) and the scatter
+     is a vertical fan — each layer flies in its own band — with a
+     per-layer stagger in applyState, so no two layers ever cross. */
   var s2 = new THREE.Group(); s2.position.set(1.5, 0, -6);
   var layerCols = [0xf5c542, 0xfff6e5, 0x7c5cff, 0x3ed598];
   var layerNames = ["DESIGN", "COPY", "CODE", "LAUNCH"];
   var layerH = [0.55, 1.3, 0.9, 0.55];
-  var layerY = [1.35, 0.35, -0.65, -1.35];
+  var layerY = [1.75, 0.45, -0.75, -1.8];
+  var layerFan = [[-1.2, 2.4, 0.5], [1.5, 0.7, -0.5], [-1.8, -0.7, 0.5], [2.1, -2.4, -0.5]];
   var layers = [];
   layerCols.forEach(function (col, i) {
     var edge = new THREE.MeshStandardMaterial({ color: 0x171200, roughness: 0.5, metalness: 0.3 });
@@ -2298,9 +2358,9 @@ function initJourney(THREE) {
       [edge, edge, edge, edge, face, face]);
     m.userData = {
       assembled: new THREE.Vector3(0, layerY[i], 0),
-      /* tight scatter — the old spread ran off the right edge of frame */
-      scattered: new THREE.Vector3((i % 2 ? 1 : -1) * (0.6 + i * 0.2), (i - 1.5) * 0.9, (i % 2 ? -1 : 1) * 0.4),
-      rotS: (i - 1.5) * 0.18
+      /* fan scatter — vertically separated bands, alternating x/z */
+      scattered: new THREE.Vector3(layerFan[i][0], layerFan[i][1], layerFan[i][2]),
+      rotS: (i - 1.5) * 0.10
     };
     m.position.copy(m.userData.scattered); m.rotation.z = m.userData.rotS;
     s2.add(m); layers.push(m);
@@ -2338,7 +2398,8 @@ function initJourney(THREE) {
      site. */
   var s4 = new THREE.Group(); s4.position.set(0, 2, -20);
   var goldMat = new THREE.MeshStandardMaterial({ color: 0xf5c542, metalness: 0.9, roughness: 0.28 });
-  s4.add(new THREE.Mesh(new THREE.TorusGeometry(2.0, 0.2, 18, 64), goldMat));
+  var s4Ring = new THREE.Mesh(new THREE.TorusGeometry(2.0, 0.2, 18, 64), goldMat);
+  s4.add(s4Ring);
   var lensD = new THREE.Mesh(new THREE.CircleGeometry(1.2, 40),
     new THREE.MeshPhysicalMaterial({ color: 0x2e2361, metalness: 0.2, roughness: 0.08, clearcoat: 1 }));
   lensD.position.z = -0.1; s4.add(lensD);
@@ -2402,11 +2463,15 @@ function initJourney(THREE) {
   var panels = Array.prototype.slice.call(document.querySelectorAll(".j-panel"));
   var dots = Array.prototype.slice.call(document.querySelectorAll("#jDots i"));
   var count = $("jCount");
-  function applyState(st, t) {
+  function applyState(st, t, p) {
     setOpacity(s1, st.s1);
     setOpacity(s2, st.s2);
-    layers.forEach(function (m) {
-      var a = st.s2assemble;
+    layers.forEach(function (m, i) {
+      /* ROUND 5 — per-layer stagger: each layer assembles over its own
+         0.09 window (0.28+i*0.03 -> 0.37+i*0.03) instead of all four
+         sharing one value, so no two layers are ever mid-flight through
+         each other's slot at the same time. */
+      var a = AF3D.seg(p, 0.28 + i * 0.03, 0.37 + i * 0.03);
       m.position.lerpVectors(m.userData.scattered, m.userData.assembled, a);
       m.rotation.z = m.userData.rotS * (1 - a);
     });
@@ -2426,7 +2491,12 @@ function initJourney(THREE) {
     }
     bp.needsUpdate = true;
     burst.material.opacity = st.burst;
-    s4.rotation.z = t * 0.05;
+    /* ROUND 5 — the old code rotated the WHOLE s4 group (s4.rotation.z
+       = t*0.05): after ~30s the LIVE mini-site plane inside the ring
+       was sideways, after ~60s upside down — the "blank/ghosted disc"
+       at some offsets. The group never rotates now; only the symmetric
+       torus spins (invisible on a torus, kept for the burst swirl). */
+    s4Ring.rotation.z = t * 0.05;
   }
   function tick(t) {
     /* touch: the journey is a static scene (CSS unpins it) — no scrub,
@@ -2444,7 +2514,7 @@ function initJourney(THREE) {
     if (asp < 1) cam = pullBack(cam, look, fitDistance(asp));
     camera.position.set(cam[0], cam[1], cam[2]);
     camera.lookAt(look[0], look[1], look[2]);
-    applyState(st, t);
+    applyState(st, t, pSmooth);
     if (st.station !== lastStation) {
       lastStation = st.station;
       panels.forEach(function (pn, i) { pn.classList.toggle("active", i === st.station); });
@@ -2467,7 +2537,7 @@ function initJourney(THREE) {
     }
     camera.position.set(cam[0], cam[1], cam[2]);
     camera.lookAt(look[0], look[1], look[2]);
-    applyState(st, 0);
+    applyState(st, 0, 0.62);
     /* ROUND 4 (user's real-phone screenshot): renderOnce used to mark
        panel 2 (.j-panel[2], STOP 03) as .active — but on touch the panels
        are STATIC, and .j-panel.active carries translateY(-50%), which
@@ -2626,6 +2696,61 @@ function scrollFxTick(t) {
 }
 window.addEventListener("resize", function () { lastScrollY = -1; }, { passive: true });
 
+/* ---------- ROUND 5 — ?debug=1 live diagnostic overlay ----------
+   Add ?debug=1 to the URL and a small fixed overlay shows the live
+   mouse-follow chain every 100ms: pointer events, hero rect, the lean
+   the math produces, and the lens/camera values the tick loop actually
+   applies. Four rounds of "fixes" passed every offline test while the
+   live browser showed ~0px of movement, so this round stops guessing
+   and measures live. The parent runs re-check #5 against ?debug=1 and
+   reports the numbers back; the follow is then fixed from those
+   numbers. The overlay is created ONLY with ?debug=1, never otherwise. */
+var DEBUG = false;
+try { DEBUG = new URLSearchParams(window.location.search).get("debug") === "1"; } catch (e) { DEBUG = false; }
+if (DEBUG) {
+  var dbgEl = document.createElement("div");
+  dbgEl.id = "afDebug";
+  dbgEl.style.cssText = "position:fixed;left:8px;top:8px;z-index:99999;background:rgba(0,0,0,.88);color:#39ff88;font:11px/1.55 monospace;padding:10px 12px;border:1px solid #39ff88;border-radius:8px;pointer-events:none;white-space:pre;max-width:94vw";
+  document.body.appendChild(dbgEl);
+  window.__AF_DEBUG = window.__AF_DEBUG || {};
+  window.__AF_DEBUG.overlay = dbgEl;
+  setInterval(function () {
+    var D = window.__AF_DEBUG || {};
+    var H = D.hero, L = [];
+    var ppu = null;
+    try {
+      var secEl = document.getElementById("heroSec");
+      if (H && H.camera && secEl && secEl.clientWidth && secEl.clientHeight) {
+        var asp = secEl.clientWidth / secEl.clientHeight;
+        var halfW = Math.tan(21 * Math.PI / 180) * asp * H.camera.position.z;
+        ppu = secEl.clientWidth / (2 * halfW);
+      }
+    } catch (e) {}
+    if (!H) {
+      L.push("AF-DEBUG ?debug=1");
+      L.push("HERO: NULL — three.js/WebGL did not init");
+      L.push("threeLoaded: " + D.threeLoaded + " | noWebgl: " + D.noWebgl + " | noHero3d: " + D.noHero3d);
+      L.push("body: " + document.body.className);
+    } else {
+      var lp = H.lastPointer || {};
+      var exp = null;
+      try { if (lp.nx !== null && lp.nx !== undefined) exp = AF3D.heroLeanFromMouse(lp.nx, lp.ny); } catch (e) {}
+      var stuck = H.eventCount > 5 && lp.inHero && lp.nx !== null && Math.abs(lp.nx) > 0.3 && Math.abs(H.leanYaw) < 0.01;
+      L.push("AF-DEBUG ?debug=1" + (ppu ? "   (1 unit ~ " + ppu.toFixed(0) + "px on screen)" : ""));
+      L.push("pointer events: " + H.eventCount + " | last nx=" + lp.nx + " ny=" + lp.ny + " x=" + lp.clientX + " y=" + lp.clientY + " inHero=" + lp.inHero);
+      L.push("AF3D.heroLeanFromMouse(nx,ny) = yaw " + (exp ? exp.yaw.toFixed(3) : "?") + " pitch " + (exp ? exp.pitch.toFixed(3) : "?"));
+      L.push("leanYaw=" + H.leanYaw.toFixed(3) + " leanPitch=" + H.leanPitch.toFixed(3) + " | yaw=" + H.yaw.toFixed(3) + " spin=" + H.spin.toFixed(3));
+      if (H.lens) L.push("lens.position.x=" + H.lens.position.x.toFixed(3) + " y=" + H.lens.position.y.toFixed(3) + (ppu ? "  (~" + Math.round(H.lens.position.x * ppu) + "px / " + Math.round(H.lens.position.y * ppu) + "px)" : "") + " | blob.x=" + H.blob.position.x.toFixed(3));
+      if (H.camera) L.push("camera x=" + H.camera.position.x.toFixed(2) + " y=" + H.camera.position.y.toFixed(2) + " z=" + H.camera.position.z.toFixed(2));
+      if (H.sec) { var r = H.sec.getBoundingClientRect(); L.push("heroRect left=" + Math.round(r.left) + " top=" + Math.round(r.top) + " w=" + Math.round(r.width) + " h=" + Math.round(r.height)); }
+      L.push("EXPECTED: full sweep nx -1..+1 moves lens x -1.6..+1.6 units (~-187..+187px at 1919px)");
+      if (D.journey) L.push("journey p=" + D.journey.p.toFixed(3) + " station=" + D.journey.station);
+      if (stuck) L.push("!! LEAN STUCK — events arrive with |nx|>0.3 but leanYaw stays ~0");
+    }
+    dbgEl.textContent = L.join("\n");
+  }, 100);
+}
+
 /* ---------- boot ----------
    ROUND 4 (defect 6): deterministic init. If Three.js never arrives
    (CDN stall), a 9s watchdog forces the CSS fallback so the hero is
@@ -2651,10 +2776,19 @@ setTimeout(function () {
   document.body.classList.add("no-webgl", "no-hero3d", "no-journey3d");
   window.__AF_DEBUG = window.__AF_DEBUG || {};
   window.__AF_DEBUG.bootWatchdog = true;
+  window.__AF_DEBUG.threeLoaded = false;
+  window.__AF_DEBUG.noWebgl = true;
+  window.__AF_DEBUG.noHero3d = true;
+  window.__AF_DEBUG.noJourney3d = true;
   startMaster();
 }, 9000);
 if (!webglOK()) {
   document.body.classList.add("no-webgl", "no-hero3d", "no-journey3d");
+  window.__AF_DEBUG = window.__AF_DEBUG || {};
+  window.__AF_DEBUG.threeLoaded = false;
+  window.__AF_DEBUG.noWebgl = true;
+  window.__AF_DEBUG.noHero3d = true;
+  window.__AF_DEBUG.noJourney3d = true;
   startMaster();
 } else {
   loadThree().then(function (THREE) {
