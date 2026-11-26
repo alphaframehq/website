@@ -1005,6 +1005,114 @@ section[id]{scroll-margin-top:96px}
   .hstat,.hstat b{white-space:normal}
   .drag-hint{white-space:normal;max-width:92vw;text-align:center}
 }
+
+/* ==========================================================================
+   FIX ROUND 4 — 26 Nov 2026, ~14:00 IST (re-check #3 NO-GO + user's
+   real-phone screenshot of the mobile journey, 13:57 IST)
+   (1) HERO MOUSE-FOLLOW: the camera counter-move cancelled the lens
+       shift and the windows slid the opposite way (diluting the gold
+       centroid); the sway fought the lean because lastMove was only
+       updated on drags. Camera is fixed now, windows slide WITH the
+       lens, sway freezes while the mouse is active.
+   (2) EDGE-ON SPIKE: drag spun the lens around Y (up to ~90 deg = a
+       thin gold spike through the headline). Drag now spins IN-PLANE
+       (rotation.z) and total yaw is clamped to +/-20 deg — a spike is
+       geometrically impossible (see AF3D.heroClampYaw).
+   (3) JOURNEY FRAMING: camera re-keyed 6-7 units from each station
+       (was 12-14) — projector-verified (/tmp/af3d-journey-proj.js):
+       S1 59% wide centred 68%, S2 49-54%, S3 46% centred 66%, S4 41%;
+       station fade windows no longer overlap (s2 gone by p=0.50, s3 by
+       p=0.78) so no station bleeds cut-off into the next one's peak.
+       S4's blank disc is now a real mini-site ("LIVE").
+   (4) STAT CHIP 3: hero content is shortened so the stats sit inside
+       the viewport on a 900px screen, and chips can never shrink.
+   (5) RING CARD UNDER HEADER: translateZ 320->220px, stage taller,
+       ring lower — the front card's top stays inside the stage.
+   (6) FRESH-LOAD VARIANCE: CDN import has a 5s timeout per attempt +
+       a 9s boot watchdog; hero/journey fail independently with their
+       own fallback classes (see three.js boot).
+   (7) BLACK CIRCLES ON BUTTONS: the old retro .btn::before/::after
+       "rivets" (14px near-black circles) were still rendering on every
+       button edge, including the header pill — removed.
+   (8) MOBILE JOURNEY (user's real-phone screenshot): bars covered the
+       CTA button on the FOUND mockup (lowered below the browser's
+       bottom edge); the portrait canvas showed only a slice of the
+       station (camera now fits the whole scene + centres it, since the
+       panels sit BELOW the canvas on touch); STOP 03's panel overlapped
+       STOP 02 — renderOnce() used to mark it .active, and
+       .j-panel.active's translateY(-50%) beat the coarse
+       .j-panel{transform:none} (higher specificity).
+   ========================================================================== */
+
+/* ---- (7) BUTTON RIVETS: the old 14px near-black circles are gone ----
+   .btn-gold::after is the alive sheen (kept) — only the rivet circles
+   are removed: ::before on all buttons, ::after on non-gold buttons. */
+.btn::before{display:none}
+.btn-ghost::after,.btn-outline::after,.btn-line::after{display:none}
+
+/* ---- (5) RING GEOMETRY: front card can never rise above the stage ---- */
+#ringStage{height:700px}
+#workRing{top:90px}
+@media (max-width:640px){
+  /* mobile: stage 560px, ring 460px tall at top 60px (60+460=520<560) —
+     front card top stays ~22px inside the stage (scale 1.17x). */
+  #ringStage{height:560px}
+  #workRing{top:60px;height:460px}
+}
+
+/* ---- (4) HERO FIT: stats inside the viewport on a 900px screen ----
+   Content is ~890px tall; 110px top + 140px bottom padding puts the
+   stats row at ~760-820px — inside the fold. Chips never shrink. */
+.hero{padding:110px 0 140px}
+.hero-stats{min-height:60px;transform:none}
+.hstat{flex:0 0 auto}
+@media (max-height:860px){
+  .hero{padding-top:96px}
+  .hero h1{font-size:clamp(56px,9vw,110px)}
+}
+
+/* ---- (6) PER-SCENE FALLBACKS: a dead hero shows the CSS aperture,
+   a dead journey shows its panels statically (mirrors the coarse
+   touch layout). ---- */
+.no-hero3d #hero3d{display:none}
+.no-hero3d .hero-fallback{display:flex}
+.no-journey3d #journey3d{display:none}
+.no-journey3d #journeyWrap{height:auto}
+.no-journey3d .j-sticky{position:relative;height:auto;overflow:visible}
+.no-journey3d .j-panel{position:static;opacity:1;visibility:visible;transform:none;margin:20px auto;max-width:560px}
+.no-journey3d .j-panel.active{transform:none}
+.no-journey3d .j-dots,.no-journey3d .j-count,.no-journey3d .j-skip{display:none}
+
+/* ---- (8) MOBILE JOURNEY: panels can never overlap, canvas fits ----
+   The .active guard is the actual fix for the screenshot overlap:
+   .j-panel.active (0,2,0) beat the coarse .j-panel{transform:none}
+   (0,1,0), so STOP 03 sat translateY(-50%) — half its height up over
+   STOP 02. The mobile canvas is shorter (54svh) so the fitted scene
+   fills it instead of leaving a ~40% dark void above it. */
+@media (pointer:coarse){
+  .j-panel{margin:20px auto}
+  .j-panel.active{transform:none}
+  #journey3d{height:54svh}
+}
+
+/* ---- (4b) HERO HEADLINE WRAP — measured in a real browser (Firefox,
+   1919x900, 26 Nov): the h1 rendered 5 lines, not 3. "Websites that"
+   at 138px Bebas needs 1053px but .hero-inner capped the column at
+   980px, so lines 1-2 each wrapped to two lines (h1 632px instead of
+   ~390px) and pushed .hero-stats to y=1077 — 177px BELOW the 900px
+   fold, so the count-up never fired at first paint and chip 3 sat at
+   the fold edge where any ring pose clipped it. Widen the hero column
+   so the 3-line headline fits as designed, and trim the gaps above
+   the stats so the stats row ends inside the fold. ---- */
+.hero-inner{max-width:1140px}
+.hero{padding-top:100px}
+.hero .pill{margin-bottom:12px}
+.hero-ctas{margin-top:22px}
+.hero-stats{margin-top:26px}
+/* stat chips equal width: chip 3 ("100%") rendered 106px wide next to
+   162/175px for chips 1-2 — content-driven, but the row reads as one
+   component only when the three boxes match. */
+.hstat{min-width:160px;text-align:center}
 </style>
 </head>
 <body>
@@ -1370,16 +1478,31 @@ var AF3D = (function () {
   function seg(p, a, b) { return smooth((p - a) / (b - a)); }
 
   /* HERO — drag: 500px horizontal drag = one full turn (360 deg).
-     Faster than the old 800px so a drag visibly spins the lens well
-     beyond the gentle idle sway (round 3). */
-  function heroYawFromDrag(dx) { return dx * (Math.PI * 2 / 500); }
-  /* HERO — drag: vertical drag tilts the lens, +/-30 deg over 400px. */
+     ROUND 4: a drag now spins the lens IN-PLANE (rotation.z), not around
+     the Y axis. A Y-spin turns the torus edge-on into a thin gold spike
+     through the headline (re-check #3 defect 2); an in-plane spin can
+     never go edge-on — the aperture visibly rotates like a camera
+     aperture, and the ring stays face-on at every drag distance. */
+  function heroSpinFromDrag(dx) { return dx * (Math.PI * 2 / 500); }
+  function heroYawFromDrag(dx) { return heroSpinFromDrag(dx); }
+  /* HERO — drag no longer pitches the lens (round 4): pitch comes from
+     the mouse lean only (max +/-14 deg), so the torus can never pitch
+     itself thin either. */
   function heroPitchFromDrag(dy) { return clamp(dy * (Math.PI / 6 / 400), -Math.PI / 6, Math.PI / 6); }
+  /* HERO — total lens yaw (lean + idle sway) is clamped to +/-20 deg
+     (round 4). At 20 deg the torus is still 94% wide — a spike needs
+     ~90 deg, which is now geometrically impossible. The POSITION shift
+     (lens slides with the mouse) is NOT clamped — only the rotation. */
+  var HERO_YAW_MAX = 0.35;
+  function heroClampYaw(yaw) { return clamp(yaw, -HERO_YAW_MAX, HERO_YAW_MAX); }
   /* HERO — mouse lean: nx,ny in [-1,1] across the hero.
-     Full left-to-right sweep = +/-28.6 deg yaw, +/-14 deg pitch,
-     camera shifts +/-1.6 units sideways. Round 3: stronger lean, and the
-     lens translation in three.js is now x3.2 (was x2.0) with the gold blob
-     following too, so a full sweep moves the lens ~145px gross. */
+     Full left-to-right sweep = +/-28.6 deg yaw, +/-14 deg pitch.
+     ROUND 4: the camera counter-move is GONE (camX/camY are no longer
+     applied in three.js). Moving the camera WITH the mouse shifted the
+     whole world the opposite way and cancelled up to ~30px of the lens
+     shift the user was supposed to see — the lens now slides the full
+     +/-1.6 units (~375px gross at 1919px) against a fixed camera, and
+     the floating windows slide WITH it (parallax, same direction). */
   function heroLeanFromMouse(nx, ny) {
     return { yaw: nx * 0.5, pitch: -ny * 0.25, camX: nx * 1.6, camY: -ny * 0.9 };
   }
@@ -1397,20 +1520,22 @@ var AF3D = (function () {
   function baZoom(v) { v = clamp(v, 0, 1); return { scale: 0.9 + 0.1 * v, rx: 8 * (1 - v) }; }
 
   /* JOURNEY — camera fly-through keyframes (p in [0,1]).
-     Round 3: stations recentered near the camera axis (old S2 at x=8 and
-     S3 at x=-6 swung the scene far left mid-transition — station 01 read
-     as "only the left 40%" with the right 60% empty void). Look targets sit
-     ~1.2 units LEFT of each station, so the station renders slightly
-     right-of-centre — clear of the left text panel (which covers the
-     left ~33% of a 1919px viewport) — without the old 2.5-unit shove.
-     Stations: S1 old site (0,0,0) | S2 layers (2.5,0,-6) |
+     ROUND 4 (re-check #3 defect 3 — measured with a projection script,
+     /tmp/af3d-journey-proj.js, viewport 1919x900, fov 42deg): the round-3
+     camera sat 12-14 units from each station, so station 01 filled only
+     27% of the frame width and station 04 only 23%. The camera now sits
+     6-7 units from each station, so every station fills 40-62% of the
+     frame width in the clear zone right of the text panel (panel covers
+     left ~6-33%; stations centre at ~66% width). Look targets sit ~1.65
+     units LEFT of each station, which pushes the station right-of-centre.
+     Stations: S1 old site (0,0,0) | S2 layers (1.5,0,-6) |
                S3 browser (-2,1,-12) | S4 launch (0,2,-20). */
   var CAM_KEYS = [
-    { p: 0.00, pos: [0, 0.5, 14],  look: [-1.2, 0, 0] },
-    { p: 0.25, pos: [2.5, 2, 7],   look: [1.3, 0, -6] },
-    { p: 0.50, pos: [-2, 3, 1],    look: [-3.2, 1, -12] },
-    { p: 0.75, pos: [-1, 2, -1],   look: [-3.2, 1, -12] },
-    { p: 1.00, pos: [0, 3, -8],    look: [-1.2, 2, -20] }
+    { p: 0.00, pos: [0, 0.3, 6.8],   look: [-1.65, 0, 0] },
+    { p: 0.30, pos: [1.5, 0.3, 0.25], look: [-0.15, 0, -6] },
+    { p: 0.60, pos: [-2, 1.3, -5.0], look: [-3.65, 1, -12] },
+    { p: 0.85, pos: [0, 2.3, -12.84], look: [-1.65, 2, -20] },
+    { p: 1.00, pos: [0, 2.3, -14.5], look: [-1.2, 2, -20] }
   ];
   function keyed(p, field) {
     p = clamp(p, 0, 1);
@@ -1424,17 +1549,23 @@ var AF3D = (function () {
   }
   function journeyCam(p) { return keyed(p, "pos"); }
   function journeyLook(p) { return keyed(p, "look"); }
-  /* JOURNEY — station visibility / morph state from scroll progress. */
+  /* JOURNEY — station visibility / morph state from scroll progress.
+     ROUND 4: the round-3 windows OVERLAPPED — s2 stayed at opacity 1.0
+     until p=0.62 while s3 was already fully in at p=0.54, so the S2
+     layer stack was fully visible (cut off at the right edge) all
+     through station 03's peak (measured in the projector: S2 at
+     x 69..113% at p=0.6). Now every station fades OUT before the next
+     one peaks: s2 is gone by p=0.50, s3 is gone by p=0.78. */
   function journeyState(p) {
     p = clamp(p, 0, 1);
     return {
-      s1: 1 - seg(p, 0.12, 0.25),
-      s2: seg(p, 0.18, 0.28) * (1 - seg(p, 0.62, 0.74)),
-      s2assemble: seg(p, 0.22, 0.42),
-      s3: seg(p, 0.44, 0.54) * (1 - seg(p, 0.78, 0.88)),
-      bars: seg(p, 0.48, 0.62),
-      s4: seg(p, 0.72, 0.82),
-      burst: seg(p, 0.82, 0.98),
+      s1: 1 - seg(p, 0.06, 0.16),
+      s2: seg(p, 0.16, 0.26) * (1 - seg(p, 0.36, 0.46)),
+      s2assemble: seg(p, 0.20, 0.38),
+      s3: seg(p, 0.46, 0.56) * (1 - seg(p, 0.66, 0.74)),
+      bars: seg(p, 0.50, 0.60),
+      s4: seg(p, 0.76, 0.86),
+      burst: seg(p, 0.86, 0.98),
       station: Math.min(3, Math.floor(p * 4))
     };
   }
@@ -1451,6 +1582,9 @@ var AF3D = (function () {
   return {
     clamp: clamp, lerp: lerp, smooth: smooth, seg: seg,
     heroYawFromDrag: heroYawFromDrag,
+    heroSpinFromDrag: heroSpinFromDrag,
+    heroClampYaw: heroClampYaw,
+    HERO_YAW_MAX: HERO_YAW_MAX,
     heroPitchFromDrag: heroPitchFromDrag,
     heroLeanFromMouse: heroLeanFromMouse,
     tiltFromPointer: tiltFromPointer,
@@ -1740,11 +1874,18 @@ var isMobile = window.innerWidth < 700;
 var $ = function (id) { return document.getElementById(id); };
 function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
 
-/* ---------- Three.js loader ---------- */
+/* ---------- Three.js loader ----------
+   ROUND 4 (defect 6 — fresh-load variance): the dynamic import had NO
+   timeout — if a CDN stalled (neither resolved nor rejected), the hero
+   stayed empty forever with no fallback. Each attempt now races a 5s
+   timeout, and a 9s boot watchdog (below) forces the CSS fallback if
+   Three.js never arrives. Deterministic: the page always ends up with
+   either the 3D hero or the CSS aperture — never a blank hero. */
 function loadThree() {
   if (window.__AF_THREE) return Promise.resolve(window.__AF_THREE);
   function attempt(url) {
-    return import(url).then(function (m) { window.__AF_THREE = m; return m; });
+    var timeout = new Promise(function (_, rej) { setTimeout(function () { rej(new Error("three.js CDN timeout")); }, 5000); });
+    return Promise.race([import(url), timeout]).then(function (m) { window.__AF_THREE = m; return m; });
   }
   return attempt("https://unpkg.com/three@0.160.0/build/three.module.js")
     .catch(function () { return attempt("https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"); });
@@ -1914,6 +2055,7 @@ function initHero(THREE) {
   /* --- interaction state: drag spins, mouse leans, hover opens blades --- */
   var S = {
     yaw: 0.35, pitch: 0, targetYaw: 0.35, targetPitch: 0,
+    spin: 0, targetSpin: 0,
     leanYaw: 0, leanPitch: 0, camX: 0, camY: 0,
     hoverT: 0, dragging: false, lastMove: 0, dragged: false
   };
@@ -1947,8 +2089,12 @@ function initHero(THREE) {
       /* touch: a mostly-vertical swipe is a page scroll, not a lens drag */
       if (e.pointerType === "touch" && Math.abs(dy) > Math.abs(dx) * 1.5) return;
       if (Math.abs(dx) + Math.abs(dy) > 2) S.dragged = true;
-      S.targetYaw += AF3D.heroYawFromDrag(dx);
-      S.targetPitch = clamp(S.targetPitch + AF3D.heroPitchFromDrag(dy), -0.5, 0.5);
+      /* ROUND 4 — drag spins the lens IN-PLANE (rotation.z). The old
+         code added drag to targetYaw (rotation.y): a 400px drag spun the
+         torus to ~90 deg, where it collapses to a thin vertical gold
+         spike through the headline. In-plane spin can never go edge-on,
+         and the aperture blades visibly rotate like a real aperture. */
+      S.targetSpin += AF3D.heroSpinFromDrag(dx);
       S.lastMove = performance.now();
       var hint = $("dragHint"); if (hint) hint.style.opacity = "0";
       return;
@@ -1960,6 +2106,11 @@ function initHero(THREE) {
       S.hoverTarget = 0;
       return;
     }
+    /* ROUND 4 — the idle sway must never fight an active mouse: the old
+       code only updated lastMove on drags, so the sway kept pulling
+       targetYaw while the user was moving the mouse. Now every hero
+       pointermove counts as activity. */
+    S.lastMove = performance.now();
     var L = AF3D.heroLeanFromMouse(p.nx, p.ny);
     S.leanYaw = L.yaw; S.leanPitch = L.pitch; S.camX = L.camX; S.camY = L.camY;
     if (finePointer && !reduced) {
@@ -2007,33 +2158,40 @@ function initHero(THREE) {
     tick: function (t, now) {
       if (!heroVisible || document.hidden) return;
       frameNo++;
-      /* ROUND 3 — idle SWAY, not a continuous 360 deg spin. The old
-         auto-rotation turned the torus edge-on into a thin gold spike
-         through the headline every ~24s, and made any drag-driven spin
-         indistinguishable from the idle spin. Now the lens gently sways
-         +/-30 deg around a front-facing pose when idle; a drag spins it
-         freely and unmistakably, and it eases back to the sway afterwards. */
+      /* ROUND 4 — idle SWAY, not a continuous 360 deg spin, and SMALL.
+         The old sway swung targetYaw by +/-0.5 rad around 0.35 (up to
+         0.85 rad = 49 deg) — combined with a full lean (+/-0.5) the lens
+         could reach ~77 deg yaw, i.e. nearly edge-on, even without any
+         drag. The sway is now +/-0.12 rad around 0, and the total yaw
+         (sway + lean) is clamped to +/-0.35 rad (20 deg) below, so the
+         torus can never approach edge-on from any input. */
       if (!reduced && !S.dragging && now - S.lastMove > 3000) {
-        var sway = 0.35 + Math.sin(now * 0.00045) * 0.5;
+        var sway = 0.12 * Math.sin(now * 0.00045);
         S.targetYaw += (sway - S.targetYaw) * 0.01;
       }
       var k = 0.12;
-      S.yaw += (S.targetYaw + S.leanYaw - S.yaw) * k;
-      S.pitch += (S.targetPitch + S.leanPitch - S.pitch) * k;
+      /* ROUND 4 — yaw CLAMPED (see AF3D.heroClampYaw): rotation can never
+         go edge-on. Pitch comes from the lean only (drag no longer
+         pitches). Spin is the in-plane drag rotation (rotation.z). */
+      S.yaw += (AF3D.heroClampYaw(S.targetYaw + S.leanYaw) - S.yaw) * k;
+      S.pitch += (S.leanPitch - S.pitch) * k;
+      S.spin += (S.targetSpin - S.spin) * 0.1;
       S.hoverT += ((S.hoverTarget || 0) - S.hoverT) * 0.1;
-      lens.rotation.y = S.yaw; lens.rotation.x = S.pitch;
-      /* MOUSE-FOLLOW, made unmistakable (round 3): the lens slides x3.2
-         with the mouse AND the gold blob — the biggest gold mass on
-         screen — slides with it, so the whole hero's centroid moves; the
-         camera counter-move is cut to x0.12 so it no longer cancels the
-         shift. Full sweep: lens ~+/-1.6 units (~200px gross, ~145px net
-         after the camera). */
+      lens.rotation.y = S.yaw; lens.rotation.x = S.pitch; lens.rotation.z = S.spin;
+      /* MOUSE-FOLLOW (round 4): the lens slides with the mouse against a
+         FIXED camera. The old camera counter-move (camX*0.12) shifted the
+         whole world the opposite way and cancelled up to ~30px of the
+         shift; the floating windows also slid the OPPOSITE way
+         (-leanYaw*0.9), diluting the visible gold centroid. Now the
+         camera never moves and the windows slide WITH the lens
+         (same direction, half magnitude — parallax, not cancellation),
+         so the full +/-1.6-unit lens shift is what the eye measures. */
       lens.position.x = S.leanYaw * 3.2;
       lens.position.y = S.leanPitch * 1.8;
       blob.position.x = S.leanYaw * 1.6;
       blob.position.y = S.leanPitch * 0.8;
-      winRing.position.x = -S.leanYaw * 0.9;
-      winRing.position.y = -S.leanPitch * 0.5;
+      winRing.position.x = S.leanYaw * 0.45;
+      winRing.position.y = S.leanPitch * 0.25;
       /* blades: hover opens them wide (0.9) and the idle wobble is tiny
          (0.02) so hover-open is clearly distinct from idle */
       var open = S.hoverT * 0.9 + 0.02 * Math.sin(t * 0.8);
@@ -2064,8 +2222,9 @@ function initHero(THREE) {
         });
       }
       dust.rotation.y = t * 0.02; stars.rotation.y = -t * 0.008;
-      camera.position.x += (S.camX * 0.12 - camera.position.x) * 0.05;
-      camera.position.y += (S.camY * 0.12 - camera.position.y) * 0.05;
+      /* ROUND 4 — the camera NEVER moves now (no counter-move): it stays
+         centred on the origin, so the lens slide is pure and maximal. */
+      camera.position.set(0, 0, camera.position.z);
       camera.lookAt(0, 0, 0);
       renderer.render(scene, camera);
     },
@@ -2120,11 +2279,13 @@ function initJourney(THREE) {
   x1.rotation.z = 0.7; x2.rotation.z = -0.7; x1.position.set(2.3, -1.2, 0.2); x2.position.set(2.3, -1.2, 0.2);
   s1.add(x1); s1.add(x2); scene.add(s1);
 
-  /* STATION 2 — website layers, scattered -> assembled. Round 3: station
-     recentered to x=2.5 (was 8 — it swung far off-axis), layers wider
-     (3.8) with real labelled faces, tighter scatter and gentler rotation
-     so they never read as planks scattered at -35 deg off-frame. */
-  var s2 = new THREE.Group(); s2.position.set(2.5, 0, -6);
+  /* STATION 2 — website layers, scattered -> assembled. Round 4:
+     recentered to x=1.5 (was 2.5) and the scatter tightened again
+     (x +/-0.6-1.0, was +/-1.2-2.25) so the scattered layers never reach
+     past the right edge of frame mid-assembly (projector: 44..99% at
+     p=0.25, fully in-frame). Rotation per layer cut to +/-0.27 rad so
+     they never read as planks at -35 deg. */
+  var s2 = new THREE.Group(); s2.position.set(1.5, 0, -6);
   var layerCols = [0xf5c542, 0xfff6e5, 0x7c5cff, 0x3ed598];
   var layerNames = ["DESIGN", "COPY", "CODE", "LAUNCH"];
   var layerH = [0.55, 1.3, 0.9, 0.55];
@@ -2137,9 +2298,9 @@ function initJourney(THREE) {
       [edge, edge, edge, edge, face, face]);
     m.userData = {
       assembled: new THREE.Vector3(0, layerY[i], 0),
-      /* tighter scatter — the old spread ran off the right edge of frame */
-      scattered: new THREE.Vector3((i % 2 ? 1 : -1) * (1.2 + i * 0.35), (i - 1.5) * 1.1, (i % 2 ? -1 : 1) * 0.5),
-      rotS: (i - 1.5) * 0.3
+      /* tight scatter — the old spread ran off the right edge of frame */
+      scattered: new THREE.Vector3((i % 2 ? 1 : -1) * (0.6 + i * 0.2), (i - 1.5) * 0.9, (i % 2 ? -1 : 1) * 0.4),
+      rotS: (i - 1.5) * 0.18
     };
     m.position.copy(m.userData.scattered); m.rotation.z = m.userData.rotS;
     s2.add(m); layers.push(m);
@@ -2158,23 +2319,32 @@ function initJourney(THREE) {
   [0xf5c542, 0x3ed598, 0x7c5cff].forEach(function (col, i) {
     var b = new THREE.Mesh(new THREE.BoxGeometry(0.55, 1.7, 0.55),
       new THREE.MeshStandardMaterial({ color: col, roughness: 0.35, metalness: 0.5 }));
-    b.position.set(-1.3 + i * 1.3, -2.2, 0.4); b.scale.y = 0.1;
+    /* ROUND 4 (user's real-phone screenshot): the bars used to rise to
+       local y=0.0 — 0.9 units ABOVE the browser's bottom edge (-0.9) —
+       so the gold bar covered the "Get a Free Quote" button on the FOUND
+       mockup. The bars now sit fully BELOW the browser (base -2.6, max
+       top -0.9 = exactly the browser's bottom edge). */
+    b.position.set(-1.3 + i * 1.3, -2.6, 0.4); b.scale.y = 0.15;
     s3.add(b); bars.push(b);
   });
   scene.add(s3);
 
   /* STATION 4 — launch: golden aperture + particle burst.
      Thicker ring + a glowing inner disc, so it reads as an aperture,
-     not a faint outline. */
+     not a faint outline. ROUND 4 (re-check #3 defect 3): the disc was a
+     BLANK cream circle — no launch content inside. It is now a real
+     mini-website (the same siteTexture as the station-03 browser, title
+     "LIVE") fitted inside the ring, so the aperture shows the launched
+     site. */
   var s4 = new THREE.Group(); s4.position.set(0, 2, -20);
   var goldMat = new THREE.MeshStandardMaterial({ color: 0xf5c542, metalness: 0.9, roughness: 0.28 });
   s4.add(new THREE.Mesh(new THREE.TorusGeometry(2.0, 0.2, 18, 64), goldMat));
   var lensD = new THREE.Mesh(new THREE.CircleGeometry(1.2, 40),
     new THREE.MeshPhysicalMaterial({ color: 0x2e2361, metalness: 0.2, roughness: 0.08, clearcoat: 1 }));
   lensD.position.z = -0.1; s4.add(lensD);
-  var disc = new THREE.Mesh(new THREE.CircleGeometry(1.35, 40),
-    new THREE.MeshBasicMaterial({ color: 0xffd97a, transparent: true, opacity: 0.4 }));
-  disc.position.z = -0.05; s4.add(disc);
+  var liveSite = new THREE.Mesh(new THREE.PlaneGeometry(2.4, 1.6),
+    new THREE.MeshBasicMaterial({ map: siteTexture(THREE, "#3ED598", "LIVE") }));
+  liveSite.position.z = 0.02; s4.add(liveSite);
   var burstN = 180, burstBase = new Float32Array(burstN * 3), burstDir = new Float32Array(burstN * 3);
   for (var i = 0; i < burstN; i++) {
     var th = Math.random() * Math.PI * 2, ph = Math.acos(2 * Math.random() - 1);
@@ -2202,6 +2372,30 @@ function initJourney(THREE) {
   size();
   var rzT; window.addEventListener("resize", function () { clearTimeout(rzT); rzT = setTimeout(function () { size(); if (coarsePointer) renderOnce(); }, 200); }, { passive: true });
 
+  /* ROUND 4 — PORTRAIT FIT (user's real-phone screenshot, 26 Nov 13:57
+     IST): on a portrait phone the journey canvas is ~0.74 aspect, so the
+     landscape-framed camera showed only a slice of station 03 — the
+     browser's right side was cut at the viewport edge and ~40% of the
+     canvas was empty dark void above the scene. fitDistance() is the
+     camera distance that fits the whole station-03 scene (6.0 wide,
+     5.9 tall, incl. the lowered bars) at 80% fill for the canvas's
+     actual aspect; pullBack() moves the camera out along the view axis
+     to that distance. tick() uses it (narrow screens keep the
+     panel-aware right-of-centre framing); renderOnce() also recentres
+     the look on the station, because on touch the text panels sit BELOW
+     the canvas instead of over its left side. */
+  function fitDistance(asp) {
+    var tv = Math.tan(THREE.MathUtils.degToRad(21));
+    return Math.max(6.0 / (2 * tv * asp), 5.9 / (2 * tv));
+  }
+  function pullBack(cam, look, d) {
+    var dir = [cam[0] - look[0], cam[1] - look[1], cam[2] - look[2]];
+    var len = Math.hypot(dir[0], dir[1], dir[2]) || 1;
+    if (d <= len) return cam;
+    var k = d / len;
+    return [look[0] + dir[0] * k, look[1] + dir[1] * k, look[2] + dir[2] * k];
+  }
+
   var pSmooth = 0, lastStation = -1;
   window.__AF_DEBUG = window.__AF_DEBUG || {};
   window.__AF_DEBUG.journey = { get p() { return pSmooth; }, get station() { return lastStation; } };
@@ -2218,9 +2412,11 @@ function initJourney(THREE) {
     });
     setOpacity(s3, st.s3);
     bars.forEach(function (b) {
-      /* taller, earlier bars — full height by p=0.62, ~2.2 units tall */
-      var s = 0.15 + 1.15 * st.bars;
-      b.scale.y = s; b.position.y = -2.2 + (1.7 * s) / 2;
+      /* round 4: bars rise to max scale 1.0 (was 1.3) from a lower base
+         (-2.6, was -2.2) — their tops stop exactly at the browser's
+         bottom edge, so they never cover the CTA button again. */
+      var s = 0.15 + 0.85 * st.bars;
+      b.scale.y = s; b.position.y = -2.6 + (1.7 * s) / 2;
     });
     setOpacity(s4, st.s4);
     var bp = burstGeo.attributes.position;
@@ -2243,6 +2439,9 @@ function initJourney(THREE) {
     else pSmooth += (p - pSmooth) * 0.14;
     var st = AF3D.journeyState(pSmooth);
     var cam = AF3D.journeyCam(pSmooth), look = AF3D.journeyLook(pSmooth);
+    var cr = canvas.getBoundingClientRect();
+    var asp = (cr.width || window.innerWidth) / (cr.height || window.innerHeight);
+    if (asp < 1) cam = pullBack(cam, look, fitDistance(asp));
     camera.position.set(cam[0], cam[1], cam[2]);
     camera.lookAt(look[0], look[1], look[2]);
     applyState(st, t);
@@ -2257,10 +2456,25 @@ function initJourney(THREE) {
   function renderOnce() {
     var st = AF3D.journeyState(0.62);
     var cam = AF3D.journeyCam(0.62), look = AF3D.journeyLook(0.62);
+    var cr = canvas.getBoundingClientRect();
+    var asp = (cr.width || window.innerWidth) / (cr.height || window.innerHeight);
+    if (asp < 1) {
+      /* portrait static render (touch): centre the station — the panels
+         sit below the canvas, so the desktop left-offset is wrong here —
+         and pull back until the whole scene fits the narrow canvas. */
+      look = [-2, 1, -12];
+      cam = pullBack(cam, look, fitDistance(asp));
+    }
     camera.position.set(cam[0], cam[1], cam[2]);
     camera.lookAt(look[0], look[1], look[2]);
     applyState(st, 0);
-    panels.forEach(function (pn, i) { pn.classList.toggle("active", i === 2); });
+    /* ROUND 4 (user's real-phone screenshot): renderOnce used to mark
+       panel 2 (.j-panel[2], STOP 03) as .active — but on touch the panels
+       are STATIC, and .j-panel.active carries translateY(-50%), which
+       beat the coarse .j-panel{transform:none} (higher specificity) and
+       shoved STOP 03 up by half its height, overlapping STOP 02 and
+       hiding its paragraph. No panel is .active in the static layout. */
+    panels.forEach(function (pn) { pn.classList.remove("active"); });
     renderer.render(scene, camera);
   }
   return { tick: tick, renderOnce: renderOnce };
@@ -2286,7 +2500,13 @@ function initInteractions() {
   var stage = $("ringStage"), ring = $("workRing");
   if (stage && ring) {
     var cards = Array.prototype.slice.call(ring.querySelectorAll(".ring-card"));
-    cards.forEach(function (c, i) { c.style.transform = "rotateY(" + (i * 120) + "deg) translateZ(320px)"; });
+    /* ROUND 4 (re-check #3 defect 5): translateZ was 320px — with the
+       stage's 1500px perspective the front card scaled 1.27x, so its top
+       rose ~23px ABOVE the stage and, once the section was scrolled,
+       slid ~250px under the sticky header. At 220px the scale is 1.17x
+       and the front card's top stays ~46px INSIDE the stage (ring top
+       90px + stage 700px in CSS) at every rotation. */
+    cards.forEach(function (c, i) { c.style.transform = "rotateY(" + (i * 120) + "deg) translateZ(220px)"; });
     var rot = 0, target = 0, vel = 0, dragging = false, lastX = 0, dragDist = 0, lastAct = 0;
     window.__AF_DEBUG = window.__AF_DEBUG || {};
     window.__AF_DEBUG.ring = { get rot() { return rot; }, get target() { return target; } };
@@ -2406,7 +2626,13 @@ function scrollFxTick(t) {
 }
 window.addEventListener("resize", function () { lastScrollY = -1; }, { passive: true });
 
-/* ---------- boot ---------- */
+/* ---------- boot ----------
+   ROUND 4 (defect 6): deterministic init. If Three.js never arrives
+   (CDN stall), a 9s watchdog forces the CSS fallback so the hero is
+   never blank. If Three.js loads but a scene fails to init, that
+   scene's fallback class shows instead of a blank canvas — the hero
+   and journey fail independently (the old code only added .no-webgl
+   when BOTH failed, so a dead hero with a live journey stayed blank). */
 initInteractions();
 var masterStarted = false;
 function startMaster() {
@@ -2420,16 +2646,30 @@ function startMaster() {
     requestAnimationFrame(loop);
   })();
 }
+setTimeout(function () {
+  if (masterStarted) return;
+  document.body.classList.add("no-webgl", "no-hero3d", "no-journey3d");
+  window.__AF_DEBUG = window.__AF_DEBUG || {};
+  window.__AF_DEBUG.bootWatchdog = true;
+  startMaster();
+}, 9000);
 if (!webglOK()) {
-  document.body.classList.add("no-webgl");
+  document.body.classList.add("no-webgl", "no-hero3d", "no-journey3d");
   startMaster();
 } else {
   loadThree().then(function (THREE) {
     hero = initHero(THREE);
     journey = initJourney(THREE);
-    if (!hero && !journey) document.body.classList.add("no-webgl");
+    /* toggle (not just add): if the watchdog already fired on a slow
+       CDN, a late-but-successful load takes the fallback classes back
+       off — the scenes that actually initialised are shown. */
+    document.body.classList.toggle("no-hero3d", !hero);
+    document.body.classList.toggle("no-journey3d", !journey);
+    document.body.classList.toggle("no-webgl", !hero && !journey);
     window.__AF_DEBUG = window.__AF_DEBUG || {};
     window.__AF_DEBUG.noWebgl = document.body.classList.contains("no-webgl");
+    window.__AF_DEBUG.noHero3d = document.body.classList.contains("no-hero3d");
+    window.__AF_DEBUG.noJourney3d = document.body.classList.contains("no-journey3d");
     window.__AF_DEBUG.threeLoaded = true;
     if (reduced) {
       if (hero) hero.renderOnce();
@@ -2439,9 +2679,11 @@ if (!webglOK()) {
     if (coarsePointer && journey) journey.renderOnce();
     startMaster();
   }).catch(function () {
-    document.body.classList.add("no-webgl");
+    document.body.classList.add("no-webgl", "no-hero3d", "no-journey3d");
     window.__AF_DEBUG = window.__AF_DEBUG || {};
     window.__AF_DEBUG.noWebgl = true;
+    window.__AF_DEBUG.noHero3d = true;
+    window.__AF_DEBUG.noJourney3d = true;
     window.__AF_DEBUG.threeLoaded = false;
     startMaster();
   });
