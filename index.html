@@ -4,18 +4,19 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
 <meta name="color-scheme" content="dark"/>
-<title>AlphaFrame — A Cinematic Website Experience</title>
-<meta name="description" content="AlphaFrame builds cinematic, conversion-first websites for US small businesses. Starter $500, Premium $1,000 — live in 7 days. Email: alphaframehq@gmail.com"/>
+<title>AlphaFrame — 3D Interactive Websites That Bring Customers</title>
+<meta name="description" content="AlphaFrame builds 3D interactive, conversion-first websites for US small businesses. Starter $500, Premium $1,000 — live in 7 days. Free homepage mockup first. Email: alphaframehq@gmail.com"/>
 <meta property="og:type" content="website"/>
-<meta property="og:title" content="AlphaFrame — Websites That Bring Customers"/>
-<meta property="og:description" content="Custom websites for US small businesses. $500 Starter / $1,000 Premium, live in 7 days. Free homepage mockup first — email alphaframehq@gmail.com or DM @alphaframehq."/>
+<meta property="og:title" content="AlphaFrame — 3D Interactive Websites That Bring Customers"/>
+<meta property="og:description" content="Custom 3D interactive websites for US small businesses. $500 Starter / $1,000 Premium, live in 7 days. Free homepage mockup first — email alphaframehq@gmail.com or DM @alphaframehq."/>
 <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="AlphaFrame — Websites That Bring Customers"/>
-<meta name="twitter:description" content="Custom websites for US small businesses. Free mockup first, live in 7 days. Email alphaframehq@gmail.com"/>
-<link rel="icon" href="data:,">
+<meta name="twitter:title" content="AlphaFrame — 3D Interactive Websites That Bring Customers"/>
+<meta name="twitter:description" content="Custom 3D interactive websites for US small businesses. Free mockup first, live in 7 days. Email alphaframehq@gmail.com"/>
+<link rel="icon" href="data:,"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:ital,wght@1,600;1,700&family=Special+Elite&family=Libre+Franklin:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
+
 
 :root{
   --bg:#0B0703; --bg2:#140D05; --surface:#1A1206; --surface2:#241A0B; --surface3:#2E2110;
@@ -78,7 +79,7 @@ header.scrolled{background:rgba(11,7,3,.97);box-shadow:0 12px 40px rgba(0,0,0,.7
 .hero{position:relative;padding:158px 0 0;overflow:hidden;background:radial-gradient(900px 520px at 50% 0%,rgba(212,160,23,.20),transparent 62%),linear-gradient(180deg,#000 0,#0B0703 18%,#0B0703 82%,#000 100%),var(--bg)}
 .hero::before,.hero::after{content:"";position:absolute;left:0;right:0;height:52px;background:#000;z-index:4;pointer-events:none}
 .hero::before{top:0}.hero::after{bottom:0;height:38px}
-#heroCanvas{position:absolute;inset:0;width:100%;height:100%;opacity:.55;pointer-events:none}
+
 .hero-grid-bg{position:absolute;inset:0;background-image:radial-gradient(rgba(232,201,122,.13) 1px,transparent 1.4px);background-size:26px 26px;mask-image:radial-gradient(ellipse 75% 55% at 50% 0%,black 30%,transparent 100%);pointer-events:none}
 .orb{position:absolute;border-radius:50%;pointer-events:none;animation:orbFloat 11s ease-in-out infinite;will-change:transform}
 .orb1{width:520px;height:520px;background:radial-gradient(circle,rgba(212,160,23,.22),transparent 68%);top:-140px;right:4%}
@@ -564,47 +565,313 @@ button.mh-btn:hover{filter:brightness(1.08)}
 @media(max-width:960px){.team-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:560px){.team-grid{grid-template-columns:1fr}}
 
+
+/* ============ ALPHAFRAME 3D WORLD — override skin (26 Nov 2026 rebuild) ============ */
+/* New palette: deep indigo space + gold + coral/mint/violet. Cartoon/animated. */
+:root{
+  --bg:#0D0A1F; --bg2:#14102E; --surface:#1B1540; --surface2:#241B4D; --surface3:#2E2361;
+  --ink:#FFF6E5; --ink2:#E6DCFF; --muted:#A79ED1;
+  --line:rgba(255,246,229,.14); --line2:rgba(245,197,66,.55);
+  --gold:#F5C542; --gold2:#FFD97A; --gold3:#FFE9A8; --gold-soft:rgba(245,197,66,.16);
+  --red:#FF5A5F; --red2:#FF7A5C; --cream:#FFF6E5; --paper:#FFF3D6;
+  --green:#3ED598; --redtext:#FF8A7A; --violet:#7C5CFF; --blue:#4CC9F0;
+  --r:20px;
+  --hard:0 8px 0 rgba(0,0,0,.38);
+  --bounce:cubic-bezier(.34,1.56,.64,1);
+}
+body{font-family:'Nunito',system-ui,-apple-system,'Segoe UI',sans-serif;background:radial-gradient(1200px 600px at 70% -10%,#241B4D 0%,var(--bg) 55%) fixed,var(--bg)}
+h1,h2,h3{font-family:'Bebas Neue','Arial Narrow',sans-serif;letter-spacing:.02em}
+.serif{font-family:'Bebas Neue',sans-serif;font-style:normal;color:var(--gold2);letter-spacing:.02em}
+section{padding:110px 0}
+.sec-head h2{font-size:clamp(44px,6vw,76px);line-height:.95;text-transform:uppercase}
+/* 3D typography: layered shadow stack = extruded type */
+.t3d{text-shadow:0 1px 0 #B98A1B,0 2px 0 #B98A1B,0 3px 0 #8A6410,0 4px 0 #6B4C08,0 6px 0 rgba(0,0,0,.45),0 10px 24px rgba(0,0,0,.55)}
+/* Strong reveals — real transform, not opacity-only (old: opacity/blur only) */
+.reveal{opacity:0;transform:translateY(40px) rotateX(12deg);transform-origin:50% 0;transition:opacity .7s ease,transform .8s var(--bounce)}
+.reveal.in{opacity:1;transform:translateY(0) rotateX(0)}
+/* Chunky cartoon buttons */
+.btn{border-radius:999px;border:2px solid rgba(0,0,0,.35);box-shadow:0 5px 0 rgba(0,0,0,.4);transition:transform .25s var(--bounce),box-shadow .25s var(--bounce)}
+.btn:hover{transform:translateY(-3px) scale(1.02);box-shadow:0 9px 0 rgba(0,0,0,.4)}
+.btn:active{transform:translateY(2px);box-shadow:0 2px 0 rgba(0,0,0,.4)}
+.btn-gold{background:linear-gradient(180deg,var(--gold3),var(--gold));color:#171200}
+.btn-ghost{background:rgba(255,246,229,.08);color:var(--ink);border-color:var(--line2)}
+.btn-line{background:transparent;color:var(--ink);border-color:var(--line2)}
+.btn-outline{background:transparent;color:var(--gold2);border-color:var(--gold)}
+/* Header */
+#siteHeader{background:rgba(13,10,31,.72);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+#siteHeader .nav a{color:var(--ink2)}
+#siteHeader .nav a:hover{color:var(--gold2)}
+/* ============ HERO — full-viewport 3D ============ */
+.hero{min-height:100svh;position:relative;overflow:hidden;padding:150px 0 90px;background:radial-gradient(900px 500px at 50% 30%,#2E2361 0%,var(--bg) 62%)}
+#hero3d{position:absolute;inset:0;width:100%;height:100%;display:block;cursor:grab;touch-action:none;opacity:1;pointer-events:auto;z-index:1}
+#hero3d.dragging{cursor:grabbing}
+.hero-inner{position:relative;z-index:3;pointer-events:none;text-align:center;max-width:980px;margin:0 auto;display:block}
+.hero-inner a,.hero-inner button,.hero-inner input,.hero-inner .pill{pointer-events:auto}
+.hero .pill{margin:0 auto 18px}
+.hero h1{font-size:clamp(64px,11vw,138px);line-height:.88;text-transform:uppercase;margin:6px 0 18px;text-align:center}
+.hero h1 .line{display:block}
+.hero h1 .line>span{display:inline-block}
+#rotWord{color:var(--gold2);display:inline-block;min-width:2.2em;text-align:left}
+.hero .sub{max-width:640px;margin:0 auto;font-size:clamp(16px,2vw,19px);line-height:1.6;color:var(--ink2)}
+.hero .sub strong{color:var(--gold2)}
+.hero-ctas{justify-content:center;margin-top:30px}
+.hero-stats{justify-content:center;margin-top:34px;gap:14px;flex-wrap:wrap;border:0;padding:0}
+.hstat{background:rgba(27,21,64,.82);border:2px solid var(--line);border-radius:18px;padding:14px 20px;margin:0;box-shadow:var(--hard);backdrop-filter:blur(6px)}
+.hstat b{font-size:26px;color:var(--gold2)}
+/* Drag hint + scroll cue */
+.drag-hint{position:absolute;left:50%;bottom:118px;transform:translateX(-50%);z-index:4;display:flex;align-items:center;gap:10px;background:rgba(13,10,31,.8);border:2px solid var(--gold);color:var(--gold2);font-weight:800;font-size:13px;letter-spacing:.14em;padding:10px 18px;border-radius:999px;box-shadow:var(--hard);animation:hintBob 2.2s ease-in-out infinite;white-space:nowrap}
+.drag-hint .spin{font-size:18px;display:inline-block;animation:spinSlow 2.6s linear infinite}
+@keyframes hintBob{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-7px)}}
+@keyframes spinSlow{to{transform:rotate(360deg)}}
+.scroll-cue{position:absolute;left:50%;bottom:66px;transform:translateX(-50%);z-index:4;color:var(--muted);font-size:12px;letter-spacing:.22em;text-align:center}
+.scroll-cue i{display:block;font-style:normal;font-size:20px;color:var(--gold2);animation:cueDrop 1.6s ease-in-out infinite}
+@keyframes cueDrop{0%,100%{transform:translateY(0);opacity:.5}50%{transform:translateY(8px);opacity:1}}
+/* Floating chips over the 3D hero (depth layers) */
+.float-chip3d{position:absolute;z-index:2;background:rgba(27,21,64,.9);border:2px solid var(--line2);border-radius:16px;padding:10px 16px;font-size:13px;font-weight:800;color:var(--ink);box-shadow:var(--hard);pointer-events:none;will-change:transform}
+.float-chip3d b{color:var(--gold2);display:block;font-size:15px}
+.fc-a{top:22%;left:4%}.fc-b{top:30%;right:4%}.fc-c{bottom:24%;right:7%}
+/* CSS fallback aperture (only shown if WebGL/CDN truly fails) */
+.hero-fallback{position:absolute;inset:0;display:none;align-items:center;justify-content:center;pointer-events:none;z-index:1}
+.hero-fallback .ap{width:min(58vmin,420px);height:min(58vmin,420px);border-radius:50%;background:conic-gradient(from 0deg,#F5C542,#7C5CFF,#F5C542,#FF5A5F,#F5C542);-webkit-mask:radial-gradient(circle,transparent 34%,#000 35%,#000 62%,transparent 63%);mask:radial-gradient(circle,transparent 34%,#000 35%,#000 62%,transparent 63%);opacity:.85;animation:spinSlow 14s linear infinite}
+.hero-fallback .ap-core{position:absolute;width:min(26vmin,190px);height:min(26vmin,190px);border-radius:50%;background:radial-gradient(circle at 35% 30%,#FFE9A8,#F5C542 45%,#8A6410);box-shadow:0 0 80px rgba(245,197,66,.55)}
+body.no-webgl #hero3d,body.no-webgl #journey3d{display:none}
+body.no-webgl .hero-fallback{display:flex}
+body.no-webgl .j-sticky{position:static;height:auto}
+body.no-webgl .j-panel{position:static;opacity:1;transform:none;margin:18px auto;max-width:560px}
+/* Marquee — pinned to the hero's bottom edge */
+.hero .marquee{position:absolute;left:0;right:0;bottom:0;margin-top:0;z-index:3}
+.marquee{border-top:2px solid var(--line);border-bottom:2px solid var(--line);background:var(--gold);color:#171200}
+.marquee-track span{color:#171200;font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:.08em}
+.marquee-track span::after{content:"✦";margin-left:26px;color:#8A6410}
+/* Section heads */
+.sec-head .mono{color:var(--gold2);border:2px solid var(--line2);border-radius:999px;padding:7px 14px;display:inline-block;background:rgba(245,197,66,.1)}
+.sec-head p{color:var(--ink2)}
+/* Tilt cards — strong, measurable tilt (old: +-0.3-0.6 deg; new: +-10 deg) */
+.tilt3d{transform-style:preserve-3d;will-change:transform;transition:transform .18s ease-out,box-shadow .3s}
+.tilt3d:hover{box-shadow:0 18px 0 rgba(0,0,0,.35)}
+.spotlight{background:linear-gradient(160deg,var(--surface2),var(--surface));border:2px solid var(--line);border-radius:24px;box-shadow:var(--hard)}
+.spotlight:hover{border-color:var(--gold)}
+.spotlight h3{color:var(--ink)}
+.spotlight p{color:var(--ink2)}
+/* Mini 3D animated icons inside standard cards */
+.mini3d{width:64px;height:64px;margin-bottom:16px;position:relative;transform-style:preserve-3d}
+.mini3d .cube{position:absolute;inset:12px;background:linear-gradient(135deg,var(--gold3),var(--gold));border:2px solid #171200;border-radius:12px;box-shadow:6px 6px 0 rgba(0,0,0,.4);animation:cubeSpin 5s ease-in-out infinite}
+@keyframes cubeSpin{0%,100%{transform:rotateX(0) rotateY(0)}50%{transform:rotateX(24deg) rotateY(28deg) translateZ(8px)}}
+.mini3d .ring{position:absolute;inset:4px;border:3px solid var(--violet);border-radius:50%;animation:ringSpin 4s linear infinite}
+.mini3d .ring.r2{inset:14px;border-color:var(--mint);animation-duration:3s;animation-direction:reverse}
+@keyframes ringSpin{0%{transform:rotateX(62deg) rotateZ(0)}100%{transform:rotateX(62deg) rotateZ(360deg)}}
+.mini3d .dot{position:absolute;left:50%;top:50%;width:22px;height:22px;margin:-11px 0 0 -11px;border-radius:50%;background:var(--coral);border:2px solid #171200;animation:pulseDot 1.6s ease-in-out infinite}
+@keyframes pulseDot{0%,100%{transform:scale(1)}50%{transform:scale(1.5)}}
+.mini3d .layer{position:absolute;left:8px;right:8px;height:12px;border-radius:6px;border:2px solid #171200;animation:layerFloat 2.4s ease-in-out infinite}
+.mini3d .layer.l1{top:8px;background:var(--gold)}
+.mini3d .layer.l2{top:26px;background:var(--violet);animation-delay:.25s}
+.mini3d .layer.l3{top:44px;background:var(--mint);animation-delay:.5s}
+@keyframes layerFloat{0%,100%{transform:translateX(0)}50%{transform:translateX(8px) rotate(-2deg)}}
+
+/* ============ JOURNEY — scroll is the trip (600vh pinned canvas) ============ */
+#journey{padding:0;background:var(--bg)}
+#journeyWrap{height:600vh;position:relative}
+.j-sticky{position:sticky;top:0;height:100svh;overflow:hidden}
+#journey3d{position:absolute;inset:0;width:100%;height:100%;display:block}
+.j-panel{position:absolute;left:6%;top:50%;transform:translateY(-50%) translateX(60px) scale(.96);opacity:0;transition:opacity .5s ease,transform .6s var(--bounce);max-width:520px;z-index:3;pointer-events:none;background:rgba(13,10,31,.78);border:2px solid var(--line2);border-radius:24px;padding:30px 32px;box-shadow:var(--hard);backdrop-filter:blur(8px)}
+.j-panel.active{opacity:1;transform:translateY(-50%) translateX(0) scale(1)}
+.j-panel .j-num{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:.2em;color:var(--gold2)}
+.j-panel h3{font-size:clamp(40px,5vw,64px);line-height:.92;text-transform:uppercase;margin:8px 0 10px}
+.j-panel p{color:var(--ink2);font-size:17px;line-height:1.55;margin:0}
+.j-dots{position:absolute;right:26px;top:50%;transform:translateY(-50%);z-index:4;display:flex;flex-direction:column;gap:12px}
+.j-dots i{width:12px;height:12px;border-radius:50%;border:2px solid var(--gold2);background:transparent;transition:all .3s}
+.j-dots i.on{background:var(--gold2);transform:scale(1.5)}
+.j-count{position:absolute;right:26px;top:24px;z-index:4;font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:.18em;color:var(--gold2)}
+.j-skip{position:absolute;left:50%;bottom:26px;transform:translateX(-50%);z-index:4;color:var(--muted);font-size:13px;letter-spacing:.12em;text-decoration:none;border-bottom:1px dashed var(--muted)}
+.j-skip:hover{color:var(--gold2)}
+/* ============ SHOWCASE — scroll-zoom + preview browser ============ */
+.ba-wrap{transform-origin:50% 20%;will-change:transform}
+.ba{border:2px solid var(--line2);border-radius:24px;overflow:hidden;box-shadow:var(--hard)}
+.ba-handle{background:var(--gold);box-shadow:0 0 0 4px rgba(245,197,66,.35)}
+.ba-knob{font-size:22px}
+.demo-scores .score-card{background:var(--surface);border:2px solid var(--line);border-radius:20px}
+.demo-btn{border-radius:999px;border:2px solid var(--line2)}
+.demo-btn.active{background:var(--gold);color:#171200;border-color:#171200}
+/* Preview browser (niche tabs) — keep old layout, new skin */
+.visual{position:relative}
+.browser{background:#fff;border:2px solid #171200;border-radius:20px;box-shadow:10px 10px 0 rgba(0,0,0,.45)}
+.phone{background:#171200;border:2px solid var(--line2);border-radius:28px;box-shadow:var(--hard)}
+/* ============ AUDIT — diagnostic machine ============ */
+.audit-panel{background:linear-gradient(160deg,var(--surface2),var(--surface));border:2px solid var(--line2);border-radius:28px;box-shadow:var(--hard)}
+.audit-dial{background:conic-gradient(var(--gold) calc(var(--pct,0)*1%),#241B4D 0)}
+.audit-opt{border-radius:999px;border:2px solid var(--line2)}
+.audit-opt.sel-yes{background:var(--green);color:#06281A;border-color:#06281A}
+.audit-opt.sel-part{background:var(--gold);color:#171200;border-color:#171200}
+.audit-opt.sel-no{background:var(--coral);color:#fff;border-color:#3d0a0c}
+/* ============ WORK — drag-to-rotate 3D ring ============ */
+#ringStage{perspective:1500px;position:relative;height:560px;overflow:visible;cursor:grab;touch-action:pan-y}
+#ringStage.dragging{cursor:grabbing}
+#workRing{position:absolute;left:50%;top:30px;width:360px;height:480px;margin-left:-180px;transform-style:preserve-3d;will-change:transform}
+.ring-card{position:absolute;inset:0;transform-style:preserve-3d;border-radius:24px;overflow:hidden;background:var(--surface2);border:2px solid var(--line2);box-shadow:0 16px 0 rgba(0,0,0,.4);backface-visibility:hidden}
+.ring-card .work-visual{height:220px}
+.ring-card .work-body{padding:20px 22px}
+.ring-card .work-body h3{font-size:26px;text-transform:uppercase}
+.ring-card .work-body p{color:var(--ink2);font-size:14.5px;line-height:1.55}
+.ring-hint{text-align:center;color:var(--muted);font-size:13px;letter-spacing:.14em;margin-top:8px}
+.ring-nav{display:flex;justify-content:center;gap:14px;margin-top:18px}
+.ring-nav button{width:52px;height:52px;border-radius:50%;border:2px solid var(--gold);background:rgba(245,197,66,.12);color:var(--gold2);font-size:22px;cursor:pointer;transition:transform .25s var(--bounce)}
+.ring-nav button:hover{transform:scale(1.12)}
+.ring-nav button:active{transform:scale(.94)}
+/* ============ ENGINEERING — exploded layer stack ============ */
+#layerStack{position:relative;height:420px;perspective:1200px;margin-top:44px}
+#layerStack .layer{position:absolute;left:50%;top:60px;width:min(680px,92%);margin-left:min(-340px,-46%);padding:20px 26px;border-radius:18px;border:2px solid #171200;box-shadow:8px 8px 0 rgba(0,0,0,.4);transform-style:preserve-3d;will-change:transform;display:flex;gap:16px;align-items:center}
+#layerStack .layer b{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:.06em;white-space:nowrap}
+#layerStack .layer span{font-size:14.5px;line-height:1.45;opacity:.92}
+#layerStack .layer.lay0{background:var(--gold);color:#171200}
+#layerStack .layer.lay1{background:var(--violet);color:#fff}
+#layerStack .layer.lay2{background:var(--cream);color:#171200}
+#layerStack .layer.lay3{background:var(--mint);color:#06281A}
+#layerStack .layer.lay4{background:var(--coral);color:#fff}
+/* ============ PRICING — value stack of 3D coins ============ */
+#valueStack{position:relative;height:150px;perspective:900px;margin:18px auto 4px;width:220px}
+#valueStack .coin{position:absolute;left:50%;bottom:0;width:150px;height:26px;margin-left:-75px;border-radius:50%/100%;border:2px solid #171200;background:radial-gradient(circle at 35% 30%,#FFE9A8,#F5C542 55%,#B98A1B);box-shadow:0 4px 0 rgba(0,0,0,.35);transform:translateZ(0);opacity:.18;transition:opacity .4s,transform .5s var(--bounce)}
+#valueStack .coin.on{opacity:1}
+#valueStack .coin::after{content:"$";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:18px;color:#6B4C08}
+.plan{background:linear-gradient(160deg,var(--surface2),var(--surface));border:2px solid var(--line);border-radius:28px;box-shadow:var(--hard)}
+.plan.pop{border-color:var(--gold);background:linear-gradient(160deg,#3A2A10,var(--surface2))}
+.glass-panel{background:linear-gradient(160deg,var(--surface2),var(--surface));border:2px solid var(--line);border-radius:28px;box-shadow:var(--hard)}
+/* ============ PROCESS / COMPARE / FAQ / BRIEF / CONTACT ============ */
+.step{background:var(--surface);border:2px solid var(--line);border-radius:24px;box-shadow:var(--hard)}
+.step .bignum{color:var(--gold)}
+.compare table{border:2px solid var(--line);border-radius:20px;overflow:hidden}
+.faq{background:var(--surface);border:2px solid var(--line);border-radius:18px}
+.faq[open]{border-color:var(--gold)}
+.form-card,.brief-out,.contact-panel{background:linear-gradient(160deg,var(--surface2),var(--surface));border:2px solid var(--line);border-radius:28px;box-shadow:var(--hard)}
+.field input,.field select,.field textarea{background:#0D0A1F;border:2px solid var(--line);border-radius:14px;color:var(--ink)}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--gold);outline:none;box-shadow:0 0 0 3px rgba(245,197,66,.25)}
+.final{background:linear-gradient(160deg,var(--gold),#D4A017);color:#171200;border:2px solid #171200;border-radius:32px;box-shadow:10px 10px 0 rgba(0,0,0,.45)}
+.final h2,.final p{color:#171200}
+.final .serif{color:#5C430A}
+/* ============ FOOTER WORDMARK — letters lift measurably on hover ============ */
+.foot-word{font-family:'Bebas Neue',sans-serif;overflow:hidden}
+.foot-word span{display:inline-block;transition:transform .35s var(--bounce);transition-delay:calc(var(--i)*40ms);will-change:transform}
+.foot-word span:hover{transform:translateY(-16px) rotateX(25deg);color:var(--gold2)}
+.foot-word.in span{animation:letterRise .8s var(--bounce) both;animation-delay:calc(var(--i)*60ms)}
+@keyframes letterRise{from{transform:translateY(70px) rotateX(50deg);opacity:0}to{transform:translateY(0) rotateX(0);opacity:1}}
+/* Sticky CTA */
+.sticky-cta{background:rgba(13,10,31,.9);border-top:2px solid var(--gold)}
+/* Demo modal (kept classes, new skin) */
+.demo-panel{background:var(--bg2);border:2px solid var(--gold);border-radius:24px}
+.demo-site-hero{border-radius:18px}
+.demo-tab{border-radius:999px}
+.demo-tab.active{background:var(--gold);color:#171200}
+/* ============ MOBILE 390px ============ */
+@media (max-width:640px){
+  section{padding:76px 0}
+  .hero{padding:120px 0 120px}
+  .hero h1{font-size:clamp(56px,17vw,84px)}
+  .fc-a{top:16%;left:2%}.fc-b{top:24%;right:2%}.fc-c{display:none}
+  .float-chip3d{font-size:11px;padding:8px 12px}
+  .j-panel{left:4%;right:4%;max-width:none;padding:22px}
+  .j-panel h3{font-size:38px}
+  .j-dots{right:12px}
+  #ringStage{height:520px}
+  #workRing{width:300px;height:470px;margin-left:-150px}
+  .ring-card .work-visual{height:190px}
+  #layerStack{height:460px}
+  #layerStack .layer{flex-direction:column;align-items:flex-start;gap:6px;padding:16px 18px}
+  .drag-hint{bottom:88px;font-size:11px;padding:9px 14px}
+  .foot-word{font-size:17vw}
+  .hero-stats{gap:8px}
+  .hstat{padding:10px 14px}
+  .hstat b{font-size:20px}
+}
+/* ============ REDUCED MOTION ============ */
+@media (prefers-reduced-motion:reduce){
+  .reveal{transition:none;transform:none;opacity:1}
+  .drag-hint,.scroll-cue i,.mini3d .cube,.mini3d .ring,.mini3d .dot,.mini3d .layer,.hero-fallback .ap{animation:none}
+  .j-panel{transition:none}
+}
 </style>
 </head>
 <body>
 <div id="progressBar"></div><div id="cursorDot"></div><div id="cursorRing"></div>
-
 <header id="siteHeader"><div class="wrap"><div class="nav">
-  <a class="brand" href="#top"><img src="data:image/webp;base64,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" width="46" height="46" decoding="async" fetchpriority="high" alt="AlphaFrame logo"><span><b>AlphaFrame</b><span>CAPTURE • CREATE • INSPIRE</span></span></a>
-  <nav class="navlinks"><a href="#showcase">Difference</a><a href="#audit">Free Audit</a><a href="#standard">Standard</a><a href="#work">Work</a><a href="#pricing">Pricing</a><a href="#process">Process</a><a href="#faq">FAQ</a><a href="#contact">Contact</a><!-- Team link — enable with the Team section below: <a href="#team">Team</a> --></nav>
+  <a class="brand" href="#top" style="text-decoration:none"><span><b style="font-size:18px">AlphaFrame</b><span>CAPTURE • CREATE • INSPIRE</span></span></a>
+  <nav class="nav-links"><a href="#journey">The Journey</a><a href="#showcase">Difference</a><a href="#audit">Free Audit</a><a href="#standard">Standard</a><a href="#work">Work</a><a href="#pricing">Pricing</a><a href="#process">Process</a><a href="#faq">FAQ</a><a href="#contact">Contact</a></nav>
+  <a class="btn btn-gold" href="#brief" style="padding:10px 20px;font-size:14px">Get Free Mockup →</a>
   <button class="menu-btn" id="menuBtn" aria-label="Menu" aria-expanded="false">☰</button>
-  <a class="btn btn-gold btn-sm magnetic" href="#brief" style="margin-left:8px">Free Mockup →</a>
-</div>
-<nav class="mobile-menu" id="mobileMenu"><a href="#showcase">Difference</a><a href="#audit">Free Audit</a><a href="#standard">Standard</a><a href="#work">Work</a><a href="#pricing">Pricing</a><a href="#process">Process</a><a href="#faq">FAQ</a><a href="#contact">Contact</a><!-- Team link — enable with the Team section: <a href="#team">Team</a> --><a href="mailto:alphaframehq@gmail.com?subject=Website%20enquiry%20for%20my%20business">✉ alphaframehq@gmail.com</a><a href="#brief"><strong>Get Free Mockup →</strong></a></nav>
-</div></header>
+</div></div></header>
+<nav class="mobile-menu" id="mobileMenu"><a href="#journey">The Journey</a><a href="#showcase">Difference</a><a href="#audit">Free Audit</a><a href="#standard">Standard</a><a href="#work">Work</a><a href="#pricing">Pricing</a><a href="#process">Process</a><a href="#faq">FAQ</a><a href="#contact">Contact</a><a href="mailto:alphaframehq@gmail.com?subject=Website%20enquiry%20for%20my%20business">✉ alphaframehq@gmail.com</a><a href="#brief"><strong>Get Free Mockup →</strong></a></nav>
 
 <main id="top">
-<!-- HERO -->
+<!-- AlphaFrame 3D World — full-site 3D rebuild, 26 Nov 2026 -->
+<!-- HERO — full-viewport real-time 3D -->
 <div class="hero" id="heroSec">
-  <canvas id="heroCanvas"></canvas><canvas id="hero3d" aria-hidden="true"></canvas><div class="hero-grid-bg"></div><div class="orb orb1"></div><div class="orb orb2"></div><div id="cursorGlow"></div>
+  <canvas id="hero3d" aria-hidden="true"></canvas>
+  <div class="hero-fallback" aria-hidden="true"><div class="ap"></div><div class="ap-core"></div></div>
+  <div id="cursorGlow"></div>
+  <div class="float-chip3d fc-a" data-float="0.9"><b>⚡ Loads in 0.4s</b>fast on any phone</div>
+  <div class="float-chip3d fc-b" data-float="1.2"><b>★ 7 days</b>brief → live</div>
+  <div class="float-chip3d fc-c" data-float="0.7"><b>$500 / $1,000</b>fixed, no hourly</div>
   <div class="wrap hero-inner">
     <div>
-      <span class="pill"><i></i> AlphaFrame Pictures Presents — Now Booking</span>
-      <h1>
+      <span class="pill"><i></i> AlphaFrame — 3D Interactive Websites · Now Booking</span>
+      <h1 class="t3d">
         <span class="line"><span>Websites that</span></span>
         <span class="line"><span>make people</span></span>
         <span class="line"><span><span id="rotWord">stop.</span></span></span>
       </h1>
-      <p class="sub">Anyone can generate a page in one prompt. Your customers feel it in <strong>3 seconds</strong> — and leave. AlphaFrame designs, engineers &amp; polishes every site by hand, so visitors <strong>trust you, call you, and pay you.</strong> Live in 7 days.</p>
+      <p class="sub">Anyone can generate a page in one prompt. Your customers feel it in <strong>3 seconds</strong> — and leave. AlphaFrame designs, engineers &amp; polishes every site by hand, in real 3D, so visitors <strong>trust you, call you, and pay you.</strong> Live in 7 days.</p>
       <div class="hero-ctas">
         <a class="btn btn-gold magnetic" href="#brief" style="font-size:16px;padding:16px 32px">Get My Free Homepage Mockup →</a>
-        <a class="btn btn-ghost magnetic" href="#showcase">Drag &amp; See Difference ↓</a>
+        <a class="btn btn-ghost magnetic" href="#journey">Take the 3D Tour ↓</a>
       </div>
       <div class="hero-stats">
         <div class="hstat"><b><span class="count" data-count="7">0</span><em> days</em></b><span>BRIEF TO LAUNCH</span></div>
         <div class="hstat"><b>$<span class="count" data-count="500">0</span><em>+</em></b><span>FIXED • NO HOURLY</span></div>
         <div class="hstat"><b><span class="count" data-count="100">0</span><em>%</em></b><span>YOU OWN CODE</span></div>
       </div>
-      <p style="margin-top:18px;font-size:13px;color:var(--muted);display:flex;gap:8px;align-items:center"><span style="color:var(--green)">●</span> Free mockup first — pay only if you love it &nbsp;•&nbsp; PayPal invoice &nbsp;•&nbsp; No lock-in</p>
+      <p style="margin-top:18px;font-size:13px;color:var(--muted);display:flex;gap:8px;align-items:center;justify-content:center"><span style="color:var(--green)">●</span> Free mockup first — pay only if you love it &nbsp;•&nbsp; PayPal invoice &nbsp;•&nbsp; No lock-in</p>
       <p style="margin-top:10px;font-size:14px;color:var(--ink2)">Prefer email? Write to us at <a class="mail-link" href="mailto:alphaframehq@gmail.com?subject=Website%20enquiry%20for%20my%20business">alphaframehq@gmail.com</a> — replies within 24 hours.</p>
     </div>
+  </div>
+  <div class="drag-hint" id="dragHint"><span class="spin">⟲</span> DRAG THE LENS — IT SPINS · MOVE YOUR MOUSE — IT FOLLOWS</div>
+  <div class="scroll-cue">SCROLL — THE RIDE STARTS<i>↓</i></div>
+  <div class="marquee" aria-hidden="true"><div class="marquee-track" id="marqueeTrack"><span>Realtors</span><span>Dentists &amp; Clinics</span><span>Restaurants</span><span>Packers &amp; Movers</span><span>Gyms &amp; Studios</span><span>Salons &amp; Spas</span><span>Roofers &amp; Plumbers</span><span>Coaches</span><span>Home Services</span><span>Local Shops</span></div></div>
+</div>
 
-    <div class="visual" data-parallax-wrap>
+<!-- JOURNEY — scroll is the trip -->
+<section id="journey"><div id="journeyWrap"><div class="j-sticky">
+  <canvas id="journey3d" aria-hidden="true"></canvas>
+  <div class="j-count" id="jCount">01 / 04</div>
+  <div class="j-dots" id="jDots"><i class="on"></i><i></i><i></i><i></i></div>
+  <div class="j-panel" data-station="0"><span class="j-num">STOP 01 — THE PROBLEM</span><h3>Your website is <span style="color:var(--coral)">invisible.</span></h3><p>No calls. No bookings. Customers search for your service, and Google shows your competitors first. The site you have is not selling — it is standing in the way.</p></div>
+  <div class="j-panel" data-station="1"><span class="j-num">STOP 02 — WE BUILD</span><h3>We build it <span style="color:var(--gold2)">in 3D.</span></h3><p>Watch the layers snap together — design, copy, booking, speed — into one site engineered around a single job: turn a visitor into a call.</p></div>
+  <div class="j-panel" data-station="2"><span class="j-num">STOP 03 — THEY FIND YOU</span><h3>Customers find you. <span style="color:var(--mint)">They call.</span></h3><p>Fast on mobile. Clear in 5 seconds. Quote and booking built in, working while you sleep. This is the moment the phone starts ringing.</p></div>
+  <div class="j-panel" data-station="3"><span class="j-num">STOP 04 — LIVE IN 7 DAYS</span><h3>Live in <span style="color:var(--gold2)">7 days.</span></h3><p>Free homepage mockup first — judge the real design before you pay a dollar. Then launch, handover, and 100% of the code is yours.</p></div>
+  <a class="j-skip" href="#showcase">Skip the ride ↓ — jump to the proof</a>
+</div></div></section>
+
+<!-- SHOWCASE -->
+<section id="showcase" class="alt">
+  <div class="wrap">
+    <div class="sec-head center reveal"><span class="mono">★ Feature Presentation ★ Drag it yourself</span><h2>Same business. Two websites.<br><span class="serif">One gets the call.</span></h2><p>Drag the gold handle. This is exactly what your customer feels in the first 3 seconds — before they read a single word.</p></div>
+    <div class="ba-wrap" id="baWrap">
+      <div class="ba" id="baSlider" role="slider" aria-label="Before after slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" tabindex="0">
+        <div class="ba-layer ba-cheap"><span class="ba-k">Generic template · DIY / AI</span><h3>Welcome to Our Website</h3><p>We offer many services. Please contact us for more information about our company and what we do.</p><span class="ba-btn">Click Here</span><div class="ba-badges"><span>Slow on mobile</span><span>No booking flow</span><span>Stock layout #4,021</span><span>Generic copy</span></div></div>
+        <div class="ba-layer ba-premium"><span class="ba-k">AlphaFrame · Custom build</span><h3>Moving day, <em>handled.</em></h3><p>Instant quote in 60 seconds, licensed crew, and a booking flow that works while you sleep.</p><span class="ba-btn">Get My Free Quote →</span><div class="ba-badges"><span>⚡ Loads instantly</span><span>Quote form built-in</span><span>Designed for your brand</span><span>Copy that sells</span></div></div>
+        <div class="ba-handle"><span class="ba-knob">⇔</span></div>
+      </div>
+      <div class="ba-labels"><span style="color:var(--muted)">← DIY / AI template</span><span style="color:var(--gold2)">AlphaFrame →</span></div>
+      <p class="ba-hint">👆 Drag the gold handle, use the slider below, or tap the panel and use arrow keys — your customers make this same judgement, silently, in seconds.</p>
+      <div class="ba-control"><input type="range" id="baRange" min="26" max="74" step="1" value="50" aria-label="Comparison slider control"><span>Slide to compare</span></div>
+    </div>
+    <div class="demo-toggle"><button class="demo-btn" id="demoCheap" type="button">Score: DIY Template</button><button class="demo-btn active" id="demoPremium" type="button">Score: AlphaFrame Build</button></div>
+    <div class="demo-scores">
+      <div class="score-card good" data-score-card><div class="sc-num" data-score="94">94</div><div class="sc-label">First impression / trust</div><div class="sc-bar"><div class="sc-fill" data-fill="94"></div></div></div>
+      <div class="score-card good" data-score-card><div class="sc-num" data-score="96">96</div><div class="sc-label">Mobile speed feel</div><div class="sc-bar"><div class="sc-fill" data-fill="96"></div></div></div>
+      <div class="score-card good" data-score-card><div class="sc-num" data-score="92">92</div><div class="sc-label">Chance visitor takes action</div><div class="sc-bar"><div class="sc-fill" data-fill="92"></div></div></div>
+    </div>
+    <p style="text-align:center;color:var(--muted);font-size:13px;margin-top:18px" class="reveal">Illustrative comparison based on design, speed, copy &amp; lead flows listed on this page.</p>
+
+    <div class="sec-head center reveal" style="margin-top:80px"><span class="mono">★ Live preview — tap a business</span><h2>See YOUR business<br><span class="serif">in the same build.</span></h2><p>Tap a niche — the mock homepage below changes instantly. Like the direction? The button opens the full live demo.</p></div>
+    <div class="visual reveal" data-parallax-wrap style="max-width:860px;margin:0 auto">
       <div class="niche-tabs" role="tablist" aria-label="Preview by business type">
         <button class="niche-tab active" data-niche="movers" type="button">Movers</button>
         <button class="niche-tab" data-niche="dentist" type="button">Dentist</button>
@@ -624,31 +891,6 @@ button.mh-btn:hover{filter:brightness(1.08)}
       <div class="phone"><div class="phone-screen"><span class="reel-tag">MOBILE-FIRST</span><h5>Moving day, handled end to end.</h5><p>Quote form, reviews &amp; click-to-call — right on the home screen.</p><span style="margin-top:12px;background:var(--gold3);color:#171200;font-weight:800;font-size:11.5px;padding:9px 15px;border-radius:999px;align-self:flex-start">Get a Free Quote</span></div></div>
       <div class="float-chip"><span class="fc-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M13 2L4.5 13.5H11L9.5 22 19 10h-6.5z"/></svg></span><span><b>Live in 7 days</b><span>Strategy → Design → Code → Launch</span></span></div>
     </div>
-  </div>
-  <div class="marquee" aria-hidden="true"><div class="marquee-track" id="marqueeTrack"><span>Realtors</span><span>Dentists &amp; Clinics</span><span>Restaurants</span><span>Packers &amp; Movers</span><span>Gyms &amp; Studios</span><span>Salons &amp; Spas</span><span>Roofers &amp; Plumbers</span><span>Coaches</span><span>Home Services</span><span>Local Shops</span></div></div>
-</div>
-
-<!-- SHOWCASE -->
-<section id="showcase" class="alt">
-  <div class="wrap">
-    <div class="sec-head center reveal"><span class="mono">★ Feature Presentation ★ Drag it yourself</span><h2>Same business. Two websites.<br><span class="serif">One gets the call.</span></h2><p>Drag the gold handle. This is exactly what your customer feels in the first 3 seconds — before they read a single word.</p></div>
-    <div class="ba-wrap">
-      <div class="ba" id="baSlider" role="slider" aria-label="Before after slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" tabindex="0">
-        <div class="ba-layer ba-cheap"><span class="ba-k">Generic template · DIY / AI</span><h3>Welcome to Our Website</h3><p>We offer many services. Please contact us for more information about our company and what we do.</p><span class="ba-btn">Click Here</span><div class="ba-badges"><span>Slow on mobile</span><span>No booking flow</span><span>Stock layout #4,021</span><span>Generic copy</span></div></div>
-        <div class="ba-layer ba-premium"><span class="ba-k">AlphaFrame · Custom build</span><h3>Moving day, <em>handled.</em></h3><p>Instant quote in 60 seconds, licensed crew, and a booking flow that works while you sleep.</p><span class="ba-btn">Get My Free Quote →</span><div class="ba-badges"><span>⚡ Loads instantly</span><span>Quote form built-in</span><span>Designed for your brand</span><span>Copy that sells</span></div></div>
-        <div class="ba-handle"><span class="ba-knob">⇔</span></div>
-      </div>
-      <div class="ba-labels"><span style="color:var(--muted)">← DIY / AI template</span><span style="color:var(--gold2)">AlphaFrame →</span></div>
-      <p class="ba-hint">👆 Drag the gold handle, use the slider below, or tap the panel and use arrow keys — your customers make this same judgement, silently, in seconds.</p>
-      <div class="ba-control"><input type="range" id="baRange" min="26" max="74" step="1" value="50" aria-label="Comparison slider control"><span>Slide to compare</span></div>
-    </div>
-    <div class="demo-toggle"><button class="demo-btn" id="demoCheap" type="button">Score: DIY Template</button><button class="demo-btn active" id="demoPremium" type="button">Score: AlphaFrame Build</button></div>
-    <div class="demo-scores">
-      <div class="score-card good" data-score-card><div class="sc-num" data-score="94">94</div><div class="sc-label">First impression / trust</div><div class="sc-bar"><div class="sc-fill" data-fill="94"></div></div></div>
-      <div class="score-card good" data-score-card><div class="sc-num" data-score="96">96</div><div class="sc-label">Mobile speed feel</div><div class="sc-bar"><div class="sc-fill" data-fill="96"></div></div></div>
-      <div class="score-card good" data-score-card><div class="sc-num" data-score="92">92</div><div class="sc-label">Chance visitor takes action</div><div class="sc-bar"><div class="sc-fill" data-fill="92"></div></div></div>
-    </div>
-    <p style="text-align:center;color:var(--muted);font-size:13px;margin-top:18px" class="reveal">Illustrative comparison based on design, speed, copy &amp; lead flows listed on this page.</p>
   </div>
 </section>
 
@@ -682,46 +924,34 @@ button.mh-btn:hover{filter:brightness(1.08)}
 
 <!-- STANDARD -->
 <section id="standard"><div class="wrap">
-  <div class="sec-head reveal"><span class="mono">The AlphaFrame Standard</span><h2>Not a template.<br>Not a prompt. <span class="serif">A build.</span></h2><p>Move your mouse over these cards — that glow, that lift, that polish? That's what expensive feels like. Every AlphaFrame site gets the disciplines agencies charge $10k for.</p></div>
+  <div class="sec-head reveal"><span class="mono">The AlphaFrame Standard</span><h2>Not a template.<br>Not a prompt. <span class="serif">A build.</span></h2><p>Move your mouse over these cards — they tilt, glow and lift in 3D. That feeling? That's what expensive feels like. Every AlphaFrame site gets the disciplines agencies charge $10k for.</p></div>
   <div class="std-grid">
-    <article class="spotlight reveal"><span class="std-ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg></span><h3>Conversion strategy first</h3><p>We map the one action your site must drive — calls, bookings or orders — and build every page around it.</p><span class="tagline">Every package</span></article>
-    <article class="spotlight reveal" data-delay="1"><span class="std-ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M12 19l7-7a4.6 4.6 0 10-7-7l-7 7v7h7z"/><path d="M18 13l-7-7"/></svg></span><h3>Custom design system</h3><p>Your own type, color, spacing &amp; components — designed for your brand. No themes, no lookalikes.</p><span class="tagline">Every package</span></article>
-    <article class="spotlight reveal" data-delay="2"><span class="std-ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M4 7V5h16v2"/><path d="M12 5v14"/><path d="M9 19h6"/></svg></span><h3>Copy that sells</h3><p>Headlines written for your customer — clear offer, proof up front, zero filler.</p><span class="tagline">Premium</span></article>
-    <article class="spotlight reveal" data-delay="3"><span class="std-ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M13 2L4.5 13.5H11L9.5 22 19 10h-6.5z"/></svg></span><h3>Performance engineered</h3><p>Hand-built, lightweight code. Fast on phones — where most customers meet you first.</p><span class="tagline">Every package</span></article>
-    <article class="spotlight reveal"><span class="std-ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M4 18c4-1 5-4 5-8V4h6v6c0 4 1 7 5 8"/><path d="M2 21h20"/></svg></span><h3>Motion &amp; polish</h3><p>Smooth scroll, hover states &amp; micro-interactions tuned by hand — the details that feel expensive.</p><span class="tagline">Premium</span></article>
-    <article class="spotlight reveal" data-delay="1"><span class="std-ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></span><h3>Local SEO foundation</h3><p>Titles, maps, hours &amp; local keywords set up properly — so nearby customers find you.</p><span class="tagline">Premium · Full</span></article>
-    <article class="spotlight reveal" data-delay="2"><span class="std-ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18"/><path d="M7 15h4"/></svg></span><h3>Real lead flows</h3><p>Quote forms, booking &amp; click-to-call wired to actually reach you — tested end to end.</p><span class="tagline">Every package</span></article>
-    <article class="spotlight reveal" data-delay="3"><span class="std-ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg></span><h3>QA on real devices</h3><p>Checked on phone, tablet &amp; desktop before you see it. Broken layouts don't ship.</p><span class="tagline">Every package</span></article>
+    <article class="spotlight tilt3d reveal"><div class="mini3d"><div class="cube"></div></div><h3>Conversion strategy first</h3><p>We map the one action your site must drive — calls, bookings or orders — and build every page around it.</p><span class="tagline">Every package</span></article>
+    <article class="spotlight tilt3d reveal" data-delay="1"><div class="mini3d"><div class="ring"></div><div class="ring r2"></div></div><h3>Custom design system</h3><p>Your own type, color, spacing &amp; components — designed for your brand. No themes, no lookalikes.</p><span class="tagline">Every package</span></article>
+    <article class="spotlight tilt3d reveal" data-delay="2"><div class="mini3d"><div class="layer l1"></div><div class="layer l2"></div><div class="layer l3"></div></div><h3>Copy that sells</h3><p>Headlines written for your customer — clear offer, proof up front, zero filler.</p><span class="tagline">Premium</span></article>
+    <article class="spotlight tilt3d reveal" data-delay="3"><div class="mini3d"><div class="dot"></div></div><h3>Performance engineered</h3><p>Hand-built, lightweight code. Fast on phones — where most customers meet you first.</p><span class="tagline">Every package</span></article>
+    <article class="spotlight tilt3d reveal"><div class="mini3d"><div class="cube"></div></div><h3>Motion &amp; polish</h3><p>Smooth scroll, hover states &amp; micro-interactions tuned by hand — the details that feel expensive.</p><span class="tagline">Premium</span></article>
+    <article class="spotlight tilt3d reveal" data-delay="1"><div class="mini3d"><div class="ring"></div><div class="ring r2"></div></div><h3>Local SEO foundation</h3><p>Titles, maps, hours &amp; local keywords set up properly — so nearby customers find you.</p><span class="tagline">Premium · Full</span></article>
+    <article class="spotlight tilt3d reveal" data-delay="2"><div class="mini3d"><div class="layer l1"></div><div class="layer l2"></div><div class="layer l3"></div></div><h3>Real lead flows</h3><p>Quote forms, booking &amp; click-to-call wired to actually reach you — tested end to end.</p><span class="tagline">Every package</span></article>
+    <article class="spotlight tilt3d reveal" data-delay="3"><div class="mini3d"><div class="dot"></div></div><h3>QA on real devices</h3><p>Checked on phone, tablet &amp; desktop before you see it. Broken layouts don't ship.</p><span class="tagline">Every package</span></article>
   </div>
 </div></section>
 
-<!-- WORK -->
+<!-- WORK — drag-to-rotate 3D ring -->
 <section id="work" class="alt"><div class="wrap">
-  <div class="sec-head reveal"><span class="mono">Selected work &amp; concepts</span><h2>Judge the work,<br><span class="serif">not the pitch.</span></h2><p>One live client build + two concepts in the exact standard we'd build for you. Like a direction? Name it in your brief — mockup is free.</p></div>
-  <div class="work-grid">
-    <article class="work-card reveal"><div class="work-visual wv-movers"><span class="tag">CLIENT WORK · LIVE</span><h4>Mr Dwivedi Packer<br>&amp; Relocation</h4><p>Interactive site with live cost estimator &amp; quote form</p></div><div class="work-body"><h3>Packers &amp; Movers — Business Website</h3><p>Immersive, animated website: services, 5-step process, working cost estimator and a free-quote form that turns visitors into enquiries.</p><div class="work-meta"><span>Custom build</span><span>Cost estimator</span><span>Quote form</span><span>Motion</span></div><button class="btn btn-outline btn-sm demo-open" type="button" data-demo="dwivedi">Open Live Demo →</button></div></article>
-    <article class="work-card reveal" data-delay="1"><div class="work-visual wv-well"><span class="tag sample">CONCEPT BUILD</span><h4>Wellness Studio<br>Booking Website</h4><p>Programs, pricing &amp; membership sign-up flow</p></div><div class="work-body"><h3>Wellness Coach — Business Website</h3><p>Concept for a wellness coach: programs explained simply, transparent pricing, sign-up flow from curious to enrolled in 3 steps.</p><div class="work-meta"><span>Custom build</span><span>Pricing page</span><span>Sign-up flow</span><span>Mobile-first</span></div><button class="btn btn-outline btn-sm demo-open" type="button" data-demo="wellness">Open Live Demo →</button></div></article>
-    <article class="work-card reveal" data-delay="2"><div class="work-visual wv-real"><span class="tag sample">CONCEPT BUILD</span><h4>Realtor Personal<br>Brand Site</h4><p>Listings, testimonials &amp; booking-first layout</p></div><div class="work-body"><h3>Real Estate — Agent Website</h3><p>Concept for a solo realtor: listing-led homepage, featured properties, social proof, consultation booking that captures leads 24/7.</p><div class="work-meta"><span>Custom build</span><span>Booking flow</span><span>Lead capture</span></div><button class="btn btn-outline btn-sm demo-open" type="button" data-demo="realtor">Open Live Demo →</button></div></article>
+  <div class="sec-head reveal"><span class="mono">Selected work &amp; concepts</span><h2>Judge the work,<br><span class="serif">not the pitch.</span></h2><p>One live client build + two concepts in the exact standard we'd build for you. Drag the ring to spin through them — tap a card to open its live demo.</p></div>
+  <div id="ringStage" aria-label="Work carousel — drag to rotate">
+    <div id="workRing">
+      <article class="ring-card"><div class="work-visual wv-movers"><span class="tag">CLIENT WORK · LIVE</span><h4>Mr Dwivedi Packer<br>&amp; Relocation</h4><p>Interactive site with live cost estimator &amp; quote form</p></div><div class="work-body"><h3>Packers &amp; Movers — Business Website</h3><p>Immersive, animated website: services, 5-step process, working cost estimator and a free-quote form that turns visitors into enquiries.</p><div class="work-meta"><span>Custom build</span><span>Cost estimator</span><span>Quote form</span><span>Motion</span></div><button class="btn btn-outline btn-sm demo-open" type="button" data-demo="dwivedi">Open Live Demo →</button></div></article>
+      <article class="ring-card"><div class="work-visual wv-well"><span class="tag sample">CONCEPT BUILD</span><h4>Wellness Studio<br>Booking Website</h4><p>Programs, pricing &amp; membership sign-up flow</p></div><div class="work-body"><h3>Wellness Coach — Business Website</h3><p>Concept for a wellness coach: programs explained simply, transparent pricing, sign-up flow from curious to enrolled in 3 steps.</p><div class="work-meta"><span>Custom build</span><span>Pricing page</span><span>Sign-up flow</span><span>Mobile-first</span></div><button class="btn btn-outline btn-sm demo-open" type="button" data-demo="wellness">Open Live Demo →</button></div></article>
+      <article class="ring-card"><div class="work-visual wv-real"><span class="tag sample">CONCEPT BUILD</span><h4>Realtor Personal<br>Brand Site</h4><p>Listings, testimonials &amp; booking-first layout</p></div><div class="work-body"><h3>Real Estate — Agent Website</h3><p>Concept for a solo realtor: listing-led homepage, featured properties, social proof, consultation booking that captures leads 24/7.</p><div class="work-meta"><span>Custom build</span><span>Booking flow</span><span>Lead capture</span></div><button class="btn btn-outline btn-sm demo-open" type="button" data-demo="realtor">Open Live Demo →</button></div></article>
+    </div>
   </div>
+  <p class="ring-hint">⟵ DRAG THE RING TO SPIN · 100px = 30° · TAP A CARD FOR ITS LIVE DEMO ⟶</p>
+  <div class="ring-nav"><button id="ringPrev" type="button" aria-label="Previous project">‹</button><button id="ringNext" type="button" aria-label="Next project">›</button></div>
 </div></section>
 
-<!-- ================= TEAM SECTION — READY TO ENABLE =================
-     Dev will share 1 or 2 website links with real team / friends info.
-     When they arrive: fill in the cards below (name, role, one line bio,
-     photo), then delete ONLY the opening comment line above and the
-     closing comment line below, and uncomment the Team link in the
-     header nav and mobile menu. No invented names, photos, roles or
-     testimonials are in this section. Placeholders only, on purpose.
-<section id="team" class="alt"><div class="wrap">
-  <div class="sec-head reveal"><span class="mono">The people behind the pixels</span><h2>Meet the team<br><span class="serif">behind AlphaFrame.</span></h2><p>Designers, engineers and storytellers. The crew that turns a brief into a website that brings customers.</p></div>
-  <div class="team-grid">
-    <article class="team-card reveal"><div class="team-photo">PHOTO</div><div class="team-body"><h3>Team Member 1</h3><p class="team-role">Role</p><p>One line bio goes here. What they do for your website.</p></div></article>
-    <article class="team-card reveal" data-delay="1"><div class="team-photo">PHOTO</div><div class="team-body"><h3>Team Member 2</h3><p class="team-role">Role</p><p>One line bio goes here. What they do for your website.</p></div></article>
-    <article class="team-card reveal" data-delay="2"><div class="team-photo">PHOTO</div><div class="team-body"><h3>Team Member 3</h3><p class="team-role">Role</p><p>One line bio goes here. What they do for your website.</p></div></article>
-  </div>
-</div></section>
-     ================= END TEAM SECTION ================= -->
-<!-- ENGINEERING -->
+<!-- ENGINEERING — exploded layer stack -->
 <section id="engineering"><div class="wrap"><div class="eng-grid">
   <div class="reveal"><div class="sec-head" style="margin-bottom:0"><span class="mono">Under the hood</span><h2>Built like a product,<br><span class="serif">not pasted together.</span></h2><p>This page itself is hand-coded — view its source. Your site gets the same treatment.</p></div>
   <div class="eng-points">
@@ -739,13 +969,23 @@ button.mh-btn:hover{filter:brightness(1.08)}
 <span class="c-blue">Performance</span>   <span class="c-green">fast, hand-built code</span>
 <span class="c-blue">SEO</span>           <span class="c-green">titles · maps · local keywords</span>
 <span class="c-blue">Ownership</span>     <span class="c-gold">100% — code, domain, content</span></pre></div>
-</div></div></section>
+</div></div>
+<div class="wrap">
+  <div class="sec-head center reveal"><span class="mono">★ Scroll — watch it assemble</span><h2>Your website, layer by layer.<br><span class="serif">Scroll and it builds itself.</span></h2><p>Every AlphaFrame site is five layers stacked in order. Scroll through this section and watch them fly apart, then snap together into the finished product.</p></div>
+  <div id="layerStack" aria-hidden="true">
+    <div class="layer lay0"><b>01 · FOUNDATION</b><span>Clean hand-written code, version-controlled on GitHub — the base everything stands on.</span></div>
+    <div class="layer lay1"><b>02 · DESIGN</b><span>Your own design system — type, color and components made for your brand only.</span></div>
+    <div class="layer lay2"><b>03 · COPY</b><span>Headlines written for your customer — clear offer, proof up front, zero filler.</span></div>
+    <div class="layer lay3"><b>04 · MOTION</b><span>Scroll, hover and micro-interactions tuned by hand — the details that feel expensive.</span></div>
+    <div class="layer lay4"><b>05 · LAUNCH</b><span>Tested on real devices, live on your domain in 7 days — with full code handover.</span></div>
+  </div>
+</div></section>
 
 <!-- PRICING -->
 <section id="pricing" class="alt"><div class="wrap">
   <div class="sec-head reveal"><span class="mono">Pricing — fixed, honest</span><h2>Agency-grade build.<br><span class="serif">Freelancer price.</span></h2><p>Agencies quote $3,000–$10,000+ and 4–8 weeks for this scope — that's overhead, not work. Here you pay for the work itself: fixed price, 7 days, 50% to start, 50% only when live &amp; approved.</p></div>
   <div class="price-grid">
-    <article class="plan reveal"><h3>Starter</h3><p class="for">For new businesses that need to look established, fast.</p><div class="amount">$500 <small>one-time</small></div><p class="value-note">The full standard above — at an entry price.</p><ul>
+    <article class="plan tilt3d reveal"><h3>Starter</h3><p class="for">For new businesses that need to look established, fast.</p><div class="amount">$500 <small>one-time</small></div><p class="value-note">The full standard above — at an entry price.</p><ul>
       <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>Up to 5 pages, custom design system</li>
       <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>Mobile-first &amp; performance engineered</li>
       <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>Contact / quote form + click-to-call</li>
@@ -753,7 +993,7 @@ button.mh-btn:hover{filter:brightness(1.08)}
       <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>GitHub-tracked, full code handover</li>
       <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>2 revision rounds · live in 5–7 days</li>
       <li class="off">— Blog / booking system</li></ul><button class="btn btn-outline plan-btn" data-plan="Starter — $500">Choose Starter</button></article>
-    <article class="plan pop reveal" data-delay="1"><span class="pop-tag">★ MOST POPULAR — BEST VALUE</span><h3>Premium</h3><p class="for">The complete build — more pages, more flows, more polish.</p><div class="amount">$1,000 <small>one-time</small></div><p class="value-note">Everything an agency delivers. Without the agency invoice.</p><ul>
+    <article class="plan pop tilt3d reveal" data-delay="1"><span class="pop-tag">★ MOST POPULAR — BEST VALUE</span><h3>Premium</h3><p class="for">The complete build — more pages, more flows, more polish.</p><div class="amount">$1,000 <small>one-time</small></div><p class="value-note">Everything an agency delivers. Without the agency invoice.</p><ul>
       <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>Everything in Starter</li>
       <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>Up to 8 pages + blog setup</li>
       <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>Booking / quote flow included</li>
@@ -764,13 +1004,14 @@ button.mh-btn:hover{filter:brightness(1.08)}
       <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>Priority build queue</li></ul><button class="btn btn-gold plan-btn" data-plan="Premium — $1,000">Choose Premium →</button></article>
   </div>
 
-  <div class="glass-panel reveal"><div><h3>🎛️ Build your own estimate</h3><p>Drag, tap, see your exact price — then send it with your brief. No surprises later.</p>
+  <div class="glass-panel tilt3d reveal"><div><h3>🎛️ Build your own estimate</h3><p>Drag, tap, see your exact price — then send it with your brief. No surprises later. Watch the coin stack grow with your price.</p>
+    <div id="valueStack" aria-hidden="true"><div class="coin" style="transform:translateZ(0)"></div><div class="coin" style="transform:translateZ(14px)"></div><div class="coin" style="transform:translateZ(28px)"></div><div class="coin" style="transform:translateZ(42px)"></div><div class="coin" style="transform:translateZ(56px)"></div><div class="coin" style="transform:translateZ(70px)"></div><div class="coin" style="transform:translateZ(84px)"></div><div class="coin" style="transform:translateZ(98px)"></div></div>
     <div class="est-row"><label for="pagesRange">Website pages <output id="pagesOut">5 pages</output></label><input type="range" id="pagesRange" min="1" max="12" value="5" step="1"></div>
     <div class="est-row" style="margin-bottom:0"><label>Add-ons</label><div class="addons"><button class="addon" data-price="99" data-name="Logo refresh">Logo refresh +$99</button><button class="addon" data-price="149" data-name="Booking system">Booking system +$149</button><button class="addon" data-price="79" data-name="Copywriting">Copywriting +$79</button><button class="addon" data-price="249" data-name="Online store setup">Online store +$249</button><button class="addon" data-price="199" data-name="Rush delivery (3 days)">Rush — 3 days +$199</button></div></div></div>
     <div class="est-total"><span class="mono">Your estimate</span><div class="big" id="estTotal">$500</div><p>Fixed quote confirmed before you pay anything. 50% to start, 50% on launch — via secure PayPal invoice.</p><div class="est-breakdown" id="estBreakdown"></div><button class="btn btn-gold" id="useEstimateBtn">Use this estimate in my brief ↓</button></div>
   </div>
 
-  <div class="glass-panel reveal"><div><h3>💸 What is a weak website costing you?</h3><p style="color:var(--ink2);font-size:14.5px;margin-bottom:24px">Move the sliders with your real numbers. Most owners are shocked.</p>
+  <div class="glass-panel tilt3d reveal"><div><h3>💸 What is a weak website costing you?</h3><p style="color:var(--ink2);font-size:14.5px;margin-bottom:24px">Move the sliders with your real numbers. Most owners are shocked.</p>
     <div class="est-row"><label for="roiVisitors">Monthly visitors <output id="roiVisitorsOut">800</output></label><input type="range" id="roiVisitors" min="100" max="5000" step="50" value="800"></div>
     <div class="est-row"><label for="roiValue">Value of one customer <output id="roiValueOut">$300</output></label><input type="range" id="roiValue" min="50" max="3000" step="50" value="300"></div>
     <div class="est-row" style="margin-bottom:0"><label for="roiConv">Visitors who contact you today <output id="roiConvOut">1%</output></label><input type="range" id="roiConv" min="0.5" max="5" step="0.5" value="1"></div></div>
@@ -854,7 +1095,7 @@ button.mh-btn:hover{filter:brightness(1.08)}
       <div class="contact-facts">
         <div class="contact-fact"><span class="cf-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><div><b>Reply within 24 hours</b><span>Every enquiry gets a personal reply — usually much sooner.</span></div></div>
         <div class="contact-fact"><span class="cf-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></span><div><b>Free mockup, no payment first</b><span>We design your homepage before you pay anything. Payment is only via secure PayPal invoice, 50% to start.</span></div></div>
-        <div class="contact-fact"><span class="cf-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3l2.7 5.6 6.1.8-4.5 4.2 1.1 6-5.4-3-5.4 3 1.1-6L3.2 9.4l6.1-.8z"/></svg></span><div><b>Prefer talking first?</b><span>Ask in your email and we'll set up a short call to walk through your options before you decide.</span></div></div>
+        <div class="contact-fact"><span class="cf-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3l2.7 5.6 6.1.8-4.5 4.2 1.1 6-5.4-3-5.4 3 1.1-6L3.2 9.4l6.1-.8z"/></svg></span><div><b>Quick call before you decide?</b><span>Ask in your email and we'll set up a short call to walk through your options.</span></div></div>
       </div>
     </div>
   </div>
@@ -862,6 +1103,23 @@ button.mh-btn:hover{filter:brightness(1.08)}
 
 <div class="wrap"><div class="final reveal"><span class="mono">No risk · Free mockup first</span><h2 style="margin-top:16px">Your competitors look cheap.<br><span class="serif">Yours won't.</span></h2><p>See agency-grade design with your own name on it. If you don't love the direction, you pay nothing. That's the whole deal.</p><a class="btn btn-gold magnetic" href="#brief" style="font-size:17px;padding:18px 36px">Start My Free Mockup ↑</a><p style="margin-top:18px;font-size:14.5px;color:var(--ink2)">or email us directly — <a class="mail-link" href="mailto:alphaframehq@gmail.com?subject=Free%20homepage%20mockup%20request">alphaframehq@gmail.com</a></p><p style="margin-top:14px;font-size:13px;color:var(--muted)">⚡ Replies within 24 hours &nbsp;•&nbsp; Mockup in 48 hours &nbsp;•&nbsp; Live in 7 days</p></div></div>
 </main>
+
+<!-- ================= TEAM SECTION — READY TO ENABLE =================
+     Dev will share 1 or 2 website links with real team / friends info.
+     When they arrive: fill in the cards below (name, role, one line bio,
+     photo), then delete ONLY the opening comment line above and the
+     closing comment line below. No invented names, photos, roles or
+     testimonials are in this section. Placeholders only, on purpose.
+<section id="team" class="alt"><div class="wrap">
+  <div class="sec-head reveal"><span class="mono">The people behind the pixels</span><h2>Meet the team<br><span class="serif">behind AlphaFrame.</span></h2><p>Designers, engineers and storytellers. The crew that turns a brief into a website that brings customers.</p></div>
+  <div class="team-grid">
+    <article class="team-card reveal"><div class="team-photo">PHOTO</div><div class="team-body"><h3>Team Member 1</h3><p class="team-role">Role</p><p>One line bio goes here. What they do for your website.</p></div></article>
+    <article class="team-card reveal" data-delay="1"><div class="team-photo">PHOTO</div><div class="team-body"><h3>Team Member 2</h3><p class="team-role">Role</p><p>One line bio goes here. What they do for your website.</p></div></article>
+    <article class="team-card reveal" data-delay="2"><div class="team-photo">PHOTO</div><div class="team-body"><h3>Team Member 3</h3><p class="team-role">Role</p><p>One line bio goes here. What they do for your website.</p></div></article>
+  </div>
+</div></section>
+     ================= END TEAM SECTION ================= -->
+
 
 <!-- LIVE DEMO VIEWER -->
 <div class="demo-modal" id="demoModal" hidden role="dialog" aria-modal="true" aria-label="Live demo website">
@@ -877,7 +1135,107 @@ button.mh-btn:hover{filter:brightness(1.08)}
 
 <footer><div class="foot-word" id="footWord" aria-hidden="true">ALPHAFRAME</div><div class="wrap foot"><a class="brand" href="#top" style="text-decoration:none"><img src="data:image/webp;base64,UklGRjYIAABXRUJQVlA4ICoIAAAwJQCdASpgAGAAPmEokEWkIqGVW1bUQAYEoAzmh7UdBhoYu2z8wHm4+jbyAPVs9R70AP1y6079vv2d9pK54/jZ5/+Sj137QblV/Uegv8h+xP4n8nfzA5z+AF7O/wPfAdsdNJ6gXsf9A/1Hgq6gXer7QPg3/Nf8x+W/wd/qvDf8R9gD+Qf1n/eflL8A3+z/mPy39rP55/g/+x/lvgK/mX9i/0n93/eH/McjV+2iaw5hXTRe2a01WFCT/TpJk110qmJHbW2KwQ/1GP64/rVZcccgoHVx7Zpv5ttQ8b3NV/pbOlDCNC9mVFhWC38xtNxIoysjsYtwpBzUUkIe6V1UPJQSA/ishSIhl86d6z2C3Sh71HxpycGjDrDlXXK9b7QChp9f3x4rbxxwEK1GuXnzAS8y4AAA/vw3DaYvDPz/lDSSVY9JzyHmSnheP3VHhhlwGg+JY89GS7ntWq3u8e7/gdlNRa8+WQhd+NKVYvyn8hvTsJdztseKP00ET/1LjieGnzsscUvkJUaVhJQFE/dV1fsHqvMNZiMOQujQ53GMdCnGtsp9AjP7ubK0R82dbSi/0X/SyGsev8VrpVNAEkWbSvV2+0+cIErtgRK4ueO/fyxWtPfpc4TKetFl0u02/YIi/PPrpJI4qQhQQnMLMGIo6pbqugNvcFC4EGh3YY9nnw927H62OAHKFbzlql6WAPTjnUNXhwe59ldQ7ZsYJ7mjE3kHsSyXOSUWOLddHDlYYPJmY6Q5HOG7QN/DlmieSftuzQ2ih3N9jb4FQIOz/AmuA9P8Emdq9kurnlVZnPF36Atj9Vk0ysPDAcf+dtndQLG+8poht+rW22RtER5veSdPmzcqLfN5G5RPSh2zEvC8q8b9BlVn3wDrQKZdq+ab3SfHQWe7Xvz3DCrEYbMfYvre+jT+NohETkHmzyIgHexRJrnX8vcirCaRK3+xXqi2Aro1YHV5cE9nN/0uyGDZpxqKP9l3vJLSRWozt05zK6XTwpiN/QkPsgEMBoDzlelr6K+wL6+nN9fBoxG+/emCTatqtxCDO78gzxDuR0pjVr2bjMfohdH7crc/3B9No5xbNp35CKycn7Ax476+mt12CUO6f2gHuGxVn7KBDks6EJUVnGrGfvD7EXR517us/pUBa+CoBPI4dkZcjK56OawKnqv6AOBFcCOlLExNTAd+zKfkLkcL+PRtZZ3CbeNlnNZqhNXVd8OqrQEMmvEd2GNIiX/WsQQaYrnNJQKDmnblVa7Q3TbRqqazvI4jBHvUf8V/A5vOoI4IN8Rz84jHOq+mHdc6xOkoQsOz+ztuMTslKT7/I6tjtft0LpWl96Jz1cEfghOKe4io8y/7Skw5TOhwisY5xrlCZ+rQPzsinSo+veFfB/9ebgOAOcUSpcmscjL3oa5ygJxCOhPs4BxjRXpaihxL8IbGVYB6XSu76kBWNoB26CxhrI1QzVkTq+ML3rCqz7T2toum79oNXnn3BOn5ODHrC4kTAU7fln+rImwNi/WzAPhjU3mGJaNQd/r+ykIduJrbWfSA+0Y5x/uqHhAs3dBOjqF+FQpkjjkevx4+L8jTXkfvWxCwmkl2H8Xr9RH9KiYTtRx21JlsK/WlYKBQfm7FtwpmxGJ3hwaBwIKzzFhDpYXRXyWhKNnBz6XpSh57GAxL9/E4sr9ANf+43a/9DtJni3G3Xtxkre3KbXr8aCVnbkxKuGzz/bpvO90ZeQbK+4dtN2UKFhJyg/blpCykkpVfSkIz35YxUKmnO2klhV35xAJkvMh6mE81HU4zgvJ1K6LT8Tky/a8ZBnKg814eJQ3q8I7hHKKVwMDa7lewciEuEZ+MCYcsog6OGRSyMsA4zFiyxxjQ/zmom2bfyTSae1aM7Hy+eKIAYQEDLWZrJNACXHBHG4DOV1N9SCaYXYBgLWewnoGsjCwCLA0vgG/6YlAgfPlnlcbDsHOEU0/AJi8hd9wQXPp7frx+Nbb/w90Hr3S9m+BiWrNnUgaIDR7pqVVhKf+NtpXm9oAK55I5qFlBYuOLTLRRdDUdMnoE8hHUc5YR1NlXVBrO9I89sYC9Bol2zZrvpbKfx4Q4/koFUYKp+3hymiluazi9pk5+fcezeuv474lAR54kWBJl8NuaBgreDAKlrx1rq34ggsa0ksNOyeLIOE8Fe/yXT/9RqDPu4EzHd9Dn/7P1W/5Lp39m/IobVS8n+Ly/zIfhKgMQKqtwXxpMfOXr9vddg8E043wHSLhwjPAvq+weHkH2EekvlfKibH7YKU9G+xtednYYWNiwXLU7UtoCNO+n62QsZq2AXqsAdnzMjG+eTLThR80w3HlW08sZNlj6x9d5Ddo2PaLYfr/NcCfnzcRd0k1BO3uIhPrydY/tCZqV9h01T0HqdzYvNc8I47ZBTvmf/5SWpGpEGlSusVTrt/yFHqUcJ+JT3L+xqtZrBs8J33xYOAWeYDU66abvTqvzlOdmOTtWi+uwMHm92qRYY+RrXtQVP/TPwT4L4lDFnslnWx/9Hbun8X42BBnb/1Z8Dp10YxbQS4by+A2Dp/nZvs1T7CPYLW2JmEsC9OgwnFCiw2j7FJH6UIiY+3OD7PUPXIxA/awFBFoYzqIy9FdazsJdlMZAwsq3pEe7Cq65y6PaazfM7RQEGZPMzTlXm6fVhOWdB7nZHfD285lCtspYDgKKzWqS3Qfgl6c+QVfFb4LGZOrkrdDM+/WaVW/epuAxMpZkOWmYeuYC+lICtVEdOZQK2oMo8UJ0YQorVM1DKSw/79Rh63Ol1NWGMZixHPCXeb0b4gAAAA==" alt="" width="40" height="40" loading="lazy" decoding="async" style="width:40px;height:40px;border-radius:11px;object-fit:cover;border:1px solid var(--line2)"><span><b style="font-size:18px">AlphaFrame</b><span>CAPTURE • CREATE • INSPIRE</span></span></a><p>Premium websites for US small businesses • $500 / $1,000 • PayPal invoice</p><span style="display:flex;flex-wrap:wrap;gap:18px"><a href="mailto:alphaframehq@gmail.com?subject=Website%20enquiry%20for%20my%20business">✉ alphaframehq@gmail.com</a><a href="https://www.instagram.com/alphaframehq" target="_blank" rel="noopener">Instagram — @alphaframehq ↗</a></span></div></footer>
 
+
+
+
+
 <script>
+/* AF3D — pure mapping math for the AlphaFrame 3D rebuild.
+   No DOM access here on purpose: these functions are unit-tested in Node
+   (see test-af3d-math.js) so every effect's movement is a
+   MEASURED number, not a hope. The browser scripts use these same functions. */
+var AF3D = (function () {
+  "use strict";
+  function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
+  function lerp(a, b, t) { return a + (b - a) * t; }
+  function smooth(t) { t = clamp(t, 0, 1); return t * t * (3 - 2 * t); }
+  function seg(p, a, b) { return smooth((p - a) / (b - a)); }
+
+  /* HERO — drag: 800px horizontal drag = one full turn (360 deg). */
+  function heroYawFromDrag(dx) { return dx * (Math.PI * 2 / 800); }
+  /* HERO — drag: vertical drag tilts the lens, +/-30 deg over 400px. */
+  function heroPitchFromDrag(dy) { return clamp(dy * (Math.PI / 6 / 400), -Math.PI / 6, Math.PI / 6); }
+  /* HERO — mouse lean: nx,ny in [-1,1] across the hero.
+     Full left-to-right sweep = +/-20 deg yaw, +/-10 deg pitch,
+     camera shifts +/-1.2 units sideways (about 90px on screen). */
+  function heroLeanFromMouse(nx, ny) {
+    return { yaw: nx * 0.35, pitch: -ny * 0.175, camX: nx * 1.2, camY: -ny * 0.7 };
+  }
+  /* TILT CARDS — pointer offset dx,dy in [-0.5,0.5] -> degrees, +/-10. */
+  function tiltFromPointer(dx, dy) { return { rx: (-dy * 20), ry: (dx * 20) }; }
+  /* WORK RING — 100px drag = 30 deg. */
+  function ringRotFromDrag(dx) { return dx * 0.3; }
+  /* LAYER STACK — scroll progress 0..1 -> spread in px per layer step (max 90). */
+  function layerSpread(p) { return smooth(p) * 90; }
+  /* BEFORE/AFTER scroll-zoom — viewport ratio v 0..1 -> scale + rotateX. */
+  function baZoom(v) { v = clamp(v, 0, 1); return { scale: 0.9 + 0.1 * v, rx: 8 * (1 - v) }; }
+
+  /* JOURNEY — camera fly-through keyframes (p in [0,1]).
+     Stations: S1 old site (0,0,0) | S2 layers (8,0,-6) |
+               S3 browser (-6,1,-12) | S4 launch (0,2,-20). */
+  var CAM_KEYS = [
+    { p: 0.00, pos: [0, 0.5, 14],  look: [0, 0, 0] },
+    { p: 0.25, pos: [8, 2, 6],     look: [8, 0, -6] },
+    { p: 0.50, pos: [-6, 3, 0],    look: [-6, 1, -12] },
+    { p: 0.75, pos: [-2, 2, -2],   look: [-6, 1, -12] },
+    { p: 1.00, pos: [0, 3, -8],    look: [0, 2, -20] }
+  ];
+  function keyed(p, field) {
+    p = clamp(p, 0, 1);
+    var i = 0;
+    while (i < CAM_KEYS.length - 2 && p > CAM_KEYS[i + 1].p) i++;
+    var a = CAM_KEYS[i], b = CAM_KEYS[i + 1];
+    var t = smooth((p - a.p) / (b.p - a.p));
+    return [lerp(a[field][0], b[field][0], t),
+            lerp(a[field][1], b[field][1], t),
+            lerp(a[field][2], b[field][2], t)];
+  }
+  function journeyCam(p) { return keyed(p, "pos"); }
+  function journeyLook(p) { return keyed(p, "look"); }
+  /* JOURNEY — station visibility / morph state from scroll progress. */
+  function journeyState(p) {
+    p = clamp(p, 0, 1);
+    return {
+      s1: 1 - seg(p, 0.12, 0.25),
+      s2: seg(p, 0.18, 0.28) * (1 - seg(p, 0.62, 0.74)),
+      s2assemble: seg(p, 0.22, 0.42),
+      s3: seg(p, 0.44, 0.54) * (1 - seg(p, 0.78, 0.88)),
+      bars: seg(p, 0.55, 0.73),
+      s4: seg(p, 0.76, 0.86),
+      burst: seg(p, 0.82, 0.98),
+      station: Math.min(3, Math.floor(p * 4))
+    };
+  }
+  function camPathLength() {
+    var total = 0, prev = CAM_KEYS[0].pos;
+    for (var i = 1; i < CAM_KEYS.length; i++) {
+      var k = CAM_KEYS[i].pos;
+      total += Math.sqrt(Math.pow(k[0] - prev[0], 2) + Math.pow(k[1] - prev[1], 2) + Math.pow(k[2] - prev[2], 2));
+      prev = k;
+    }
+    return total;
+  }
+
+  return {
+    clamp: clamp, lerp: lerp, smooth: smooth, seg: seg,
+    heroYawFromDrag: heroYawFromDrag,
+    heroPitchFromDrag: heroPitchFromDrag,
+    heroLeanFromMouse: heroLeanFromMouse,
+    tiltFromPointer: tiltFromPointer,
+    ringRotFromDrag: ringRotFromDrag,
+    layerSpread: layerSpread,
+    baZoom: baZoom,
+    journeyCam: journeyCam,
+    journeyLook: journeyLook,
+    journeyState: journeyState,
+    camPathLength: camPathLength
+  };
+})();
+if (typeof module !== "undefined" && module.exports) module.exports = AF3D;
+
+</script>
+<script>
+
 (function(){
 "use strict";
 var reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -907,41 +1265,17 @@ if(finePointer && !reduced){
   document.querySelectorAll('a,button,.ba,.spotlight,.niche-tab').forEach(function(el){el.addEventListener('mouseenter',function(){ring.classList.add('hovering')});el.addEventListener('mouseleave',function(){ring.classList.remove('hovering')});});
 } else {document.getElementById('cursorDot').style.display='none';document.getElementById('cursorRing').style.display='none';}
 // magnetic buttons
-if(finePointer && !reduced){document.querySelectorAll('.magnetic').forEach(function(btn){btn.addEventListener('mousemove',function(e){var r=btn.getBoundingClientRect();var x=e.clientX-r.left-r.width/2,y=e.clientY-r.top-r.height/2;btn.style.transform='translate('+(x*.18)+'px,'+(y*.28)+'px) scale(1.03)';});btn.addEventListener('mouseleave',function(){btn.style.transform='';});});}
+if(finePointer && !reduced){document.querySelectorAll('.magnetic').forEach(function(btn){btn.addEventListener('mousemove',function(e){var r=btn.getBoundingClientRect();var x=e.clientX-r.left-r.width/2,y=e.clientY-r.top-r.height/2;btn.style.transform='translate('+(x*.3)+'px,'+(y*.3)+'px) scale(1.03)';});btn.addEventListener('mouseleave',function(){btn.style.transform='';});});}
 // rotating word - psychology triggers
 var words=['stop.','trust.','call.','book.','pay.']; var wi=0; var rot=document.getElementById('rotWord');
 if(rot && !reduced){setInterval(function(){rot.style.opacity='0';rot.style.transform='translateY(10px)';rot.style.transition='all .3s';setTimeout(function(){wi=(wi+1)%words.length;rot.textContent=words[wi];rot.style.opacity='1';rot.style.transform='translateY(0)';},300);},2200);}
-// PARTICLE NETWORK canvas - interactive constellation
-var canvas=document.getElementById('heroCanvas');
-if(canvas && !reduced && window.innerWidth>640){
-  var ctx=canvas.getContext('2d'),W=0,H=0,parts=[],mouse={x:-999,y:-999},heroVisible=true,canvasStarted=false;
-  function size(){W=canvas.width=canvas.offsetWidth;H=canvas.height=canvas.offsetHeight;parts=[];var n=Math.min(34,Math.floor(W*H/42000));for(var i=0;i<n;i++)parts.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.45,vy:(Math.random()-.5)*.45,r:Math.random()*1.8+.6});}
-  size(); var __rzT; window.addEventListener('resize',function(){clearTimeout(__rzT);__rzT=setTimeout(size,200);},{passive:true});
-  document.getElementById('heroSec').addEventListener('mousemove',function(e){var r=canvas.getBoundingClientRect();mouse.x=e.clientX-r.left;mouse.y=e.clientY-r.top;},{passive:true});
-  document.getElementById('heroSec').addEventListener('mouseleave',function(){mouse.x=-999;mouse.y=-999;});
-  if('IntersectionObserver' in window){new IntersectionObserver(function(es){heroVisible=es[0].isIntersecting;},{threshold:0}).observe(document.getElementById('heroSec'));}
-  function draw(){
-    requestAnimationFrame(draw);
-    if(!heroVisible||document.hidden)return;
-    ctx.clearRect(0,0,W,H);
-    parts.forEach(function(p){
-      p.x+=p.vx;p.y+=p.vy; if(p.x<0||p.x>W)p.vx*=-1; if(p.y<0||p.y>H)p.vy*=-1;
-      var dx=mouse.x-p.x,dy=mouse.y-p.y,d2=dx*dx+dy*dy;
-      if(d2<19600 && d2>0){var d=Math.sqrt(d2);p.x+=dx/d*.6;p.y+=dy/d*.6;}
-      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle='rgba(232,201,122,.7)';ctx.fill();
-    });
-    for(var i=0;i<parts.length;i++)for(var j=i+1;j<parts.length;j++){var a=parts[i],b=parts[j],dx=a.x-b.x;if(dx>130||dx<-130)continue;var dy=a.y-b.y;if(dy>130||dy<-130)continue;var dist=Math.sqrt(dx*dx+dy*dy);if(dist<130){ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.strokeStyle='rgba(232,201,122,'+(0.14*(1-dist/130)).toFixed(3)+')';ctx.lineWidth=1;ctx.stroke();}}
-  }
-  function startCanvas(){if(!canvasStarted){canvasStarted=true;requestAnimationFrame(draw);}}
-  if('requestIdleCallback' in window){requestIdleCallback(startCanvas,{timeout:1200});}else{setTimeout(startCanvas,350);}
-}
 // cursor glow
 var heroSec=document.getElementById('heroSec'), glow=document.getElementById('cursorGlow');
 if(heroSec&&glow&&finePointer&&!reduced){var __glowTick=false;heroSec.addEventListener('mousemove',function(e){if(__glowTick)return;__glowTick=true;var ev=e;requestAnimationFrame(function(){var r=heroSec.getBoundingClientRect();glow.style.transform='translate('+(ev.clientX-r.left-340)+'px,'+(ev.clientY-r.top-340)+'px)';__glowTick=false;});},{passive:true});}
 // tilt + glare + parallax
 var tilt=document.getElementById('tiltCard'), visual=tilt?tilt.closest('.visual'):null;
 if(visual&&tilt&&finePointer&&!reduced){
-  visual.addEventListener('mousemove',function(e){var r=visual.getBoundingClientRect();var dx=(e.clientX-r.left)/r.width-.5,dy=(e.clientY-r.top)/r.height-.5;tilt.style.transform='rotateY('+(dx*10).toFixed(2)+'deg) rotateX('+(-dy*10).toFixed(2)+'deg) scale(1.02)';});
+  visual.addEventListener('mousemove',function(e){var r=visual.getBoundingClientRect();var dx=(e.clientX-r.left)/r.width-.5,dy=(e.clientY-r.top)/r.height-.5;tilt.style.transform='rotateY('+(dx*16).toFixed(2)+'deg) rotateX('+(-dy*16).toFixed(2)+'deg) scale(1.02)';});
   visual.addEventListener('mouseleave',function(){tilt.style.transform='rotateY(0) rotateX(0) scale(1)';});
   window.addEventListener('scroll',function(){var y=window.scrollY; if(y<900){visual.style.transform='translateY('+(y*.06)+'px)';}},{passive:true});
 }
@@ -1066,8 +1400,10 @@ var auditCopy=document.getElementById('auditCopyBtn'),auditCopied=document.getEl
 if(auditCopy)auditCopy.addEventListener('click',function(){auditUpdate();function done(){auditCopied.textContent='✓ Audit report copied — paste it anywhere, or send it with your brief.';}function fb(){var ta=document.createElement('textarea');ta.value=auditReportText;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();try{document.execCommand('copy');done();}catch(e){auditCopied.textContent='Copy didn\u2019t work — take a screenshot of your score instead.';}document.body.removeChild(ta);}if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(auditReportText).then(done).catch(fb);}else fb();});
 calc();
 })();
+
 </script>
 <script>
+
 (function(){
 "use strict";
 var reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -1156,168 +1492,589 @@ document.getElementById('demoClose').addEventListener('click',closeDemo);
 modal.querySelector('[data-demo-close]').addEventListener('click',closeDemo);
 document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!modal.hidden)closeDemo();});
 })();
+
 </script>
 <script>
-(function(){
+/* ALPHAFRAME 3D WORLD — hero, journey, interactions (26 Nov 2026 rebuild).
+   Uses AF3D pure math (previous script block). Vanilla Three.js, no build step.
+   Three.js loads lazily (unpkg -> jsDelivr fallback); if WebGL/CDN fails,
+   body gets .no-webgl and the CSS fallback takes over — never the normal path. */
+(function () {
 "use strict";
-var reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-var fine=window.matchMedia('(pointer: fine)').matches;
+var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+var finePointer = window.matchMedia("(pointer: fine)").matches;
+var isMobile = window.innerWidth < 700;
+var $ = function (id) { return document.getElementById(id); };
+function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
 
-/* ============ 3D HERO — Three.js (Strata / Vanta / ITom pattern) ============
-   Real-time 3D scene: golden particle field + wireframe shapes (aperture
-   nod to the logo) that drift and rotate, camera leaning toward the
-   cursor with lerped smoothing, scene lifting away on scroll.
-   Lazy-loaded only when the hero is visible; WebGL failure, CDN failure,
-   reduced motion, or data-saver all leave the existing 2D particle
-   canvas in place — the designed fallback, like Strata's. */
-var heroSec=document.getElementById('heroSec'), c3=document.getElementById('hero3d'), c2=document.getElementById('heroCanvas');
-if(c3 && !reduced && window.WebGLRenderingContext){
-  var started=false;
-  function webglOK(){ try{ var c=document.createElement('canvas'); return !!(c.getContext('webgl2')||c.getContext('webgl')); }catch(e){ return false; } }
-  function loadThree(){
-    return import('https://unpkg.com/three@0.160.0/build/three.module.js').catch(function(){
-      return import('https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js');
-    });
+/* ---------- Three.js loader ---------- */
+function loadThree() {
+  if (window.__AF_THREE) return Promise.resolve(window.__AF_THREE);
+  function attempt(url) {
+    return import(url).then(function (m) { window.__AF_THREE = m; return m; });
   }
-  function tryStart(){
-    if(started) return; started=true;
-    if(!webglOK()) return;
-    if(navigator.connection && navigator.connection.saveData) return;
-    var timeout=new Promise(function(_,rej){ setTimeout(function(){ rej(new Error('3d-timeout')); },9000); });
-    Promise.race([loadThree(),timeout]).then(function(THREE){ init3D(THREE); }).catch(function(){ /* keep 2D fallback */ });
-  }
-  function init3D(THREE){
-    var renderer;
-    try{ renderer=new THREE.WebGLRenderer({canvas:c3,alpha:true,antialias:true,powerPreference:'low-power'}); }
-    catch(e){ return; }
-    var isMobile=Math.min(window.screen.width,window.screen.height)<700||/Mobi|Android/i.test(navigator.userAgent);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,isMobile?1.5:2));
-    var scene=new THREE.Scene();
-    var camera=new THREE.PerspectiveCamera(55,1,.1,100); camera.position.set(0,0,9);
-    var group=new THREE.Group(); scene.add(group);
-    // golden particle field
-    var N=isMobile?320:850, pos=new Float32Array(N*3), i, r, th, ph;
-    for(i=0;i<N;i++){ r=3+Math.random()*7; th=Math.random()*Math.PI*2; ph=Math.acos(2*Math.random()-1);
-      pos[i*3]=r*Math.sin(ph)*Math.cos(th); pos[i*3+1]=(Math.random()-.5)*7; pos[i*3+2]=r*Math.sin(ph)*Math.sin(th)-2; }
-    var pgeo=new THREE.BufferGeometry(); pgeo.setAttribute('position',new THREE.BufferAttribute(pos,3));
-    var pts=new THREE.Points(pgeo,new THREE.PointsMaterial({color:0xE8C97A,size:.07,transparent:true,opacity:.85,blending:THREE.AdditiveBlending,depthWrite:false}));
-    group.add(pts);
-    // wireframe shapes
-    var gold=new THREE.MeshBasicMaterial({color:0xD4A017,wireframe:true,transparent:true,opacity:.55});
-    var red=new THREE.MeshBasicMaterial({color:0xB91C1C,wireframe:true,transparent:true,opacity:.35});
-    var ico=new THREE.Mesh(new THREE.IcosahedronGeometry(1.5,0),gold); ico.position.set(-3.4,1.1,-1); group.add(ico);
-    var tor=new THREE.Mesh(new THREE.TorusGeometry(1.1,.28,12,40),red); tor.position.set(3.6,-1.2,-2); tor.rotation.x=.7; group.add(tor);
-    var oct=new THREE.Mesh(new THREE.OctahedronGeometry(.9,0),new THREE.MeshBasicMaterial({color:0xD4A017,wireframe:true,transparent:true,opacity:.3})); oct.position.set(3.2,1.6,-3); group.add(oct);
-    var ring=new THREE.Mesh(new THREE.TorusGeometry(2.4,.05,8,80),new THREE.MeshBasicMaterial({color:0xE8C97A,wireframe:false,transparent:true,opacity:.4})); ring.position.set(0,0,-4); ring.rotation.x=1.2; group.add(ring);
-    // mouse parallax — lerped, ITom useMouseParallax style
-    var mx=0,my=0,tx=0,ty=0;
-    if(fine){ heroSec.addEventListener('mousemove',function(e){ var r=heroSec.getBoundingClientRect(); tx=((e.clientX-r.left)/r.width-.5)*2; ty=((e.clientY-r.top)/r.height-.5)*2; },{passive:true}); }
-    var visible=true;
-    if('IntersectionObserver' in window){ new IntersectionObserver(function(es){ visible=es[0].isIntersecting; },{threshold:0}).observe(heroSec); }
-    function size(){ var w=heroSec.clientWidth,h=heroSec.clientHeight; if(!w||!h) return; renderer.setSize(w,h,false); camera.aspect=w/h; camera.updateProjectionMatrix(); }
-    size(); var rzT; window.addEventListener('resize',function(){ clearTimeout(rzT); rzT=setTimeout(size,200); },{passive:true});
-    var clock=new THREE.Clock();
-    c3.classList.add('on'); if(c2) c2.style.display='none';
-    (function loop(){
-      requestAnimationFrame(loop);
-      if(!visible||document.hidden) return;
-      var t=clock.getElapsedTime();
-      mx+=(tx-mx)*.045; my+=(ty-my)*.045;
-      camera.position.x=mx*.9; camera.position.y=-my*.55+Math.sin(t*.25)*.08; camera.lookAt(0,0,0);
-      group.rotation.y=t*.03+mx*.12;
-      ico.rotation.x=t*.25; ico.rotation.y=t*.18;
-      tor.rotation.y=t*.3; tor.rotation.z=t*.12;
-      oct.rotation.x=-t*.2; oct.rotation.y=t*.28;
-      ring.rotation.z=t*.05;
-      pts.rotation.y=t*.02;
-      // scroll: the scene lifts away as you leave the hero (Vanta pattern)
-      var sy=window.scrollY||0, hh=heroSec.offsetHeight||800;
-      var p=Math.min(Math.max(sy/hh,0),1);
-      group.position.y=p*2.4; group.rotation.x=p*.5;
-      c3.style.opacity=p>.85?String(Math.max(0,1-(p-.85)/.15)):'';
-      renderer.render(scene,camera);
-    })();
-  }
-  if('IntersectionObserver' in window){
-    var io3=new IntersectionObserver(function(es){ if(es[0].isIntersecting){ tryStart(); io3.disconnect(); } },{threshold:0});
-    io3.observe(heroSec);
-  } else { setTimeout(tryStart,400); }
+  return attempt("https://unpkg.com/three@0.160.0/build/three.module.js")
+    .catch(function () { return attempt("https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"); });
+}
+function webglOK() {
+  try { var c = document.createElement("canvas"); return !!(c.getContext("webgl2") || c.getContext("webgl")); }
+  catch (e) { return false; }
 }
 
-/* ============ 3D TILT CARDS (Iso-Cube / Bento pattern) ============
-   Pointer-driven rotateX/rotateY with a short ease on move and a slow
-   spring back on leave. Applies to Standard, Pricing, Work, score and
-   Process cards — the hero browser keeps its own tilt handler. */
-if(fine && !reduced){
-  var tiltEls=document.querySelectorAll('.spotlight,.plan,.work-card,.score-card,.step');
-  tiltEls.forEach(function(el){
-    el.setAttribute('data-tilt','');
-    var raf=null, lx=0, ly=0;
-    el.addEventListener('pointerenter',function(){ el.style.transition='transform .15s cubic-bezier(.2,.8,.2,1), box-shadow .3s'; });
-    el.addEventListener('pointermove',function(e){
-      lx=e.clientX; ly=e.clientY;
-      if(raf) return;
-      raf=requestAnimationFrame(function(){
-        raf=null;
-        var r=el.getBoundingClientRect();
-        var dx=(lx-r.left)/r.width-.5, dy=(ly-r.top)/r.height-.5;
-        el.style.transform='perspective(900px) rotateY('+(dx*8).toFixed(2)+'deg) rotateX('+(-dy*8).toFixed(2)+'deg) translateY(-6px)';
-        el.classList.add('tilting');
+/* ---------- canvas texture: mini website on a 3D browser window ---------- */
+function siteTexture(THREE, accent, title) {
+  var c = document.createElement("canvas"); c.width = 512; c.height = 340;
+  var x = c.getContext("2d");
+  x.fillStyle = "#ffffff"; x.fillRect(0, 0, 512, 340);
+  x.fillStyle = "#171200"; x.fillRect(0, 0, 512, 44);
+  ["#FF5A5F", "#F5C542", "#3ED598"].forEach(function (col, i) { x.fillStyle = col; x.beginPath(); x.arc(24 + i * 26, 22, 8, 0, 7); x.fill(); });
+  x.fillStyle = "#FFF6E5"; x.font = "bold 20px sans-serif"; x.fillText("yourbusiness.com", 120, 29);
+  x.fillStyle = accent; x.fillRect(28, 74, 150, 14);
+  x.fillStyle = "#171200"; x.font = "bold 44px sans-serif"; x.fillText(title, 28, 150);
+  x.fillStyle = "#8a8a8a"; x.fillRect(28, 170, 300, 10); x.fillRect(28, 190, 240, 10);
+  x.fillStyle = accent; x.beginPath(); x.roundRect(28, 224, 170, 44, 22); x.fill();
+  x.fillStyle = "#171200"; x.font = "bold 20px sans-serif"; x.fillText("Get a Free Quote", 48, 252);
+  x.fillStyle = "#eee"; x.fillRect(360, 74, 124, 194);
+  x.fillStyle = accent; x.fillRect(360, 74, 124, 90);
+  var t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
+}
+
+/* ---------- HERO scene ---------- */
+var hero = null;
+function initHero(THREE) {
+  var sec = $("heroSec"), canvas = $("hero3d");
+  if (!sec || !canvas) return null;
+  var renderer;
+  try {
+    renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+  } catch (e) { return null; }
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isMobile ? 1.5 : 2));
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.1;
+  var scene = new THREE.Scene();
+  scene.fog = new THREE.Fog(0x0d0a1f, 16, 30);
+  var camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
+  camera.position.set(0, 0, 11);
+
+  scene.add(new THREE.AmbientLight(0x8a7fd0, 0.55));
+  var key = new THREE.DirectionalLight(0xfff1d6, 1.8); key.position.set(4, 6, 6); scene.add(key);
+  var rim = new THREE.PointLight(0xff5a5f, 30, 24); rim.position.set(-5, 2, -4); scene.add(rim);
+  var gold = new THREE.PointLight(0xf5c542, 22, 16); gold.position.set(0, -3, 3); scene.add(gold);
+
+  /* --- the lens: golden aperture, the brand mark as a real object --- */
+  var lens = new THREE.Group();
+  var goldMat = new THREE.MeshStandardMaterial({ color: 0xf5c542, metalness: 0.9, roughness: 0.28 });
+  var darkMat = new THREE.MeshStandardMaterial({ color: 0x241b4d, metalness: 0.6, roughness: 0.35 });
+  var ring = new THREE.Mesh(new THREE.TorusGeometry(2.2, 0.14, 20, 72), goldMat);
+  lens.add(ring);
+  var ring2 = new THREE.Mesh(new THREE.TorusGeometry(1.62, 0.07, 14, 64), darkMat);
+  lens.add(ring2);
+  var lensGlass = new THREE.Mesh(new THREE.CircleGeometry(1.5, 48),
+    new THREE.MeshPhysicalMaterial({ color: 0x2e2361, metalness: 0.2, roughness: 0.08, clearcoat: 1 }));
+  lensGlass.position.z = -0.12; lens.add(lensGlass);
+  var iris = new THREE.Mesh(new THREE.CircleGeometry(0.85, 40),
+    new THREE.MeshBasicMaterial({ color: 0xffd97a, transparent: true, opacity: 0.28 }));
+  iris.position.z = -0.05; lens.add(iris);
+  /* 8 aperture blades on pivots — they swing open on hover */
+  var blades = [];
+  for (var i = 0; i < 8; i++) {
+    var a = (i / 8) * Math.PI * 2;
+    var pivot = new THREE.Group();
+    pivot.position.set(Math.cos(a) * 1.85, Math.sin(a) * 1.85, 0.05);
+    var blade = new THREE.Mesh(new THREE.BoxGeometry(1.75, 0.55, 0.06),
+      new THREE.MeshStandardMaterial({ color: i % 2 ? 0xd4a017 : 0xf5c542, metalness: 0.85, roughness: 0.3 }));
+    blade.position.x = 0.62;
+    pivot.add(blade);
+    pivot.rotation.z = a + Math.PI / 2;
+    pivot.userData.baseRot = pivot.rotation.z;
+    lens.add(pivot); blades.push(pivot);
+  }
+  scene.add(lens);
+
+  /* --- morphing gold blob behind the lens (4D: vertex noise over time) --- */
+  var blobDetail = isMobile ? 3 : 4;
+  var blobGeo = new THREE.IcosahedronGeometry(1.15, blobDetail);
+  var blobBase = blobGeo.attributes.position.array.slice();
+  var blob = new THREE.Mesh(blobGeo, new THREE.MeshStandardMaterial({ color: 0xf5c542, metalness: 0.85, roughness: 0.25, flatShading: true }));
+  blob.position.set(0, 0, -3.6); scene.add(blob);
+  function noise3(x, y, z, t) {
+    return Math.sin(x * 2.1 + t) * Math.sin(y * 1.7 - t * 0.7) * Math.sin(z * 1.9 + t * 0.5)
+         + 0.5 * Math.sin(x * 4.3 - t * 1.3) * Math.sin(y * 3.1 + t);
+  }
+
+  /* --- floating 3D browser windows (the product: websites) --- */
+  var winRing = new THREE.Group(); scene.add(winRing);
+  var winDefs = [
+    { pos: [-3.6, 1.3, -1.4], rotY: 0.55, accent: "#F5C542", title: "MOVERS" },
+    { pos: [3.7, -0.7, -1.0], rotY: -0.5, accent: "#7C5CFF", title: "DENTAL" },
+    { pos: [0.4, -2.5, -2.4], rotY: 0.12, accent: "#3ED598", title: "REALTY" }
+  ];
+  var winSide = new THREE.MeshStandardMaterial({ color: 0x171200, metalness: 0.4, roughness: 0.5 });
+  winDefs.forEach(function (w, i) {
+    var tex = siteTexture(THREE, w.accent, w.title);
+    var face = new THREE.MeshStandardMaterial({ map: tex, roughness: 0.35, metalness: 0.1 });
+    var box = new THREE.Mesh(new THREE.BoxGeometry(2.7, 1.8, 0.12),
+      [winSide, winSide, winSide, winSide, face, winSide]);
+    var g = new THREE.Group();
+    g.add(box); g.position.set(w.pos[0], w.pos[1], w.pos[2]); g.rotation.y = w.rotY;
+    g.userData = { baseY: w.pos[1], phase: i * 2.1 };
+    winRing.add(g);
+  });
+
+  /* --- gold dust particles + far stars + fake contact shadow --- */
+  function makePoints(n, spread, size, color, opacity) {
+    var pos = new Float32Array(n * 3), base = new Float32Array(n * 3), ph = new Float32Array(n);
+    for (var i = 0; i < n; i++) {
+      base[i * 3] = (Math.random() - 0.5) * spread[0];
+      base[i * 3 + 1] = (Math.random() - 0.5) * spread[1];
+      base[i * 3 + 2] = (Math.random() - 0.5) * spread[2] - 2;
+      ph[i] = Math.random() * Math.PI * 2;
+    }
+    pos.set(base);
+    var g = new THREE.BufferGeometry();
+    g.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+    var m = new THREE.PointsMaterial({ size: size, color: color, transparent: true, opacity: opacity, sizeAttenuation: true });
+    var pts = new THREE.Points(g, m); pts.userData = { base: base, ph: ph, n: n };
+    scene.add(pts); return pts;
+  }
+  var dust = makePoints(isMobile ? 120 : 320, [13, 8, 7], 0.07, 0xf5c542, 0.85);
+  var stars = makePoints(160, [26, 16, 8], 0.06, 0xfff6e5, 0.7);
+  stars.position.z = -9;
+  var shC = document.createElement("canvas"); shC.width = shC.height = 128;
+  var shX = shC.getContext("2d");
+  var grd = shX.createRadialGradient(64, 64, 4, 64, 64, 62);
+  grd.addColorStop(0, "rgba(0,0,0,0.55)"); grd.addColorStop(1, "rgba(0,0,0,0)");
+  shX.fillStyle = grd; shX.fillRect(0, 0, 128, 128);
+  var shT = new THREE.CanvasTexture(shC);
+  var shadow = new THREE.Mesh(new THREE.PlaneGeometry(8, 3.4),
+    new THREE.MeshBasicMaterial({ map: shT, transparent: true, depthWrite: false }));
+  shadow.rotation.x = -Math.PI / 2; shadow.position.y = -3.6; scene.add(shadow);
+
+  /* --- interaction state: drag spins, mouse leans, hover opens blades --- */
+  var S = {
+    yaw: 0.35, pitch: 0, targetYaw: 0.35, targetPitch: 0,
+    leanYaw: 0, leanPitch: 0, camX: 0, camY: 0,
+    hoverT: 0, dragging: false, lastMove: 0, dragged: false
+  };
+  /* read-only debug hook for automated verification (no behaviour change) */
+  window.__AF_DEBUG = window.__AF_DEBUG || {}; window.__AF_DEBUG.hero = S;
+  var ray = new THREE.Raycaster(), ndc = new THREE.Vector2();
+  var bladeMeshes = []; blades.forEach(function (p) { bladeMeshes.push(p.children[0]); });
+
+  function onMove(e) {
+    var r = sec.getBoundingClientRect();
+    var nx = ((e.clientX - r.left) / r.width) * 2 - 1;
+    var ny = ((e.clientY - r.top) / r.height) * 2 - 1;
+    if (!S.dragging) {
+      var L = AF3D.heroLeanFromMouse(nx, ny);
+      S.leanYaw = L.yaw; S.leanPitch = L.pitch; S.camX = L.camX; S.camY = L.camY;
+    }
+    if (finePointer && !reduced) {
+      ndc.set(nx, -ny); ray.setFromCamera(ndc, camera);
+      var hit = ray.intersectObjects(bladeMeshes, false);
+      S.hoverTarget = hit.length ? 1 : 0;
+    }
+  }
+  sec.addEventListener("pointermove", onMove, { passive: true });
+  sec.addEventListener("pointerdown", function (e) {
+    if (e.target.closest("a,button,input,select,textarea")) return;
+    S.dragging = true; S.dragged = false; S.lastX = e.clientX; S.lastY = e.clientY;
+    canvas.classList.add("dragging");
+    try { sec.setPointerCapture(e.pointerId); } catch (err) {}
+  });
+  sec.addEventListener("pointermove", function (e) {
+    if (!S.dragging) return;
+    var dx = e.clientX - S.lastX, dy = e.clientY - S.lastY;
+    S.lastX = e.clientX; S.lastY = e.clientY;
+    if (Math.abs(dx) + Math.abs(dy) > 2) S.dragged = true;
+    S.targetYaw += AF3D.heroYawFromDrag(dx);
+    S.targetPitch = clamp(S.targetPitch + AF3D.heroPitchFromDrag(dy), -0.5, 0.5);
+    S.lastMove = performance.now();
+    var hint = $("dragHint"); if (hint) hint.style.opacity = "0";
+  }, { passive: true });
+  function endDrag() { S.dragging = false; canvas.classList.remove("dragging"); S.lastMove = performance.now(); }
+  sec.addEventListener("pointerup", endDrag);
+  sec.addEventListener("pointercancel", endDrag);
+
+  var heroVisible = true;
+  if ("IntersectionObserver" in window) {
+    new IntersectionObserver(function (es) { heroVisible = es[0].isIntersecting; }, { threshold: 0 }).observe(sec);
+  }
+  function size() {
+    var w = sec.clientWidth, h = sec.clientHeight;
+    if (!w || !h) return;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h;
+    var vf = THREE.MathUtils.degToRad(camera.fov);
+    var hf = 2 * Math.atan(Math.tan(vf / 2) * camera.aspect);
+    var fit = 3.6 / Math.sin(Math.min(vf, hf) / 2);
+    camera.position.z = clamp(fit, 10, 22);
+    camera.updateProjectionMatrix();
+  }
+  size();
+  var rzT; window.addEventListener("resize", function () { clearTimeout(rzT); rzT = setTimeout(function () { isMobile = window.innerWidth < 700; size(); }, 200); }, { passive: true });
+
+  return {
+    tick: function (t, now) {
+      if (!heroVisible || document.hidden) return;
+      if (!reduced && !S.dragging && now - S.lastMove > 3000) S.targetYaw += 0.0022;
+      var k = 0.08;
+      S.yaw += (S.targetYaw + S.leanYaw - S.yaw) * k;
+      S.pitch += (S.targetPitch + S.leanPitch - S.pitch) * k;
+      S.hoverT += ((S.hoverTarget || 0) - S.hoverT) * 0.1;
+      lens.rotation.y = S.yaw; lens.rotation.x = S.pitch;
+      var open = S.hoverT * 0.55 + 0.06 * Math.sin(t * 0.8);
+      blades.forEach(function (p) { p.rotation.z = p.userData.baseRot + open; });
+      lens.scale.setScalar(1 + 0.07 * S.hoverT);
+      iris.material.opacity = 0.22 + 0.12 * Math.sin(t * 1.6) + 0.15 * S.hoverT;
+      /* blob breathes (4D morph) */
+      var pos = blobGeo.attributes.position, amp = 0.22 + 0.18 * S.hoverT;
+      for (var i = 0; i < pos.count; i++) {
+        var bx = blobBase[i * 3], by = blobBase[i * 3 + 1], bz = blobBase[i * 3 + 2];
+        var n = noise3(bx, by, bz, t * 0.7) * amp;
+        pos.setXYZ(i, bx * (1 + n), by * (1 + n), bz * (1 + n));
+      }
+      pos.needsUpdate = true; blobGeo.computeVertexNormals();
+      blob.rotation.y = t * 0.12; blob.rotation.x = Math.sin(t * 0.3) * 0.2;
+      winRing.rotation.y = t * 0.05;
+      winRing.children.forEach(function (g) { g.position.y = g.userData.baseY + Math.sin(t * 0.7 + g.userData.phase) * 0.16; });
+      [dust, stars].forEach(function (pts) {
+        var a = pts.geometry.attributes.position, b = pts.userData.base, ph = pts.userData.ph;
+        for (var j = 0; j < pts.userData.n; j++) {
+          a.setY(j, b[j * 3 + 1] + Math.sin(t * 0.5 + ph[j]) * 0.22);
+        }
+        a.needsUpdate = true;
       });
+      dust.rotation.y = t * 0.02; stars.rotation.y = -t * 0.008;
+      camera.position.x += (S.camX * 0.35 - camera.position.x) * 0.05;
+      camera.position.y += (S.camY * 0.35 - camera.position.y) * 0.05;
+      camera.lookAt(0, 0, 0);
+      renderer.render(scene, camera);
+    },
+    renderOnce: function () {
+      lens.rotation.y = 0.35; blades.forEach(function (p) { p.rotation.z = p.userData.baseRot + 0.12; });
+      camera.lookAt(0, 0, 0); renderer.render(scene, camera);
+    }
+  };
+}
+
+/* ---------- JOURNEY scene: scroll flies the camera through 4 stations ---------- */
+var journey = null;
+function initJourney(THREE) {
+  var wrap = $("journeyWrap"), canvas = $("journey3d");
+  if (!wrap || !canvas) return null;
+  var renderer;
+  try { renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true }); }
+  catch (e) { return null; }
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isMobile ? 1.5 : 2));
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.1;
+  var scene = new THREE.Scene();
+  scene.fog = new THREE.Fog(0x0d0a1f, 18, 40);
+  var camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
+  scene.add(new THREE.AmbientLight(0x9a8fd0, 0.6));
+  var key = new THREE.DirectionalLight(0xfff1d6, 1.7); key.position.set(5, 7, 8); scene.add(key);
+  var goldL = new THREE.PointLight(0xf5c542, 26, 22); goldL.position.set(0, 3, -16); scene.add(goldL);
+
+  function setOpacity(group, v) {
+    group.traverse(function (o) { if (o.isMesh) { o.material.transparent = true; o.material.opacity = v; } });
+  }
+  /* STATION 1 — the old, grey, broken website */
+  var s1 = new THREE.Group(); s1.position.set(0, 0, 0);
+  var grey = new THREE.MeshStandardMaterial({ color: 0x8a8a8a, roughness: 0.95 });
+  var greyD = new THREE.MeshStandardMaterial({ color: 0x5c5c66, roughness: 0.95 });
+  var oldSite = new THREE.Mesh(new THREE.BoxGeometry(4.6, 3, 0.18), grey);
+  oldSite.rotation.z = -0.07; s1.add(oldSite);
+  [[-1.4, 0.8, 0.9, 0.5], [0.4, 0.8, 1.6, 0.5], [-1.4, -0.2, 2.4, 0.9]].forEach(function (b) {
+    var m = new THREE.Mesh(new THREE.BoxGeometry(b[2], b[3], 0.1), greyD);
+    m.position.set(b[0], b[1], 0.16); m.rotation.z = -0.07; s1.add(m);
+  });
+  var redX = new THREE.MeshStandardMaterial({ color: 0xff5a5f, roughness: 0.5 });
+  var x1 = new THREE.Mesh(new THREE.BoxGeometry(1.7, 0.22, 0.12), redX);
+  var x2 = new THREE.Mesh(new THREE.BoxGeometry(1.7, 0.22, 0.12), redX);
+  x1.rotation.z = 0.7; x2.rotation.z = -0.7; x1.position.set(1.2, -0.9, 0.2); x2.position.set(1.2, -0.9, 0.2);
+  s1.add(x1); s1.add(x2); scene.add(s1);
+
+  /* STATION 2 — website layers, scattered -> assembled */
+  var s2 = new THREE.Group(); s2.position.set(8, 0, -6);
+  var layerCols = [0xf5c542, 0xfff6e5, 0x7c5cff, 0x3ed598];
+  var layerH = [0.55, 1.3, 0.9, 0.55];
+  var layerY = [1.35, 0.35, -0.65, -1.35];
+  var layers = [];
+  layerCols.forEach(function (col, i) {
+    var m = new THREE.Mesh(new THREE.BoxGeometry(3.4, layerH[i], 0.22),
+      new THREE.MeshStandardMaterial({ color: col, roughness: 0.4, metalness: 0.3 }));
+    m.userData = {
+      assembled: new THREE.Vector3(0, layerY[i], 0),
+      scattered: new THREE.Vector3((i % 2 ? 1 : -1) * (2.6 + i * 0.7), (i - 1.5) * 1.6, (i % 2 ? -1 : 1) * 1.2),
+      rotS: (i - 1.5) * 0.55
+    };
+    m.position.copy(m.userData.scattered); m.rotation.z = m.userData.rotS;
+    s2.add(m); layers.push(m);
+  });
+  scene.add(s2);
+
+  /* STATION 3 — the new site + rising bars */
+  var s3 = new THREE.Group(); s3.position.set(-6, 1, -12);
+  var face = new THREE.MeshStandardMaterial({ map: siteTexture(THREE, "#F5C542", "FOUND"), roughness: 0.35, metalness: 0.1 });
+  var side = new THREE.MeshStandardMaterial({ color: 0x171200, metalness: 0.4, roughness: 0.5 });
+  var browser = new THREE.Mesh(new THREE.BoxGeometry(4.2, 2.7, 0.2), [side, side, side, side, face, side]);
+  browser.position.y = 0.6; s3.add(browser);
+  var bars = [];
+  [0xf5c542, 0x3ed598, 0x7c5cff].forEach(function (col, i) {
+    var b = new THREE.Mesh(new THREE.BoxGeometry(0.55, 1.7, 0.55),
+      new THREE.MeshStandardMaterial({ color: col, roughness: 0.35, metalness: 0.5 }));
+    b.position.set(-1.3 + i * 1.3, -2.2, 0.4); b.scale.y = 0.1;
+    s3.add(b); bars.push(b);
+  });
+  scene.add(s3);
+
+  /* STATION 4 — launch: golden aperture + particle burst */
+  var s4 = new THREE.Group(); s4.position.set(0, 2, -20);
+  var goldMat = new THREE.MeshStandardMaterial({ color: 0xf5c542, metalness: 0.9, roughness: 0.28 });
+  s4.add(new THREE.Mesh(new THREE.TorusGeometry(1.7, 0.12, 18, 64), goldMat));
+  var lensD = new THREE.Mesh(new THREE.CircleGeometry(1.2, 40),
+    new THREE.MeshPhysicalMaterial({ color: 0x2e2361, metalness: 0.2, roughness: 0.08, clearcoat: 1 }));
+  lensD.position.z = -0.1; s4.add(lensD);
+  var burstN = 180, burstBase = new Float32Array(burstN * 3), burstDir = new Float32Array(burstN * 3);
+  for (var i = 0; i < burstN; i++) {
+    var th = Math.random() * Math.PI * 2, ph = Math.acos(2 * Math.random() - 1);
+    burstDir[i * 3] = Math.sin(ph) * Math.cos(th);
+    burstDir[i * 3 + 1] = Math.sin(ph) * Math.sin(th);
+    burstDir[i * 3 + 2] = Math.cos(ph);
+  }
+  var burstGeo = new THREE.BufferGeometry();
+  burstGeo.setAttribute("position", new THREE.BufferAttribute(burstBase, 3));
+  var burst = new THREE.Points(burstGeo, new THREE.PointsMaterial({ size: 0.12, color: 0xffd97a, transparent: true, opacity: 0.95 }));
+  s4.add(burst); scene.add(s4);
+
+  var jVisible = true;
+  if ("IntersectionObserver" in window) {
+    new IntersectionObserver(function (es) { jVisible = es[0].isIntersecting; }, { threshold: 0 }).observe(wrap);
+  }
+  function size() {
+    var r = wrap.getBoundingClientRect();
+    var w = r.width || window.innerWidth, h = window.innerHeight;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h; camera.updateProjectionMatrix();
+  }
+  size();
+  var rzT; window.addEventListener("resize", function () { clearTimeout(rzT); rzT = setTimeout(size, 200); }, { passive: true });
+
+  var pSmooth = 0, lastStation = -1;
+  window.__AF_DEBUG = window.__AF_DEBUG || {};
+  window.__AF_DEBUG.journey = { get p() { return pSmooth; }, get station() { return lastStation; } };
+  var panels = Array.prototype.slice.call(document.querySelectorAll(".j-panel"));
+  var dots = Array.prototype.slice.call(document.querySelectorAll("#jDots i"));
+  var count = $("jCount");
+  function applyState(st, t) {
+    setOpacity(s1, st.s1);
+    setOpacity(s2, st.s2);
+    layers.forEach(function (m) {
+      var a = st.s2assemble;
+      m.position.lerpVectors(m.userData.scattered, m.userData.assembled, a);
+      m.rotation.z = m.userData.rotS * (1 - a);
     });
-    el.addEventListener('pointerleave',function(){
-      if(raf){ cancelAnimationFrame(raf); raf=null; }
-      el.style.transition='transform .6s cubic-bezier(.2,.8,.2,1), box-shadow .3s';
-      el.style.transform=''; el.classList.remove('tilting');
+    setOpacity(s3, st.s3);
+    bars.forEach(function (b) {
+      var s = 0.1 + 0.9 * st.bars;
+      b.scale.y = s; b.position.y = -2.2 + (1.7 * s) / 2;
     });
+    setOpacity(s4, st.s4);
+    var bp = burstGeo.attributes.position;
+    for (var i = 0; i < burstN; i++) {
+      var d = 0.4 + st.burst * 5.5;
+      bp.setXYZ(i, burstDir[i * 3] * d, burstDir[i * 3 + 1] * d, burstDir[i * 3 + 2] * d);
+    }
+    bp.needsUpdate = true;
+    burst.material.opacity = st.burst;
+    s4.rotation.z = t * 0.05;
+  }
+  return {
+    tick: function (t) {
+      if (!jVisible || document.hidden) return;
+      var rect = wrap.getBoundingClientRect(), vh = window.innerHeight;
+      var p = clamp((vh - rect.top) / (rect.height - vh), 0, 1);
+      if (reduced) { p = 0.62; pSmooth = p; }
+      else pSmooth += (p - pSmooth) * 0.14;
+      var st = AF3D.journeyState(pSmooth);
+      var cam = AF3D.journeyCam(pSmooth), look = AF3D.journeyLook(pSmooth);
+      camera.position.set(cam[0], cam[1], cam[2]);
+      camera.lookAt(look[0], look[1], look[2]);
+      applyState(st, t);
+      if (st.station !== lastStation) {
+        lastStation = st.station;
+        panels.forEach(function (pn, i) { pn.classList.toggle("active", i === st.station); });
+        dots.forEach(function (d, i) { d.classList.toggle("on", i === st.station); });
+        if (count) count.textContent = "0" + (st.station + 1) + " / 04";
+      }
+      renderer.render(scene, camera);
+    },
+    renderOnce: function () {
+      var st = AF3D.journeyState(0.62);
+      var cam = AF3D.journeyCam(0.62), look = AF3D.journeyLook(0.62);
+      camera.position.set(cam[0], cam[1], cam[2]);
+      camera.lookAt(look[0], look[1], look[2]);
+      applyState(st, 0);
+      panels.forEach(function (pn, i) { pn.classList.toggle("active", i === 2); });
+      renderer.render(scene, camera);
+    }
+  };
+}
+
+/* ---------- CSS-3D INTERACTIONS (work even without WebGL) ---------- */
+function initInteractions() {
+  /* Strong tilt cards: +/-10 deg (old: +/-0.3-0.6 deg) */
+  if (finePointer && !reduced) {
+    document.querySelectorAll(".tilt3d").forEach(function (el) {
+      el.addEventListener("pointermove", function (e) {
+        var r = el.getBoundingClientRect();
+        var dx = (e.clientX - r.left) / r.width - 0.5;
+        var dy = (e.clientY - r.top) / r.height - 0.5;
+        var t = AF3D.tiltFromPointer(dx, dy);
+        el.style.transform = "perspective(900px) rotateX(" + t.rx.toFixed(2) + "deg) rotateY(" + t.ry.toFixed(2) + "deg) translateZ(6px)";
+      });
+      el.addEventListener("pointerleave", function () { el.style.transform = ""; });
+    });
+  }
+  /* Work ring: drag to rotate (100px = 30 deg), inertia, snap to 120 deg */
+  var stage = $("ringStage"), ring = $("workRing");
+  if (stage && ring) {
+    var cards = Array.prototype.slice.call(ring.querySelectorAll(".ring-card"));
+    cards.forEach(function (c, i) { c.style.transform = "rotateY(" + (i * 120) + "deg) translateZ(340px)"; });
+    var rot = 0, target = 0, vel = 0, dragging = false, lastX = 0, dragDist = 0, lastAct = 0;
+    window.__AF_DEBUG = window.__AF_DEBUG || {};
+    window.__AF_DEBUG.ring = { get rot() { return rot; }, get target() { return target; } };
+    stage.addEventListener("pointerdown", function (e) {
+      dragging = true; lastX = e.clientX; dragDist = 0; vel = 0; lastAct = performance.now();
+      stage.classList.add("dragging");
+      try { stage.setPointerCapture(e.pointerId); } catch (err) {}
+    });
+    stage.addEventListener("pointermove", function (e) {
+      if (!dragging) return;
+      var dx = e.clientX - lastX; lastX = e.clientX;
+      dragDist += Math.abs(dx); vel = AF3D.ringRotFromDrag(dx);
+      target += vel; lastAct = performance.now();
+    }, { passive: true });
+    function ringEnd() { dragging = false; stage.classList.remove("dragging"); }
+    stage.addEventListener("pointerup", ringEnd);
+    stage.addEventListener("pointercancel", ringEnd);
+    stage.addEventListener("click", function (e) {
+      if (dragDist > 6) { e.stopPropagation(); e.preventDefault(); }
+    }, true);
+    function step(dir) { target += dir * 120; lastAct = performance.now(); }
+    var pv = $("ringPrev"), nx = $("ringNext");
+    if (pv) pv.addEventListener("click", function () { step(-1); });
+    if (nx) nx.addEventListener("click", function () { step(1); });
+    window.__ringTick = function () {
+      if (!dragging) {
+        if (Math.abs(vel) > 0.05) { target += vel; vel *= 0.94; }
+        else {
+          var snap = Math.round(target / 120) * 120;
+          target += (snap - target) * 0.12;
+        }
+        if (!reduced && performance.now() - lastAct > 5000) target += 0.05;
+      }
+      rot += (target - rot) * 0.1;
+      ring.style.transform = "rotateY(" + rot.toFixed(2) + "deg)";
+    };
+  }
+  /* Footer wordmark: split into letters (hover lifts -16px + rotateX 25 deg) */
+  var fw = $("footWord");
+  if (fw && !fw.querySelector("span")) {
+    var txt = fw.textContent.trim();
+    fw.textContent = "";
+    txt.split("").forEach(function (ch, i) {
+      var s = document.createElement("span");
+      s.textContent = ch; s.style.setProperty("--i", i);
+      fw.appendChild(s);
+    });
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(function (es) {
+        es.forEach(function (en) { if (en.isIntersecting) { fw.classList.add("in"); } });
+      }, { threshold: 0.4 }).observe(fw);
+    } else fw.classList.add("in");
+  }
+  /* Estimator coin stack grows with the estimate (1 coin per $250, max 8) */
+  var est = $("estTotal"), stack = $("valueStack");
+  if (est && stack) {
+    var coins = Array.prototype.slice.call(stack.querySelectorAll(".coin"));
+    var upd = function () {
+      var total = parseInt((est.textContent || "").replace(/[^0-9]/g, ""), 10) || 0;
+      var n = Math.max(1, Math.min(8, Math.round(total / 250)));
+      coins.forEach(function (c, i) { c.classList.toggle("on", i < n); });
+    };
+    if ("MutationObserver" in window) new MutationObserver(upd).observe(est, { childList: true, characterData: true, subtree: true });
+    upd();
+  }
+}
+
+/* ---------- scroll-driven CSS effects: layer stack, BA zoom, float chips ---------- */
+function scrollFxTick(t) {
+  var vh = window.innerHeight;
+  var ls = $("layerStack");
+  if (ls) {
+    var r = ls.getBoundingClientRect();
+    var p = reduced ? 1 : clamp((vh * 0.9 - r.top) / (vh * 0.75), 0, 1);
+    var spread = AF3D.layerSpread(p);
+    Array.prototype.slice.call(ls.querySelectorAll(".layer")).forEach(function (el, i) {
+      el.style.transform = "translateZ(" + (i * spread).toFixed(1) + "px) translateY(" + (-i * spread * 0.45).toFixed(1) + "px) rotateX(" + ((1 - p) * 10).toFixed(2) + "deg)";
+    });
+  }
+  var ba = $("baWrap");
+  if (ba) {
+    var r2 = ba.getBoundingClientRect();
+    var v = reduced ? 1 : clamp((vh - r2.top) / (vh * 0.9), 0, 1);
+    var z = AF3D.baZoom(v);
+    ba.style.transform = "scale(" + z.scale.toFixed(3) + ") rotateX(" + z.rx.toFixed(2) + "deg)";
+  }
+  document.querySelectorAll("[data-float]").forEach(function (el) {
+    if (reduced) return;
+    var s = parseFloat(el.getAttribute("data-float")) || 1;
+    el.style.transform = "translateY(" + (Math.sin(t * s) * 10).toFixed(1) + "px)";
   });
 }
 
-/* ============ SCROLL-ZOOM LANDMARK (Strata pattern) ============
-   The Before/After showcase scales up from .93 and settles its tilt
-   as it scrolls into view — depth that only reveals itself on scroll. */
-var baWrap=document.querySelector('.ba-wrap');
-if(baWrap && !reduced){
-  var baTick=false;
-  function baZoom(){
-    baTick=false;
-    var r=baWrap.getBoundingClientRect(), vh=window.innerHeight||800;
-    if(r.bottom<0||r.top>vh) return;
-    var p=Math.min(Math.max((vh-r.top)/(vh+r.height),0),1);
-    var k=Math.min(p*1.6,1);
-    baWrap.style.transform='scale('+(.93+.07*k).toFixed(3)+') perspective(1200px) rotateX('+(6*(1-k)).toFixed(2)+'deg)';
-  }
-  window.addEventListener('scroll',function(){ if(!baTick){ baTick=true; requestAnimationFrame(baZoom); } },{passive:true});
-  baZoom();
+/* ---------- boot ---------- */
+initInteractions();
+var masterStarted = false;
+function startMaster() {
+  if (masterStarted) return; masterStarted = true;
+  (function loop() {
+    var t = performance.now() / 1000, now = performance.now();
+    if (hero) hero.tick(t, now);
+    if (journey) journey.tick(t);
+    if (window.__ringTick) window.__ringTick();
+    scrollFxTick(t);
+    requestAnimationFrame(loop);
+  })();
 }
-
-/* ============ GIANT FOOTER WORDMARK (Vesper pattern) ============
-   ALPHAFRAME rises letter by letter on scroll; letters near the
-   cursor lift toward it. */
-var fw=document.getElementById('footWord');
-if(fw){
-  var letters=fw.textContent.trim().split('');
-  fw.innerHTML=letters.map(function(ch,i){ return '<span style="--i:'+i+'">'+ch+'</span>'; }).join('');
-  var spans=fw.querySelectorAll('span');
-  function markLive(){ fw.classList.add('live'); }
-  if('IntersectionObserver' in window && !reduced){
-    var fio=new IntersectionObserver(function(es){ es.forEach(function(en){ if(en.isIntersecting){ fw.classList.add('in'); setTimeout(markLive,1400); fio.disconnect(); } }); },{threshold:.3});
-    fio.observe(fw);
-  } else { fw.classList.add('in'); markLive(); }
-  if(fine && !reduced){
-    var fParent=fw.parentElement;
-    fParent.addEventListener('mousemove',function(e){
-      spans.forEach(function(sp){
-        var sr=sp.getBoundingClientRect();
-        var d=Math.hypot(e.clientX-(sr.left+sr.width/2),e.clientY-(sr.top+sr.height/2));
-        var lift=Math.max(0,1-d/220)*14;
-        sp.style.transform='translateY('+(-lift).toFixed(1)+'px)';
-      });
-    },{passive:true});
-    fParent.addEventListener('mouseleave',function(){ spans.forEach(function(sp){ sp.style.transform=''; }); });
-  }
+if (!webglOK()) {
+  document.body.classList.add("no-webgl");
+  startMaster();
+} else {
+  loadThree().then(function (THREE) {
+    hero = initHero(THREE);
+    journey = initJourney(THREE);
+    if (!hero && !journey) document.body.classList.add("no-webgl");
+    window.__AF_DEBUG = window.__AF_DEBUG || {};
+    window.__AF_DEBUG.noWebgl = document.body.classList.contains("no-webgl");
+    window.__AF_DEBUG.threeLoaded = true;
+    if (reduced) {
+      if (hero) hero.renderOnce();
+      if (journey) journey.renderOnce();
+    }
+    startMaster();
+  }).catch(function () {
+    document.body.classList.add("no-webgl");
+    window.__AF_DEBUG = window.__AF_DEBUG || {};
+    window.__AF_DEBUG.noWebgl = true;
+    window.__AF_DEBUG.threeLoaded = false;
+    startMaster();
+  });
 }
 })();
+
 </script>
 </body>
 </html>
